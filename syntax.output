@@ -1,0 +1,3032 @@
+Κανόνες άχρηστοι στον αναλυτή λόγω συγκρούσεων
+
+  106 $@7: %empty
+
+
+Κατάσταση 56 συγκρούσεις: 8 ολίσθηση/ελάττωση
+Κατάσταση 67 συγκρούσεις: 8 ολίσθηση/ελάττωση
+
+
+Γραμματική
+
+    0 $accept: program "EOF"
+
+    1 program: body "end" subprograms
+
+    2 body: declarations statements
+
+    3 declarations: declarations type vars
+    4             | declarations "record" fields "endrec" vars
+    5             | declarations "data" vals
+    6             | %empty
+
+    7 type: "integer"
+    8     | "real"
+    9     | "logical"
+   10     | "character"
+
+   11 vars: vars "," undef_variable
+   12     | vars "," error
+   13     | undef_variable
+
+   14 $@1: %empty
+
+   15 $@2: %empty
+
+   16 undef_variable: "id" "(" $@1 dims ")" $@2
+   17               | "id"
+
+   18 dims: dims "," dim
+   19     | dim
+
+   20 dim: "iconst"
+   21    | "id"
+
+   22 fields: fields field
+   23       | field
+
+   24 field: type vars
+   25      | "record" fields "endrec" vars
+
+   26 vals: vals "," "id" value_list
+   27     | "id" value_list
+
+   28 value_list: "/" values "/"
+
+   29 values: values "," value
+   30       | value
+
+   31 value: repeat "*" "+|-" constant
+   32      | repeat "*" constant
+   33      | repeat "*" "string"
+   34      | "+|-" constant
+   35      | constant
+   36      | "string"
+
+   37 repeat: "iconst"
+   38       | %empty
+
+   39 constant: "iconst"
+   40         | "rconst"
+   41         | "lconst"
+   42         | "cconst"
+
+   43 statements: statements labeled_statement
+   44           | labeled_statement
+
+   45 labeled_statement: label statement
+   46                  | statement
+
+   47 label: "iconst"
+
+   48 statement: simple_statement
+   49          | compound_statement
+
+   50 simple_statement: assignment
+   51                 | goto_statement
+   52                 | if_statement
+   53                 | subroutine_call
+   54                 | io_statement
+   55                 | "continue"
+   56                 | "return"
+   57                 | "stop"
+
+   58 assignment: variable "=" expression
+   59           | variable "=" "string"
+
+   60 variable: variable ":" "id"
+
+   61 $@3: %empty
+
+   62 variable: variable "(" $@3 expressions ")"
+   63         | "id"
+
+   64 expressions: expressions "," expression
+   65            | expression
+
+   66 expression: expression ".OR." expression
+   67           | expression ".AND." expression
+   68           | expression ".GT." expression
+   69           | expression "+|-" expression
+   70           | expression "*" expression
+   71           | expression "/" expression
+   72           | expression "**" expression
+   73           | ".NOT" expression
+   74           | "+|-" expression
+   75           | variable
+   76           | constant
+
+   77 $@4: %empty
+
+   78 expression: "(" $@4 expression ")"
+
+   79 goto_statement: "goto" label
+
+   80 $@5: %empty
+
+   81 $@6: %empty
+
+   82 goto_statement: "goto" "id" "," "(" $@5 labels ")" $@6
+
+   83 labels: labels "," label
+   84       | label
+
+   85 if_statement: "if" "(" expression ")" label "," label "," label
+   86             | "if" "(" expression ")" simple_statement
+   87             | error "(" expression ")" label "," label "," label
+   88             | error "(" expression ")" simple_statement
+
+   89 subroutine_call: "call" variable
+
+   90 io_statement: "read" read_list
+   91             | "write" write_list
+
+   92 read_list: read_list "," read_item
+   93          | read_item
+
+   94 read_item: variable
+   95          | "(" read_list "," "id" "=" iter_space ")"
+
+   96 iter_space: expression "," expression step
+
+   97 step: "," expression
+   98     | %empty
+
+   99 write_list: write_list "," write_item
+  100           | write_item
+
+  101 write_item: expression
+  102           | "(" write_list "," "id" "=" iter_space ")"
+  103           | "string"
+
+  104 compound_statement: branch_statement
+  105                   | loop_statement
+
+  106 $@7: %empty
+
+  107 $@8: %empty
+
+  108 branch_statement: "if" "(" $@7 expression ")" $@8 "then" body tail
+
+  109 tail: "else" body "endif"
+  110     | "endif"
+
+  111 loop_statement: "do" "id" "=" iter_space body "enddo"
+
+  112 subprograms: subprograms subprogram
+  113            | %empty
+
+  114 subprogram: header body "end"
+
+  115 $@9: %empty
+
+  116 $@10: %empty
+
+  117 header: type "function" "id" "(" $@9 formal_parameters ")" $@10
+
+  118 $@11: %empty
+
+  119 $@12: %empty
+
+  120 header: "subroutine" "id" "(" $@11 formal_parameters ")" $@12
+  121       | "subroutine" "id"
+
+  122 formal_parameters: type vars "," formal_parameters
+  123                  | type vars
+
+
+Τερματικά σύμβολα, με κανόνες όπου εμφανίζονται
+
+"EOF" (0) 0
+error (256) 12 87 88
+"function" (258) 117
+"subroutine" (259) 120 121
+"end" (260) 1 114
+"integer" (261) 7
+"real" (262) 8
+"logical" (263) 9
+"character" (264) 10
+"record" (265) 4 25
+"endrec" (266) 4 25
+"data" (267) 5
+"continue" (268) 55
+"goto" (269) 79 82
+"call" (270) 89
+"read" (271) 90
+"write" (272) 91
+"if" (273) 85 86 108
+"then" (274) 108
+"else" (275) 109
+"endif" (276) 109 110
+"do" (277) 111
+"enddo" (278) 111
+"stop" (279) 57
+"return" (280) 56
+".OR." (281) 66
+".AND." (282) 67
+".NOT" (283) 73
+".GT." (284) 68
+"+|-" (285) 31 34 69 74
+"*" (286) 31 32 33 70
+"/" (287) 28 71
+"**" (288) 72
+"(" (289) 16 62 78 82 85 86 87 88 95 102 108 117 120
+")" (290) 16 62 78 82 85 86 87 88 95 102 108 117 120
+"," (291) 11 12 18 26 29 64 82 83 85 87 92 95 96 97 99 102 122
+"=" (292) 58 59 95 102 111
+":" (293) 60
+"id" (294) 16 17 21 26 27 60 63 82 95 102 111 117 120 121
+"iconst" (295) 20 37 39 47
+"rconst" (296) 40
+"cconst" (297) 42
+"lconst" (298) 41
+"string" (299) 33 36 59 103
+
+
+Μη τερματικά σύμβολα, με κανόνες όπου εμφανίζονται
+
+$accept (45)
+   στα αριστερά: 0
+program (46)
+   στα αριστερά: 1,στα δεξιά: 0
+body (47)
+   στα αριστερά: 2,στα δεξιά: 1 108 109 111 114
+declarations (48)
+   στα αριστερά: 3 4 5 6,στα δεξιά: 2 3 4 5
+type (49)
+   στα αριστερά: 7 8 9 10,στα δεξιά: 3 24 117 122
+    123
+vars (50)
+   στα αριστερά: 11 12 13,στα δεξιά: 3 4 11 12 24
+    25 122 123
+undef_variable (51)
+   στα αριστερά: 16 17,στα δεξιά: 11 13
+$@1 (52)
+   στα αριστερά: 14,στα δεξιά: 16
+$@2 (53)
+   στα αριστερά: 15,στα δεξιά: 16
+dims (54)
+   στα αριστερά: 18 19,στα δεξιά: 16 18
+dim (55)
+   στα αριστερά: 20 21,στα δεξιά: 18 19
+fields (56)
+   στα αριστερά: 22 23,στα δεξιά: 4 22 25
+field (57)
+   στα αριστερά: 24 25,στα δεξιά: 22 23
+vals (58)
+   στα αριστερά: 26 27,στα δεξιά: 5 26
+value_list (59)
+   στα αριστερά: 28,στα δεξιά: 26 27
+values (60)
+   στα αριστερά: 29 30,στα δεξιά: 28 29
+value (61)
+   στα αριστερά: 31 32 33 34 35 36,στα δεξιά: 29
+    30
+repeat (62)
+   στα αριστερά: 37 38,στα δεξιά: 31 32 33
+constant (63)
+   στα αριστερά: 39 40 41 42,στα δεξιά: 31 32 34
+    35 76
+statements (64)
+   στα αριστερά: 43 44,στα δεξιά: 2 43
+labeled_statement (65)
+   στα αριστερά: 45 46,στα δεξιά: 43 44
+label (66)
+   στα αριστερά: 47,στα δεξιά: 45 79 83 84 85 87
+statement (67)
+   στα αριστερά: 48 49,στα δεξιά: 45 46
+simple_statement (68)
+   στα αριστερά: 50 51 52 53 54 55 56 57,στα δεξιά:
+    48 86 88
+assignment (69)
+   στα αριστερά: 58 59,στα δεξιά: 50
+variable (70)
+   στα αριστερά: 60 62 63,στα δεξιά: 58 59 60 62
+    75 89 94
+$@3 (71)
+   στα αριστερά: 61,στα δεξιά: 62
+expressions (72)
+   στα αριστερά: 64 65,στα δεξιά: 62 64
+expression (73)
+   στα αριστερά: 66 67 68 69 70 71 72 73 74 75 76 78,στα δεξιά:
+    58 64 65 66 67 68 69 70 71 72 73 74 78 85 86 87 88 96 97 101 108
+$@4 (74)
+   στα αριστερά: 77,στα δεξιά: 78
+goto_statement (75)
+   στα αριστερά: 79 82,στα δεξιά: 51
+$@5 (76)
+   στα αριστερά: 80,στα δεξιά: 82
+$@6 (77)
+   στα αριστερά: 81,στα δεξιά: 82
+labels (78)
+   στα αριστερά: 83 84,στα δεξιά: 82 83
+if_statement (79)
+   στα αριστερά: 85 86 87 88,στα δεξιά: 52
+subroutine_call (80)
+   στα αριστερά: 89,στα δεξιά: 53
+io_statement (81)
+   στα αριστερά: 90 91,στα δεξιά: 54
+read_list (82)
+   στα αριστερά: 92 93,στα δεξιά: 90 92 95
+read_item (83)
+   στα αριστερά: 94 95,στα δεξιά: 92 93
+iter_space (84)
+   στα αριστερά: 96,στα δεξιά: 95 102 111
+step (85)
+   στα αριστερά: 97 98,στα δεξιά: 96
+write_list (86)
+   στα αριστερά: 99 100,στα δεξιά: 91 99 102
+write_item (87)
+   στα αριστερά: 101 102 103,στα δεξιά: 99 100
+compound_statement (88)
+   στα αριστερά: 104 105,στα δεξιά: 49
+branch_statement (89)
+   στα αριστερά: 108,στα δεξιά: 104
+$@7 (90)
+   στα αριστερά: 106,στα δεξιά: 108
+$@8 (91)
+   στα αριστερά: 107,στα δεξιά: 108
+tail (92)
+   στα αριστερά: 109 110,στα δεξιά: 108
+loop_statement (93)
+   στα αριστερά: 111,στα δεξιά: 105
+subprograms (94)
+   στα αριστερά: 112 113,στα δεξιά: 1 112
+subprogram (95)
+   στα αριστερά: 114,στα δεξιά: 112
+header (96)
+   στα αριστερά: 117 120 121,στα δεξιά: 114
+$@9 (97)
+   στα αριστερά: 115,στα δεξιά: 117
+$@10 (98)
+   στα αριστερά: 116,στα δεξιά: 117
+$@11 (99)
+   στα αριστερά: 118,στα δεξιά: 120
+$@12 (100)
+   στα αριστερά: 119,στα δεξιά: 120
+formal_parameters (101)
+   στα αριστερά: 122 123,στα δεξιά: 117 120 122
+
+
+Κατάσταση 0 
+
+    0 $accept: . program "EOF"
+
+    $default  ελάττωση με χρήση του κανόνα 6 (declarations)
+
+    program       πήγαινε στην κατάσταση 1
+    body          πήγαινε στην κατάσταση 2
+    declarations  πήγαινε στην κατάσταση 3
+
+
+Κατάσταση 1 
+
+    0 $accept: program . "EOF"
+
+    "EOF"  ολίσθηση, και μετάβαση στη κατάσταση 4
+
+
+Κατάσταση 2 
+
+    1 program: body . "end" subprograms
+
+    "end"  ολίσθηση, και μετάβαση στη κατάσταση 5
+
+
+Κατάσταση 3 
+
+    2 body: declarations . statements
+    3 declarations: declarations . type vars
+    4             | declarations . "record" fields "endrec" vars
+    5             | declarations . "data" vals
+
+    error        ολίσθηση, και μετάβαση στη κατάσταση 6
+    "integer"    ολίσθηση, και μετάβαση στη κατάσταση 7
+    "real"       ολίσθηση, και μετάβαση στη κατάσταση 8
+    "logical"    ολίσθηση, και μετάβαση στη κατάσταση 9
+    "character"  ολίσθηση, και μετάβαση στη κατάσταση 10
+    "record"     ολίσθηση, και μετάβαση στη κατάσταση 11
+    "data"       ολίσθηση, και μετάβαση στη κατάσταση 12
+    "continue"   ολίσθηση, και μετάβαση στη κατάσταση 13
+    "goto"       ολίσθηση, και μετάβαση στη κατάσταση 14
+    "call"       ολίσθηση, και μετάβαση στη κατάσταση 15
+    "read"       ολίσθηση, και μετάβαση στη κατάσταση 16
+    "write"      ολίσθηση, και μετάβαση στη κατάσταση 17
+    "if"         ολίσθηση, και μετάβαση στη κατάσταση 18
+    "do"         ολίσθηση, και μετάβαση στη κατάσταση 19
+    "stop"       ολίσθηση, και μετάβαση στη κατάσταση 20
+    "return"     ολίσθηση, και μετάβαση στη κατάσταση 21
+    "id"         ολίσθηση, και μετάβαση στη κατάσταση 22
+    "iconst"     ολίσθηση, και μετάβαση στη κατάσταση 23
+
+    type                πήγαινε στην κατάσταση 24
+    statements          πήγαινε στην κατάσταση 25
+    labeled_statement   πήγαινε στην κατάσταση 26
+    label               πήγαινε στην κατάσταση 27
+    statement           πήγαινε στην κατάσταση 28
+    simple_statement    πήγαινε στην κατάσταση 29
+    assignment          πήγαινε στην κατάσταση 30
+    variable            πήγαινε στην κατάσταση 31
+    goto_statement      πήγαινε στην κατάσταση 32
+    if_statement        πήγαινε στην κατάσταση 33
+    subroutine_call     πήγαινε στην κατάσταση 34
+    io_statement        πήγαινε στην κατάσταση 35
+    compound_statement  πήγαινε στην κατάσταση 36
+    branch_statement    πήγαινε στην κατάσταση 37
+    loop_statement      πήγαινε στην κατάσταση 38
+
+
+Κατάσταση 4 
+
+    0 $accept: program "EOF" .
+
+    $default  αποδοχή
+
+
+Κατάσταση 5 
+
+    1 program: body "end" . subprograms
+
+    $default  ελάττωση με χρήση του κανόνα 113 (subprograms)
+
+    subprograms  πήγαινε στην κατάσταση 39
+
+
+Κατάσταση 6 
+
+   87 if_statement: error . "(" expression ")" label "," label "," label
+   88             | error . "(" expression ")" simple_statement
+
+    "("  ολίσθηση, και μετάβαση στη κατάσταση 40
+
+
+Κατάσταση 7 
+
+    7 type: "integer" .
+
+    $default  ελάττωση με χρήση του κανόνα 7 (type)
+
+
+Κατάσταση 8 
+
+    8 type: "real" .
+
+    $default  ελάττωση με χρήση του κανόνα 8 (type)
+
+
+Κατάσταση 9 
+
+    9 type: "logical" .
+
+    $default  ελάττωση με χρήση του κανόνα 9 (type)
+
+
+Κατάσταση 10 
+
+   10 type: "character" .
+
+    $default  ελάττωση με χρήση του κανόνα 10 (type)
+
+
+Κατάσταση 11 
+
+    4 declarations: declarations "record" . fields "endrec" vars
+
+    "integer"    ολίσθηση, και μετάβαση στη κατάσταση 7
+    "real"       ολίσθηση, και μετάβαση στη κατάσταση 8
+    "logical"    ολίσθηση, και μετάβαση στη κατάσταση 9
+    "character"  ολίσθηση, και μετάβαση στη κατάσταση 10
+    "record"     ολίσθηση, και μετάβαση στη κατάσταση 41
+
+    type    πήγαινε στην κατάσταση 42
+    fields  πήγαινε στην κατάσταση 43
+    field   πήγαινε στην κατάσταση 44
+
+
+Κατάσταση 12 
+
+    5 declarations: declarations "data" . vals
+
+    "id"  ολίσθηση, και μετάβαση στη κατάσταση 45
+
+    vals  πήγαινε στην κατάσταση 46
+
+
+Κατάσταση 13 
+
+   55 simple_statement: "continue" .
+
+    $default  ελάττωση με χρήση του κανόνα 55 (simple_statement)
+
+
+Κατάσταση 14 
+
+   79 goto_statement: "goto" . label
+   82               | "goto" . "id" "," "(" $@5 labels ")" $@6
+
+    "id"      ολίσθηση, και μετάβαση στη κατάσταση 47
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 23
+
+    label  πήγαινε στην κατάσταση 48
+
+
+Κατάσταση 15 
+
+   89 subroutine_call: "call" . variable
+
+    "id"  ολίσθηση, και μετάβαση στη κατάσταση 22
+
+    variable  πήγαινε στην κατάσταση 49
+
+
+Κατάσταση 16 
+
+   90 io_statement: "read" . read_list
+
+    "("   ολίσθηση, και μετάβαση στη κατάσταση 50
+    "id"  ολίσθηση, και μετάβαση στη κατάσταση 22
+
+    variable   πήγαινε στην κατάσταση 51
+    read_list  πήγαινε στην κατάσταση 52
+    read_item  πήγαινε στην κατάσταση 53
+
+
+Κατάσταση 17 
+
+   91 io_statement: "write" . write_list
+
+    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
+    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
+    "("       ολίσθηση, και μετάβαση στη κατάσταση 56
+    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
+    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
+    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
+    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+    "string"  ολίσθηση, και μετάβαση στη κατάσταση 61
+
+    constant    πήγαινε στην κατάσταση 62
+    variable    πήγαινε στην κατάσταση 63
+    expression  πήγαινε στην κατάσταση 64
+    write_list  πήγαινε στην κατάσταση 65
+    write_item  πήγαινε στην κατάσταση 66
+
+
+Κατάσταση 18 
+
+   85 if_statement: "if" . "(" expression ")" label "," label "," label
+   86             | "if" . "(" expression ")" simple_statement
+  108 branch_statement: "if" . "(" $@7 expression ")" $@8 "then" body tail
+
+    "("  ολίσθηση, και μετάβαση στη κατάσταση 67
+
+
+Κατάσταση 19 
+
+  111 loop_statement: "do" . "id" "=" iter_space body "enddo"
+
+    "id"  ολίσθηση, και μετάβαση στη κατάσταση 68
+
+
+Κατάσταση 20 
+
+   57 simple_statement: "stop" .
+
+    $default  ελάττωση με χρήση του κανόνα 57 (simple_statement)
+
+
+Κατάσταση 21 
+
+   56 simple_statement: "return" .
+
+    $default  ελάττωση με χρήση του κανόνα 56 (simple_statement)
+
+
+Κατάσταση 22 
+
+   63 variable: "id" .
+
+    $default  ελάττωση με χρήση του κανόνα 63 (variable)
+
+
+Κατάσταση 23 
+
+   47 label: "iconst" .
+
+    $default  ελάττωση με χρήση του κανόνα 47 (label)
+
+
+Κατάσταση 24 
+
+    3 declarations: declarations type . vars
+
+    "id"  ολίσθηση, και μετάβαση στη κατάσταση 69
+
+    vars            πήγαινε στην κατάσταση 70
+    undef_variable  πήγαινε στην κατάσταση 71
+
+
+Κατάσταση 25 
+
+    2 body: declarations statements .
+   43 statements: statements . labeled_statement
+
+    error       ολίσθηση, και μετάβαση στη κατάσταση 6
+    "continue"  ολίσθηση, και μετάβαση στη κατάσταση 13
+    "goto"      ολίσθηση, και μετάβαση στη κατάσταση 14
+    "call"      ολίσθηση, και μετάβαση στη κατάσταση 15
+    "read"      ολίσθηση, και μετάβαση στη κατάσταση 16
+    "write"     ολίσθηση, και μετάβαση στη κατάσταση 17
+    "if"        ολίσθηση, και μετάβαση στη κατάσταση 18
+    "do"        ολίσθηση, και μετάβαση στη κατάσταση 19
+    "stop"      ολίσθηση, και μετάβαση στη κατάσταση 20
+    "return"    ολίσθηση, και μετάβαση στη κατάσταση 21
+    "id"        ολίσθηση, και μετάβαση στη κατάσταση 22
+    "iconst"    ολίσθηση, και μετάβαση στη κατάσταση 23
+
+    "end"    ελάττωση με χρήση του κανόνα 2 (body)
+    "else"   ελάττωση με χρήση του κανόνα 2 (body)
+    "endif"  ελάττωση με χρήση του κανόνα 2 (body)
+    "enddo"  ελάττωση με χρήση του κανόνα 2 (body)
+
+    labeled_statement   πήγαινε στην κατάσταση 72
+    label               πήγαινε στην κατάσταση 27
+    statement           πήγαινε στην κατάσταση 28
+    simple_statement    πήγαινε στην κατάσταση 29
+    assignment          πήγαινε στην κατάσταση 30
+    variable            πήγαινε στην κατάσταση 31
+    goto_statement      πήγαινε στην κατάσταση 32
+    if_statement        πήγαινε στην κατάσταση 33
+    subroutine_call     πήγαινε στην κατάσταση 34
+    io_statement        πήγαινε στην κατάσταση 35
+    compound_statement  πήγαινε στην κατάσταση 36
+    branch_statement    πήγαινε στην κατάσταση 37
+    loop_statement      πήγαινε στην κατάσταση 38
+
+
+Κατάσταση 26 
+
+   44 statements: labeled_statement .
+
+    $default  ελάττωση με χρήση του κανόνα 44 (statements)
+
+
+Κατάσταση 27 
+
+   45 labeled_statement: label . statement
+
+    error       ολίσθηση, και μετάβαση στη κατάσταση 6
+    "continue"  ολίσθηση, και μετάβαση στη κατάσταση 13
+    "goto"      ολίσθηση, και μετάβαση στη κατάσταση 14
+    "call"      ολίσθηση, και μετάβαση στη κατάσταση 15
+    "read"      ολίσθηση, και μετάβαση στη κατάσταση 16
+    "write"     ολίσθηση, και μετάβαση στη κατάσταση 17
+    "if"        ολίσθηση, και μετάβαση στη κατάσταση 18
+    "do"        ολίσθηση, και μετάβαση στη κατάσταση 19
+    "stop"      ολίσθηση, και μετάβαση στη κατάσταση 20
+    "return"    ολίσθηση, και μετάβαση στη κατάσταση 21
+    "id"        ολίσθηση, και μετάβαση στη κατάσταση 22
+
+    statement           πήγαινε στην κατάσταση 73
+    simple_statement    πήγαινε στην κατάσταση 29
+    assignment          πήγαινε στην κατάσταση 30
+    variable            πήγαινε στην κατάσταση 31
+    goto_statement      πήγαινε στην κατάσταση 32
+    if_statement        πήγαινε στην κατάσταση 33
+    subroutine_call     πήγαινε στην κατάσταση 34
+    io_statement        πήγαινε στην κατάσταση 35
+    compound_statement  πήγαινε στην κατάσταση 36
+    branch_statement    πήγαινε στην κατάσταση 37
+    loop_statement      πήγαινε στην κατάσταση 38
+
+
+Κατάσταση 28 
+
+   46 labeled_statement: statement .
+
+    $default  ελάττωση με χρήση του κανόνα 46 (labeled_statement)
+
+
+Κατάσταση 29 
+
+   48 statement: simple_statement .
+
+    $default  ελάττωση με χρήση του κανόνα 48 (statement)
+
+
+Κατάσταση 30 
+
+   50 simple_statement: assignment .
+
+    $default  ελάττωση με χρήση του κανόνα 50 (simple_statement)
+
+
+Κατάσταση 31 
+
+   58 assignment: variable . "=" expression
+   59           | variable . "=" "string"
+   60 variable: variable . ":" "id"
+   62         | variable . "(" $@3 expressions ")"
+
+    "("  ολίσθηση, και μετάβαση στη κατάσταση 74
+    "="  ολίσθηση, και μετάβαση στη κατάσταση 75
+    ":"  ολίσθηση, και μετάβαση στη κατάσταση 76
+
+
+Κατάσταση 32 
+
+   51 simple_statement: goto_statement .
+
+    $default  ελάττωση με χρήση του κανόνα 51 (simple_statement)
+
+
+Κατάσταση 33 
+
+   52 simple_statement: if_statement .
+
+    $default  ελάττωση με χρήση του κανόνα 52 (simple_statement)
+
+
+Κατάσταση 34 
+
+   53 simple_statement: subroutine_call .
+
+    $default  ελάττωση με χρήση του κανόνα 53 (simple_statement)
+
+
+Κατάσταση 35 
+
+   54 simple_statement: io_statement .
+
+    $default  ελάττωση με χρήση του κανόνα 54 (simple_statement)
+
+
+Κατάσταση 36 
+
+   49 statement: compound_statement .
+
+    $default  ελάττωση με χρήση του κανόνα 49 (statement)
+
+
+Κατάσταση 37 
+
+  104 compound_statement: branch_statement .
+
+    $default  ελάττωση με χρήση του κανόνα 104 (compound_statement)
+
+
+Κατάσταση 38 
+
+  105 compound_statement: loop_statement .
+
+    $default  ελάττωση με χρήση του κανόνα 105 (compound_statement)
+
+
+Κατάσταση 39 
+
+    1 program: body "end" subprograms .
+  112 subprograms: subprograms . subprogram
+
+    "subroutine"  ολίσθηση, και μετάβαση στη κατάσταση 77
+    "integer"     ολίσθηση, και μετάβαση στη κατάσταση 7
+    "real"        ολίσθηση, και μετάβαση στη κατάσταση 8
+    "logical"     ολίσθηση, και μετάβαση στη κατάσταση 9
+    "character"   ολίσθηση, και μετάβαση στη κατάσταση 10
+
+    $default  ελάττωση με χρήση του κανόνα 1 (program)
+
+    type        πήγαινε στην κατάσταση 78
+    subprogram  πήγαινε στην κατάσταση 79
+    header      πήγαινε στην κατάσταση 80
+
+
+Κατάσταση 40 
+
+   87 if_statement: error "(" . expression ")" label "," label "," label
+   88             | error "(" . expression ")" simple_statement
+
+    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
+    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
+    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
+    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
+    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
+    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
+    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+
+    constant    πήγαινε στην κατάσταση 62
+    variable    πήγαινε στην κατάσταση 63
+    expression  πήγαινε στην κατάσταση 82
+
+
+Κατάσταση 41 
+
+   25 field: "record" . fields "endrec" vars
+
+    "integer"    ολίσθηση, και μετάβαση στη κατάσταση 7
+    "real"       ολίσθηση, και μετάβαση στη κατάσταση 8
+    "logical"    ολίσθηση, και μετάβαση στη κατάσταση 9
+    "character"  ολίσθηση, και μετάβαση στη κατάσταση 10
+    "record"     ολίσθηση, και μετάβαση στη κατάσταση 41
+
+    type    πήγαινε στην κατάσταση 42
+    fields  πήγαινε στην κατάσταση 83
+    field   πήγαινε στην κατάσταση 44
+
+
+Κατάσταση 42 
+
+   24 field: type . vars
+
+    "id"  ολίσθηση, και μετάβαση στη κατάσταση 69
+
+    vars            πήγαινε στην κατάσταση 84
+    undef_variable  πήγαινε στην κατάσταση 71
+
+
+Κατάσταση 43 
+
+    4 declarations: declarations "record" fields . "endrec" vars
+   22 fields: fields . field
+
+    "integer"    ολίσθηση, και μετάβαση στη κατάσταση 7
+    "real"       ολίσθηση, και μετάβαση στη κατάσταση 8
+    "logical"    ολίσθηση, και μετάβαση στη κατάσταση 9
+    "character"  ολίσθηση, και μετάβαση στη κατάσταση 10
+    "record"     ολίσθηση, και μετάβαση στη κατάσταση 41
+    "endrec"     ολίσθηση, και μετάβαση στη κατάσταση 85
+
+    type   πήγαινε στην κατάσταση 42
+    field  πήγαινε στην κατάσταση 86
+
+
+Κατάσταση 44 
+
+   23 fields: field .
+
+    $default  ελάττωση με χρήση του κανόνα 23 (fields)
+
+
+Κατάσταση 45 
+
+   27 vals: "id" . value_list
+
+    "/"  ολίσθηση, και μετάβαση στη κατάσταση 87
+
+    value_list  πήγαινε στην κατάσταση 88
+
+
+Κατάσταση 46 
+
+    5 declarations: declarations "data" vals .
+   26 vals: vals . "," "id" value_list
+
+    ","  ολίσθηση, και μετάβαση στη κατάσταση 89
+
+    $default  ελάττωση με χρήση του κανόνα 5 (declarations)
+
+
+Κατάσταση 47 
+
+   82 goto_statement: "goto" "id" . "," "(" $@5 labels ")" $@6
+
+    ","  ολίσθηση, και μετάβαση στη κατάσταση 90
+
+
+Κατάσταση 48 
+
+   79 goto_statement: "goto" label .
+
+    $default  ελάττωση με χρήση του κανόνα 79 (goto_statement)
+
+
+Κατάσταση 49 
+
+   60 variable: variable . ":" "id"
+   62         | variable . "(" $@3 expressions ")"
+   89 subroutine_call: "call" variable .
+
+    "("  ολίσθηση, και μετάβαση στη κατάσταση 74
+    ":"  ολίσθηση, και μετάβαση στη κατάσταση 76
+
+    $default  ελάττωση με χρήση του κανόνα 89 (subroutine_call)
+
+
+Κατάσταση 50 
+
+   95 read_item: "(" . read_list "," "id" "=" iter_space ")"
+
+    "("   ολίσθηση, και μετάβαση στη κατάσταση 50
+    "id"  ολίσθηση, και μετάβαση στη κατάσταση 22
+
+    variable   πήγαινε στην κατάσταση 51
+    read_list  πήγαινε στην κατάσταση 91
+    read_item  πήγαινε στην κατάσταση 53
+
+
+Κατάσταση 51 
+
+   60 variable: variable . ":" "id"
+   62         | variable . "(" $@3 expressions ")"
+   94 read_item: variable .
+
+    "("  ολίσθηση, και μετάβαση στη κατάσταση 74
+    ":"  ολίσθηση, και μετάβαση στη κατάσταση 76
+
+    $default  ελάττωση με χρήση του κανόνα 94 (read_item)
+
+
+Κατάσταση 52 
+
+   90 io_statement: "read" read_list .
+   92 read_list: read_list . "," read_item
+
+    ","  ολίσθηση, και μετάβαση στη κατάσταση 92
+
+    $default  ελάττωση με χρήση του κανόνα 90 (io_statement)
+
+
+Κατάσταση 53 
+
+   93 read_list: read_item .
+
+    $default  ελάττωση με χρήση του κανόνα 93 (read_list)
+
+
+Κατάσταση 54 
+
+   73 expression: ".NOT" . expression
+
+    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
+    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
+    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
+    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
+    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
+    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
+    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+
+    constant    πήγαινε στην κατάσταση 62
+    variable    πήγαινε στην κατάσταση 63
+    expression  πήγαινε στην κατάσταση 93
+
+
+Κατάσταση 55 
+
+   74 expression: "+|-" . expression
+
+    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
+    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
+    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
+    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
+    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
+    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
+    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+
+    constant    πήγαινε στην κατάσταση 62
+    variable    πήγαινε στην κατάσταση 63
+    expression  πήγαινε στην κατάσταση 94
+
+
+Κατάσταση 56 
+
+   78 expression: "(" . $@4 expression ")"
+  102 write_item: "(" . write_list "," "id" "=" iter_space ")"
+
+    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
+    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
+    "("       ολίσθηση, και μετάβαση στη κατάσταση 56
+    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
+    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
+    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
+    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+    "string"  ολίσθηση, και μετάβαση στη κατάσταση 61
+
+    ".NOT"    [ελάττωση με χρήση του κανόνα 77 ($@4)]
+    "+|-"     [ελάττωση με χρήση του κανόνα 77 ($@4)]
+    "("       [ελάττωση με χρήση του κανόνα 77 ($@4)]
+    "id"      [ελάττωση με χρήση του κανόνα 77 ($@4)]
+    "iconst"  [ελάττωση με χρήση του κανόνα 77 ($@4)]
+    "rconst"  [ελάττωση με χρήση του κανόνα 77 ($@4)]
+    "cconst"  [ελάττωση με χρήση του κανόνα 77 ($@4)]
+    "lconst"  [ελάττωση με χρήση του κανόνα 77 ($@4)]
+
+    constant    πήγαινε στην κατάσταση 62
+    variable    πήγαινε στην κατάσταση 63
+    expression  πήγαινε στην κατάσταση 64
+    $@4         πήγαινε στην κατάσταση 95
+    write_list  πήγαινε στην κατάσταση 96
+    write_item  πήγαινε στην κατάσταση 66
+
+
+Κατάσταση 57 
+
+   39 constant: "iconst" .
+
+    $default  ελάττωση με χρήση του κανόνα 39 (constant)
+
+
+Κατάσταση 58 
+
+   40 constant: "rconst" .
+
+    $default  ελάττωση με χρήση του κανόνα 40 (constant)
+
+
+Κατάσταση 59 
+
+   42 constant: "cconst" .
+
+    $default  ελάττωση με χρήση του κανόνα 42 (constant)
+
+
+Κατάσταση 60 
+
+   41 constant: "lconst" .
+
+    $default  ελάττωση με χρήση του κανόνα 41 (constant)
+
+
+Κατάσταση 61 
+
+  103 write_item: "string" .
+
+    $default  ελάττωση με χρήση του κανόνα 103 (write_item)
+
+
+Κατάσταση 62 
+
+   76 expression: constant .
+
+    $default  ελάττωση με χρήση του κανόνα 76 (expression)
+
+
+Κατάσταση 63 
+
+   60 variable: variable . ":" "id"
+   62         | variable . "(" $@3 expressions ")"
+   75 expression: variable .
+
+    "("  ολίσθηση, και μετάβαση στη κατάσταση 74
+    ":"  ολίσθηση, και μετάβαση στη κατάσταση 76
+
+    $default  ελάττωση με χρήση του κανόνα 75 (expression)
+
+
+Κατάσταση 64 
+
+   66 expression: expression . ".OR." expression
+   67           | expression . ".AND." expression
+   68           | expression . ".GT." expression
+   69           | expression . "+|-" expression
+   70           | expression . "*" expression
+   71           | expression . "/" expression
+   72           | expression . "**" expression
+  101 write_item: expression .
+
+    ".OR."   ολίσθηση, και μετάβαση στη κατάσταση 97
+    ".AND."  ολίσθηση, και μετάβαση στη κατάσταση 98
+    ".GT."   ολίσθηση, και μετάβαση στη κατάσταση 99
+    "+|-"    ολίσθηση, και μετάβαση στη κατάσταση 100
+    "*"      ολίσθηση, και μετάβαση στη κατάσταση 101
+    "/"      ολίσθηση, και μετάβαση στη κατάσταση 102
+    "**"     ολίσθηση, και μετάβαση στη κατάσταση 103
+
+    $default  ελάττωση με χρήση του κανόνα 101 (write_item)
+
+
+Κατάσταση 65 
+
+   91 io_statement: "write" write_list .
+   99 write_list: write_list . "," write_item
+
+    ","  ολίσθηση, και μετάβαση στη κατάσταση 104
+
+    $default  ελάττωση με χρήση του κανόνα 91 (io_statement)
+
+
+Κατάσταση 66 
+
+  100 write_list: write_item .
+
+    $default  ελάττωση με χρήση του κανόνα 100 (write_list)
+
+
+Κατάσταση 67 
+
+   85 if_statement: "if" "(" . expression ")" label "," label "," label
+   86             | "if" "(" . expression ")" simple_statement
+  108 branch_statement: "if" "(" . $@7 expression ")" $@8 "then" body tail
+
+    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
+    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
+    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
+    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
+    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
+    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
+    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+
+    ".NOT"    [ελάττωση με χρήση του κανόνα 106 ($@7)]
+    "+|-"     [ελάττωση με χρήση του κανόνα 106 ($@7)]
+    "("       [ελάττωση με χρήση του κανόνα 106 ($@7)]
+    "id"      [ελάττωση με χρήση του κανόνα 106 ($@7)]
+    "iconst"  [ελάττωση με χρήση του κανόνα 106 ($@7)]
+    "rconst"  [ελάττωση με χρήση του κανόνα 106 ($@7)]
+    "cconst"  [ελάττωση με χρήση του κανόνα 106 ($@7)]
+    "lconst"  [ελάττωση με χρήση του κανόνα 106 ($@7)]
+
+    constant    πήγαινε στην κατάσταση 62
+    variable    πήγαινε στην κατάσταση 63
+    expression  πήγαινε στην κατάσταση 105
+    $@7         πήγαινε στην κατάσταση 106
+
+
+Κατάσταση 68 
+
+  111 loop_statement: "do" "id" . "=" iter_space body "enddo"
+
+    "="  ολίσθηση, και μετάβαση στη κατάσταση 107
+
+
+Κατάσταση 69 
+
+   16 undef_variable: "id" . "(" $@1 dims ")" $@2
+   17               | "id" .
+
+    "("  ολίσθηση, και μετάβαση στη κατάσταση 108
+
+    $default  ελάττωση με χρήση του κανόνα 17 (undef_variable)
+
+
+Κατάσταση 70 
+
+    3 declarations: declarations type vars .
+   11 vars: vars . "," undef_variable
+   12     | vars . "," error
+
+    ","  ολίσθηση, και μετάβαση στη κατάσταση 109
+
+    $default  ελάττωση με χρήση του κανόνα 3 (declarations)
+
+
+Κατάσταση 71 
+
+   13 vars: undef_variable .
+
+    $default  ελάττωση με χρήση του κανόνα 13 (vars)
+
+
+Κατάσταση 72 
+
+   43 statements: statements labeled_statement .
+
+    $default  ελάττωση με χρήση του κανόνα 43 (statements)
+
+
+Κατάσταση 73 
+
+   45 labeled_statement: label statement .
+
+    $default  ελάττωση με χρήση του κανόνα 45 (labeled_statement)
+
+
+Κατάσταση 74 
+
+   62 variable: variable "(" . $@3 expressions ")"
+
+    $default  ελάττωση με χρήση του κανόνα 61 ($@3)
+
+    $@3  πήγαινε στην κατάσταση 110
+
+
+Κατάσταση 75 
+
+   58 assignment: variable "=" . expression
+   59           | variable "=" . "string"
+
+    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
+    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
+    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
+    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
+    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
+    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
+    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+    "string"  ολίσθηση, και μετάβαση στη κατάσταση 111
+
+    constant    πήγαινε στην κατάσταση 62
+    variable    πήγαινε στην κατάσταση 63
+    expression  πήγαινε στην κατάσταση 112
+
+
+Κατάσταση 76 
+
+   60 variable: variable ":" . "id"
+
+    "id"  ολίσθηση, και μετάβαση στη κατάσταση 113
+
+
+Κατάσταση 77 
+
+  120 header: "subroutine" . "id" "(" $@11 formal_parameters ")" $@12
+  121       | "subroutine" . "id"
+
+    "id"  ολίσθηση, και μετάβαση στη κατάσταση 114
+
+
+Κατάσταση 78 
+
+  117 header: type . "function" "id" "(" $@9 formal_parameters ")" $@10
+
+    "function"  ολίσθηση, και μετάβαση στη κατάσταση 115
+
+
+Κατάσταση 79 
+
+  112 subprograms: subprograms subprogram .
+
+    $default  ελάττωση με χρήση του κανόνα 112 (subprograms)
+
+
+Κατάσταση 80 
+
+  114 subprogram: header . body "end"
+
+    $default  ελάττωση με χρήση του κανόνα 6 (declarations)
+
+    body          πήγαινε στην κατάσταση 116
+    declarations  πήγαινε στην κατάσταση 3
+
+
+Κατάσταση 81 
+
+   78 expression: "(" . $@4 expression ")"
+
+    $default  ελάττωση με χρήση του κανόνα 77 ($@4)
+
+    $@4  πήγαινε στην κατάσταση 95
+
+
+Κατάσταση 82 
+
+   66 expression: expression . ".OR." expression
+   67           | expression . ".AND." expression
+   68           | expression . ".GT." expression
+   69           | expression . "+|-" expression
+   70           | expression . "*" expression
+   71           | expression . "/" expression
+   72           | expression . "**" expression
+   87 if_statement: error "(" expression . ")" label "," label "," label
+   88             | error "(" expression . ")" simple_statement
+
+    ".OR."   ολίσθηση, και μετάβαση στη κατάσταση 97
+    ".AND."  ολίσθηση, και μετάβαση στη κατάσταση 98
+    ".GT."   ολίσθηση, και μετάβαση στη κατάσταση 99
+    "+|-"    ολίσθηση, και μετάβαση στη κατάσταση 100
+    "*"      ολίσθηση, και μετάβαση στη κατάσταση 101
+    "/"      ολίσθηση, και μετάβαση στη κατάσταση 102
+    "**"     ολίσθηση, και μετάβαση στη κατάσταση 103
+    ")"      ολίσθηση, και μετάβαση στη κατάσταση 117
+
+
+Κατάσταση 83 
+
+   22 fields: fields . field
+   25 field: "record" fields . "endrec" vars
+
+    "integer"    ολίσθηση, και μετάβαση στη κατάσταση 7
+    "real"       ολίσθηση, και μετάβαση στη κατάσταση 8
+    "logical"    ολίσθηση, και μετάβαση στη κατάσταση 9
+    "character"  ολίσθηση, και μετάβαση στη κατάσταση 10
+    "record"     ολίσθηση, και μετάβαση στη κατάσταση 41
+    "endrec"     ολίσθηση, και μετάβαση στη κατάσταση 118
+
+    type   πήγαινε στην κατάσταση 42
+    field  πήγαινε στην κατάσταση 86
+
+
+Κατάσταση 84 
+
+   11 vars: vars . "," undef_variable
+   12     | vars . "," error
+   24 field: type vars .
+
+    ","  ολίσθηση, και μετάβαση στη κατάσταση 109
+
+    $default  ελάττωση με χρήση του κανόνα 24 (field)
+
+
+Κατάσταση 85 
+
+    4 declarations: declarations "record" fields "endrec" . vars
+
+    "id"  ολίσθηση, και μετάβαση στη κατάσταση 69
+
+    vars            πήγαινε στην κατάσταση 119
+    undef_variable  πήγαινε στην κατάσταση 71
+
+
+Κατάσταση 86 
+
+   22 fields: fields field .
+
+    $default  ελάττωση με χρήση του κανόνα 22 (fields)
+
+
+Κατάσταση 87 
+
+   28 value_list: "/" . values "/"
+
+    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 120
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 121
+    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
+    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
+    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+    "string"  ολίσθηση, και μετάβαση στη κατάσταση 122
+
+    $default  ελάττωση με χρήση του κανόνα 38 (repeat)
+
+    values    πήγαινε στην κατάσταση 123
+    value     πήγαινε στην κατάσταση 124
+    repeat    πήγαινε στην κατάσταση 125
+    constant  πήγαινε στην κατάσταση 126
+
+
+Κατάσταση 88 
+
+   27 vals: "id" value_list .
+
+    $default  ελάττωση με χρήση του κανόνα 27 (vals)
+
+
+Κατάσταση 89 
+
+   26 vals: vals "," . "id" value_list
+
+    "id"  ολίσθηση, και μετάβαση στη κατάσταση 127
+
+
+Κατάσταση 90 
+
+   82 goto_statement: "goto" "id" "," . "(" $@5 labels ")" $@6
+
+    "("  ολίσθηση, και μετάβαση στη κατάσταση 128
+
+
+Κατάσταση 91 
+
+   92 read_list: read_list . "," read_item
+   95 read_item: "(" read_list . "," "id" "=" iter_space ")"
+
+    ","  ολίσθηση, και μετάβαση στη κατάσταση 129
+
+
+Κατάσταση 92 
+
+   92 read_list: read_list "," . read_item
+
+    "("   ολίσθηση, και μετάβαση στη κατάσταση 50
+    "id"  ολίσθηση, και μετάβαση στη κατάσταση 22
+
+    variable   πήγαινε στην κατάσταση 51
+    read_item  πήγαινε στην κατάσταση 130
+
+
+Κατάσταση 93 
+
+   66 expression: expression . ".OR." expression
+   67           | expression . ".AND." expression
+   68           | expression . ".GT." expression
+   69           | expression . "+|-" expression
+   70           | expression . "*" expression
+   71           | expression . "/" expression
+   72           | expression . "**" expression
+   73           | ".NOT" expression .
+
+    ".OR."   ολίσθηση, και μετάβαση στη κατάσταση 97
+    ".AND."  ολίσθηση, και μετάβαση στη κατάσταση 98
+    ".GT."   ολίσθηση, και μετάβαση στη κατάσταση 99
+    "+|-"    ολίσθηση, και μετάβαση στη κατάσταση 100
+    "*"      ολίσθηση, και μετάβαση στη κατάσταση 101
+    "/"      ολίσθηση, και μετάβαση στη κατάσταση 102
+    "**"     ολίσθηση, και μετάβαση στη κατάσταση 103
+
+    $default  ελάττωση με χρήση του κανόνα 73 (expression)
+
+
+Κατάσταση 94 
+
+   66 expression: expression . ".OR." expression
+   67           | expression . ".AND." expression
+   68           | expression . ".GT." expression
+   69           | expression . "+|-" expression
+   70           | expression . "*" expression
+   71           | expression . "/" expression
+   72           | expression . "**" expression
+   74           | "+|-" expression .
+
+    ".OR."   ολίσθηση, και μετάβαση στη κατάσταση 97
+    ".AND."  ολίσθηση, και μετάβαση στη κατάσταση 98
+    ".GT."   ολίσθηση, και μετάβαση στη κατάσταση 99
+
+    $default  ελάττωση με χρήση του κανόνα 74 (expression)
+
+
+Κατάσταση 95 
+
+   78 expression: "(" $@4 . expression ")"
+
+    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
+    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
+    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
+    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
+    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
+    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
+    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+
+    constant    πήγαινε στην κατάσταση 62
+    variable    πήγαινε στην κατάσταση 63
+    expression  πήγαινε στην κατάσταση 131
+
+
+Κατάσταση 96 
+
+   99 write_list: write_list . "," write_item
+  102 write_item: "(" write_list . "," "id" "=" iter_space ")"
+
+    ","  ολίσθηση, και μετάβαση στη κατάσταση 132
+
+
+Κατάσταση 97 
+
+   66 expression: expression ".OR." . expression
+
+    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
+    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
+    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
+    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
+    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
+    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
+    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+
+    constant    πήγαινε στην κατάσταση 62
+    variable    πήγαινε στην κατάσταση 63
+    expression  πήγαινε στην κατάσταση 133
+
+
+Κατάσταση 98 
+
+   67 expression: expression ".AND." . expression
+
+    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
+    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
+    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
+    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
+    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
+    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
+    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+
+    constant    πήγαινε στην κατάσταση 62
+    variable    πήγαινε στην κατάσταση 63
+    expression  πήγαινε στην κατάσταση 134
+
+
+Κατάσταση 99 
+
+   68 expression: expression ".GT." . expression
+
+    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
+    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
+    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
+    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
+    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
+    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
+    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+
+    constant    πήγαινε στην κατάσταση 62
+    variable    πήγαινε στην κατάσταση 63
+    expression  πήγαινε στην κατάσταση 135
+
+
+Κατάσταση 100 
+
+   69 expression: expression "+|-" . expression
+
+    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
+    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
+    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
+    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
+    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
+    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
+    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+
+    constant    πήγαινε στην κατάσταση 62
+    variable    πήγαινε στην κατάσταση 63
+    expression  πήγαινε στην κατάσταση 136
+
+
+Κατάσταση 101 
+
+   70 expression: expression "*" . expression
+
+    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
+    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
+    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
+    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
+    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
+    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
+    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+
+    constant    πήγαινε στην κατάσταση 62
+    variable    πήγαινε στην κατάσταση 63
+    expression  πήγαινε στην κατάσταση 137
+
+
+Κατάσταση 102 
+
+   71 expression: expression "/" . expression
+
+    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
+    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
+    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
+    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
+    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
+    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
+    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+
+    constant    πήγαινε στην κατάσταση 62
+    variable    πήγαινε στην κατάσταση 63
+    expression  πήγαινε στην κατάσταση 138
+
+
+Κατάσταση 103 
+
+   72 expression: expression "**" . expression
+
+    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
+    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
+    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
+    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
+    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
+    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
+    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+
+    constant    πήγαινε στην κατάσταση 62
+    variable    πήγαινε στην κατάσταση 63
+    expression  πήγαινε στην κατάσταση 139
+
+
+Κατάσταση 104 
+
+   99 write_list: write_list "," . write_item
+
+    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
+    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
+    "("       ολίσθηση, και μετάβαση στη κατάσταση 56
+    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
+    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
+    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
+    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+    "string"  ολίσθηση, και μετάβαση στη κατάσταση 61
+
+    constant    πήγαινε στην κατάσταση 62
+    variable    πήγαινε στην κατάσταση 63
+    expression  πήγαινε στην κατάσταση 64
+    write_item  πήγαινε στην κατάσταση 140
+
+
+Κατάσταση 105 
+
+   66 expression: expression . ".OR." expression
+   67           | expression . ".AND." expression
+   68           | expression . ".GT." expression
+   69           | expression . "+|-" expression
+   70           | expression . "*" expression
+   71           | expression . "/" expression
+   72           | expression . "**" expression
+   85 if_statement: "if" "(" expression . ")" label "," label "," label
+   86             | "if" "(" expression . ")" simple_statement
+
+    ".OR."   ολίσθηση, και μετάβαση στη κατάσταση 97
+    ".AND."  ολίσθηση, και μετάβαση στη κατάσταση 98
+    ".GT."   ολίσθηση, και μετάβαση στη κατάσταση 99
+    "+|-"    ολίσθηση, και μετάβαση στη κατάσταση 100
+    "*"      ολίσθηση, και μετάβαση στη κατάσταση 101
+    "/"      ολίσθηση, και μετάβαση στη κατάσταση 102
+    "**"     ολίσθηση, και μετάβαση στη κατάσταση 103
+    ")"      ολίσθηση, και μετάβαση στη κατάσταση 141
+
+
+Κατάσταση 106 
+
+  108 branch_statement: "if" "(" $@7 . expression ")" $@8 "then" body tail
+
+    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
+    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
+    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
+    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
+    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
+    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
+    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+
+    constant    πήγαινε στην κατάσταση 62
+    variable    πήγαινε στην κατάσταση 63
+    expression  πήγαινε στην κατάσταση 142
+
+
+Κατάσταση 107 
+
+  111 loop_statement: "do" "id" "=" . iter_space body "enddo"
+
+    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
+    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
+    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
+    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
+    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
+    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
+    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+
+    constant    πήγαινε στην κατάσταση 62
+    variable    πήγαινε στην κατάσταση 63
+    expression  πήγαινε στην κατάσταση 143
+    iter_space  πήγαινε στην κατάσταση 144
+
+
+Κατάσταση 108 
+
+   16 undef_variable: "id" "(" . $@1 dims ")" $@2
+
+    $default  ελάττωση με χρήση του κανόνα 14 ($@1)
+
+    $@1  πήγαινε στην κατάσταση 145
+
+
+Κατάσταση 109 
+
+   11 vars: vars "," . undef_variable
+   12     | vars "," . error
+
+    error  ολίσθηση, και μετάβαση στη κατάσταση 146
+    "id"   ολίσθηση, και μετάβαση στη κατάσταση 69
+
+    undef_variable  πήγαινε στην κατάσταση 147
+
+
+Κατάσταση 110 
+
+   62 variable: variable "(" $@3 . expressions ")"
+
+    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
+    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
+    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
+    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
+    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
+    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
+    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+
+    constant     πήγαινε στην κατάσταση 62
+    variable     πήγαινε στην κατάσταση 63
+    expressions  πήγαινε στην κατάσταση 148
+    expression   πήγαινε στην κατάσταση 149
+
+
+Κατάσταση 111 
+
+   59 assignment: variable "=" "string" .
+
+    $default  ελάττωση με χρήση του κανόνα 59 (assignment)
+
+
+Κατάσταση 112 
+
+   58 assignment: variable "=" expression .
+   66 expression: expression . ".OR." expression
+   67           | expression . ".AND." expression
+   68           | expression . ".GT." expression
+   69           | expression . "+|-" expression
+   70           | expression . "*" expression
+   71           | expression . "/" expression
+   72           | expression . "**" expression
+
+    ".OR."   ολίσθηση, και μετάβαση στη κατάσταση 97
+    ".AND."  ολίσθηση, και μετάβαση στη κατάσταση 98
+    ".GT."   ολίσθηση, και μετάβαση στη κατάσταση 99
+    "+|-"    ολίσθηση, και μετάβαση στη κατάσταση 100
+    "*"      ολίσθηση, και μετάβαση στη κατάσταση 101
+    "/"      ολίσθηση, και μετάβαση στη κατάσταση 102
+    "**"     ολίσθηση, και μετάβαση στη κατάσταση 103
+
+    $default  ελάττωση με χρήση του κανόνα 58 (assignment)
+
+
+Κατάσταση 113 
+
+   60 variable: variable ":" "id" .
+
+    $default  ελάττωση με χρήση του κανόνα 60 (variable)
+
+
+Κατάσταση 114 
+
+  120 header: "subroutine" "id" . "(" $@11 formal_parameters ")" $@12
+  121       | "subroutine" "id" .
+
+    "("  ολίσθηση, και μετάβαση στη κατάσταση 150
+
+    $default  ελάττωση με χρήση του κανόνα 121 (header)
+
+
+Κατάσταση 115 
+
+  117 header: type "function" . "id" "(" $@9 formal_parameters ")" $@10
+
+    "id"  ολίσθηση, και μετάβαση στη κατάσταση 151
+
+
+Κατάσταση 116 
+
+  114 subprogram: header body . "end"
+
+    "end"  ολίσθηση, και μετάβαση στη κατάσταση 152
+
+
+Κατάσταση 117 
+
+   87 if_statement: error "(" expression ")" . label "," label "," label
+   88             | error "(" expression ")" . simple_statement
+
+    error       ολίσθηση, και μετάβαση στη κατάσταση 6
+    "continue"  ολίσθηση, και μετάβαση στη κατάσταση 13
+    "goto"      ολίσθηση, και μετάβαση στη κατάσταση 14
+    "call"      ολίσθηση, και μετάβαση στη κατάσταση 15
+    "read"      ολίσθηση, και μετάβαση στη κατάσταση 16
+    "write"     ολίσθηση, και μετάβαση στη κατάσταση 17
+    "if"        ολίσθηση, και μετάβαση στη κατάσταση 153
+    "stop"      ολίσθηση, και μετάβαση στη κατάσταση 20
+    "return"    ολίσθηση, και μετάβαση στη κατάσταση 21
+    "id"        ολίσθηση, και μετάβαση στη κατάσταση 22
+    "iconst"    ολίσθηση, και μετάβαση στη κατάσταση 23
+
+    label             πήγαινε στην κατάσταση 154
+    simple_statement  πήγαινε στην κατάσταση 155
+    assignment        πήγαινε στην κατάσταση 30
+    variable          πήγαινε στην κατάσταση 31
+    goto_statement    πήγαινε στην κατάσταση 32
+    if_statement      πήγαινε στην κατάσταση 33
+    subroutine_call   πήγαινε στην κατάσταση 34
+    io_statement      πήγαινε στην κατάσταση 35
+
+
+Κατάσταση 118 
+
+   25 field: "record" fields "endrec" . vars
+
+    "id"  ολίσθηση, και μετάβαση στη κατάσταση 69
+
+    vars            πήγαινε στην κατάσταση 156
+    undef_variable  πήγαινε στην κατάσταση 71
+
+
+Κατάσταση 119 
+
+    4 declarations: declarations "record" fields "endrec" vars .
+   11 vars: vars . "," undef_variable
+   12     | vars . "," error
+
+    ","  ολίσθηση, και μετάβαση στη κατάσταση 109
+
+    $default  ελάττωση με χρήση του κανόνα 4 (declarations)
+
+
+Κατάσταση 120 
+
+   34 value: "+|-" . constant
+
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
+    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
+    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
+    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+
+    constant  πήγαινε στην κατάσταση 157
+
+
+Κατάσταση 121 
+
+   37 repeat: "iconst" .
+   39 constant: "iconst" .
+
+    "*"       ελάττωση με χρήση του κανόνα 37 (repeat)
+    $default  ελάττωση με χρήση του κανόνα 39 (constant)
+
+
+Κατάσταση 122 
+
+   36 value: "string" .
+
+    $default  ελάττωση με χρήση του κανόνα 36 (value)
+
+
+Κατάσταση 123 
+
+   28 value_list: "/" values . "/"
+   29 values: values . "," value
+
+    "/"  ολίσθηση, και μετάβαση στη κατάσταση 158
+    ","  ολίσθηση, και μετάβαση στη κατάσταση 159
+
+
+Κατάσταση 124 
+
+   30 values: value .
+
+    $default  ελάττωση με χρήση του κανόνα 30 (values)
+
+
+Κατάσταση 125 
+
+   31 value: repeat . "*" "+|-" constant
+   32      | repeat . "*" constant
+   33      | repeat . "*" "string"
+
+    "*"  ολίσθηση, και μετάβαση στη κατάσταση 160
+
+
+Κατάσταση 126 
+
+   35 value: constant .
+
+    $default  ελάττωση με χρήση του κανόνα 35 (value)
+
+
+Κατάσταση 127 
+
+   26 vals: vals "," "id" . value_list
+
+    "/"  ολίσθηση, και μετάβαση στη κατάσταση 87
+
+    value_list  πήγαινε στην κατάσταση 161
+
+
+Κατάσταση 128 
+
+   82 goto_statement: "goto" "id" "," "(" . $@5 labels ")" $@6
+
+    $default  ελάττωση με χρήση του κανόνα 80 ($@5)
+
+    $@5  πήγαινε στην κατάσταση 162
+
+
+Κατάσταση 129 
+
+   92 read_list: read_list "," . read_item
+   95 read_item: "(" read_list "," . "id" "=" iter_space ")"
+
+    "("   ολίσθηση, και μετάβαση στη κατάσταση 50
+    "id"  ολίσθηση, και μετάβαση στη κατάσταση 163
+
+    variable   πήγαινε στην κατάσταση 51
+    read_item  πήγαινε στην κατάσταση 130
+
+
+Κατάσταση 130 
+
+   92 read_list: read_list "," read_item .
+
+    $default  ελάττωση με χρήση του κανόνα 92 (read_list)
+
+
+Κατάσταση 131 
+
+   66 expression: expression . ".OR." expression
+   67           | expression . ".AND." expression
+   68           | expression . ".GT." expression
+   69           | expression . "+|-" expression
+   70           | expression . "*" expression
+   71           | expression . "/" expression
+   72           | expression . "**" expression
+   78           | "(" $@4 expression . ")"
+
+    ".OR."   ολίσθηση, και μετάβαση στη κατάσταση 97
+    ".AND."  ολίσθηση, και μετάβαση στη κατάσταση 98
+    ".GT."   ολίσθηση, και μετάβαση στη κατάσταση 99
+    "+|-"    ολίσθηση, και μετάβαση στη κατάσταση 100
+    "*"      ολίσθηση, και μετάβαση στη κατάσταση 101
+    "/"      ολίσθηση, και μετάβαση στη κατάσταση 102
+    "**"     ολίσθηση, και μετάβαση στη κατάσταση 103
+    ")"      ολίσθηση, και μετάβαση στη κατάσταση 164
+
+
+Κατάσταση 132 
+
+   99 write_list: write_list "," . write_item
+  102 write_item: "(" write_list "," . "id" "=" iter_space ")"
+
+    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
+    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
+    "("       ολίσθηση, και μετάβαση στη κατάσταση 56
+    "id"      ολίσθηση, και μετάβαση στη κατάσταση 165
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
+    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
+    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
+    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+    "string"  ολίσθηση, και μετάβαση στη κατάσταση 61
+
+    constant    πήγαινε στην κατάσταση 62
+    variable    πήγαινε στην κατάσταση 63
+    expression  πήγαινε στην κατάσταση 64
+    write_item  πήγαινε στην κατάσταση 140
+
+
+Κατάσταση 133 
+
+   66 expression: expression . ".OR." expression
+   66           | expression ".OR." expression .
+   67           | expression . ".AND." expression
+   68           | expression . ".GT." expression
+   69           | expression . "+|-" expression
+   70           | expression . "*" expression
+   71           | expression . "/" expression
+   72           | expression . "**" expression
+
+    $default  ελάττωση με χρήση του κανόνα 66 (expression)
+
+
+Κατάσταση 134 
+
+   66 expression: expression . ".OR." expression
+   67           | expression . ".AND." expression
+   67           | expression ".AND." expression .
+   68           | expression . ".GT." expression
+   69           | expression . "+|-" expression
+   70           | expression . "*" expression
+   71           | expression . "/" expression
+   72           | expression . "**" expression
+
+    $default  ελάττωση με χρήση του κανόνα 67 (expression)
+
+
+Κατάσταση 135 
+
+   66 expression: expression . ".OR." expression
+   67           | expression . ".AND." expression
+   68           | expression . ".GT." expression
+   68           | expression ".GT." expression .
+   69           | expression . "+|-" expression
+   70           | expression . "*" expression
+   71           | expression . "/" expression
+   72           | expression . "**" expression
+
+    ".OR."   ολίσθηση, και μετάβαση στη κατάσταση 97
+    ".AND."  ολίσθηση, και μετάβαση στη κατάσταση 98
+
+    $default  ελάττωση με χρήση του κανόνα 68 (expression)
+
+
+Κατάσταση 136 
+
+   66 expression: expression . ".OR." expression
+   67           | expression . ".AND." expression
+   68           | expression . ".GT." expression
+   69           | expression . "+|-" expression
+   69           | expression "+|-" expression .
+   70           | expression . "*" expression
+   71           | expression . "/" expression
+   72           | expression . "**" expression
+
+    ".OR."   ολίσθηση, και μετάβαση στη κατάσταση 97
+    ".AND."  ολίσθηση, και μετάβαση στη κατάσταση 98
+    ".GT."   ολίσθηση, και μετάβαση στη κατάσταση 99
+
+    $default  ελάττωση με χρήση του κανόνα 69 (expression)
+
+
+Κατάσταση 137 
+
+   66 expression: expression . ".OR." expression
+   67           | expression . ".AND." expression
+   68           | expression . ".GT." expression
+   69           | expression . "+|-" expression
+   70           | expression . "*" expression
+   70           | expression "*" expression .
+   71           | expression . "/" expression
+   72           | expression . "**" expression
+
+    ".OR."   ολίσθηση, και μετάβαση στη κατάσταση 97
+    ".AND."  ολίσθηση, και μετάβαση στη κατάσταση 98
+    ".GT."   ολίσθηση, και μετάβαση στη κατάσταση 99
+    "+|-"    ολίσθηση, και μετάβαση στη κατάσταση 100
+
+    $default  ελάττωση με χρήση του κανόνα 70 (expression)
+
+
+Κατάσταση 138 
+
+   66 expression: expression . ".OR." expression
+   67           | expression . ".AND." expression
+   68           | expression . ".GT." expression
+   69           | expression . "+|-" expression
+   70           | expression . "*" expression
+   71           | expression . "/" expression
+   71           | expression "/" expression .
+   72           | expression . "**" expression
+
+    ".OR."   ολίσθηση, και μετάβαση στη κατάσταση 97
+    ".AND."  ολίσθηση, και μετάβαση στη κατάσταση 98
+    ".GT."   ολίσθηση, και μετάβαση στη κατάσταση 99
+    "+|-"    ολίσθηση, και μετάβαση στη κατάσταση 100
+
+    $default  ελάττωση με χρήση του κανόνα 71 (expression)
+
+
+Κατάσταση 139 
+
+   66 expression: expression . ".OR." expression
+   67           | expression . ".AND." expression
+   68           | expression . ".GT." expression
+   69           | expression . "+|-" expression
+   70           | expression . "*" expression
+   71           | expression . "/" expression
+   72           | expression . "**" expression
+   72           | expression "**" expression .
+
+    ".OR."   ολίσθηση, και μετάβαση στη κατάσταση 97
+    ".AND."  ολίσθηση, και μετάβαση στη κατάσταση 98
+    ".GT."   ολίσθηση, και μετάβαση στη κατάσταση 99
+    "+|-"    ολίσθηση, και μετάβαση στη κατάσταση 100
+    "*"      ολίσθηση, και μετάβαση στη κατάσταση 101
+    "/"      ολίσθηση, και μετάβαση στη κατάσταση 102
+
+    $default  ελάττωση με χρήση του κανόνα 72 (expression)
+
+
+Κατάσταση 140 
+
+   99 write_list: write_list "," write_item .
+
+    $default  ελάττωση με χρήση του κανόνα 99 (write_list)
+
+
+Κατάσταση 141 
+
+   85 if_statement: "if" "(" expression ")" . label "," label "," label
+   86             | "if" "(" expression ")" . simple_statement
+
+    error       ολίσθηση, και μετάβαση στη κατάσταση 6
+    "continue"  ολίσθηση, και μετάβαση στη κατάσταση 13
+    "goto"      ολίσθηση, και μετάβαση στη κατάσταση 14
+    "call"      ολίσθηση, και μετάβαση στη κατάσταση 15
+    "read"      ολίσθηση, και μετάβαση στη κατάσταση 16
+    "write"     ολίσθηση, και μετάβαση στη κατάσταση 17
+    "if"        ολίσθηση, και μετάβαση στη κατάσταση 153
+    "stop"      ολίσθηση, και μετάβαση στη κατάσταση 20
+    "return"    ολίσθηση, και μετάβαση στη κατάσταση 21
+    "id"        ολίσθηση, και μετάβαση στη κατάσταση 22
+    "iconst"    ολίσθηση, και μετάβαση στη κατάσταση 23
+
+    label             πήγαινε στην κατάσταση 166
+    simple_statement  πήγαινε στην κατάσταση 167
+    assignment        πήγαινε στην κατάσταση 30
+    variable          πήγαινε στην κατάσταση 31
+    goto_statement    πήγαινε στην κατάσταση 32
+    if_statement      πήγαινε στην κατάσταση 33
+    subroutine_call   πήγαινε στην κατάσταση 34
+    io_statement      πήγαινε στην κατάσταση 35
+
+
+Κατάσταση 142 
+
+   66 expression: expression . ".OR." expression
+   67           | expression . ".AND." expression
+   68           | expression . ".GT." expression
+   69           | expression . "+|-" expression
+   70           | expression . "*" expression
+   71           | expression . "/" expression
+   72           | expression . "**" expression
+  108 branch_statement: "if" "(" $@7 expression . ")" $@8 "then" body tail
+
+    ".OR."   ολίσθηση, και μετάβαση στη κατάσταση 97
+    ".AND."  ολίσθηση, και μετάβαση στη κατάσταση 98
+    ".GT."   ολίσθηση, και μετάβαση στη κατάσταση 99
+    "+|-"    ολίσθηση, και μετάβαση στη κατάσταση 100
+    "*"      ολίσθηση, και μετάβαση στη κατάσταση 101
+    "/"      ολίσθηση, και μετάβαση στη κατάσταση 102
+    "**"     ολίσθηση, και μετάβαση στη κατάσταση 103
+    ")"      ολίσθηση, και μετάβαση στη κατάσταση 168
+
+
+Κατάσταση 143 
+
+   66 expression: expression . ".OR." expression
+   67           | expression . ".AND." expression
+   68           | expression . ".GT." expression
+   69           | expression . "+|-" expression
+   70           | expression . "*" expression
+   71           | expression . "/" expression
+   72           | expression . "**" expression
+   96 iter_space: expression . "," expression step
+
+    ".OR."   ολίσθηση, και μετάβαση στη κατάσταση 97
+    ".AND."  ολίσθηση, και μετάβαση στη κατάσταση 98
+    ".GT."   ολίσθηση, και μετάβαση στη κατάσταση 99
+    "+|-"    ολίσθηση, και μετάβαση στη κατάσταση 100
+    "*"      ολίσθηση, και μετάβαση στη κατάσταση 101
+    "/"      ολίσθηση, και μετάβαση στη κατάσταση 102
+    "**"     ολίσθηση, και μετάβαση στη κατάσταση 103
+    ","      ολίσθηση, και μετάβαση στη κατάσταση 169
+
+
+Κατάσταση 144 
+
+  111 loop_statement: "do" "id" "=" iter_space . body "enddo"
+
+    $default  ελάττωση με χρήση του κανόνα 6 (declarations)
+
+    body          πήγαινε στην κατάσταση 170
+    declarations  πήγαινε στην κατάσταση 3
+
+
+Κατάσταση 145 
+
+   16 undef_variable: "id" "(" $@1 . dims ")" $@2
+
+    "id"      ολίσθηση, και μετάβαση στη κατάσταση 171
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 172
+
+    dims  πήγαινε στην κατάσταση 173
+    dim   πήγαινε στην κατάσταση 174
+
+
+Κατάσταση 146 
+
+   12 vars: vars "," error .
+
+    $default  ελάττωση με χρήση του κανόνα 12 (vars)
+
+
+Κατάσταση 147 
+
+   11 vars: vars "," undef_variable .
+
+    $default  ελάττωση με χρήση του κανόνα 11 (vars)
+
+
+Κατάσταση 148 
+
+   62 variable: variable "(" $@3 expressions . ")"
+   64 expressions: expressions . "," expression
+
+    ")"  ολίσθηση, και μετάβαση στη κατάσταση 175
+    ","  ολίσθηση, και μετάβαση στη κατάσταση 176
+
+
+Κατάσταση 149 
+
+   65 expressions: expression .
+   66 expression: expression . ".OR." expression
+   67           | expression . ".AND." expression
+   68           | expression . ".GT." expression
+   69           | expression . "+|-" expression
+   70           | expression . "*" expression
+   71           | expression . "/" expression
+   72           | expression . "**" expression
+
+    ".OR."   ολίσθηση, και μετάβαση στη κατάσταση 97
+    ".AND."  ολίσθηση, και μετάβαση στη κατάσταση 98
+    ".GT."   ολίσθηση, και μετάβαση στη κατάσταση 99
+    "+|-"    ολίσθηση, και μετάβαση στη κατάσταση 100
+    "*"      ολίσθηση, και μετάβαση στη κατάσταση 101
+    "/"      ολίσθηση, και μετάβαση στη κατάσταση 102
+    "**"     ολίσθηση, και μετάβαση στη κατάσταση 103
+
+    $default  ελάττωση με χρήση του κανόνα 65 (expressions)
+
+
+Κατάσταση 150 
+
+  120 header: "subroutine" "id" "(" . $@11 formal_parameters ")" $@12
+
+    $default  ελάττωση με χρήση του κανόνα 118 ($@11)
+
+    $@11  πήγαινε στην κατάσταση 177
+
+
+Κατάσταση 151 
+
+  117 header: type "function" "id" . "(" $@9 formal_parameters ")" $@10
+
+    "("  ολίσθηση, και μετάβαση στη κατάσταση 178
+
+
+Κατάσταση 152 
+
+  114 subprogram: header body "end" .
+
+    $default  ελάττωση με χρήση του κανόνα 114 (subprogram)
+
+
+Κατάσταση 153 
+
+   85 if_statement: "if" . "(" expression ")" label "," label "," label
+   86             | "if" . "(" expression ")" simple_statement
+
+    "("  ολίσθηση, και μετάβαση στη κατάσταση 179
+
+
+Κατάσταση 154 
+
+   87 if_statement: error "(" expression ")" label . "," label "," label
+
+    ","  ολίσθηση, και μετάβαση στη κατάσταση 180
+
+
+Κατάσταση 155 
+
+   88 if_statement: error "(" expression ")" simple_statement .
+
+    $default  ελάττωση με χρήση του κανόνα 88 (if_statement)
+
+
+Κατάσταση 156 
+
+   11 vars: vars . "," undef_variable
+   12     | vars . "," error
+   25 field: "record" fields "endrec" vars .
+
+    ","  ολίσθηση, και μετάβαση στη κατάσταση 109
+
+    $default  ελάττωση με χρήση του κανόνα 25 (field)
+
+
+Κατάσταση 157 
+
+   34 value: "+|-" constant .
+
+    $default  ελάττωση με χρήση του κανόνα 34 (value)
+
+
+Κατάσταση 158 
+
+   28 value_list: "/" values "/" .
+
+    $default  ελάττωση με χρήση του κανόνα 28 (value_list)
+
+
+Κατάσταση 159 
+
+   29 values: values "," . value
+
+    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 120
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 121
+    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
+    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
+    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+    "string"  ολίσθηση, και μετάβαση στη κατάσταση 122
+
+    $default  ελάττωση με χρήση του κανόνα 38 (repeat)
+
+    value     πήγαινε στην κατάσταση 181
+    repeat    πήγαινε στην κατάσταση 125
+    constant  πήγαινε στην κατάσταση 126
+
+
+Κατάσταση 160 
+
+   31 value: repeat "*" . "+|-" constant
+   32      | repeat "*" . constant
+   33      | repeat "*" . "string"
+
+    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 182
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
+    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
+    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
+    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+    "string"  ολίσθηση, και μετάβαση στη κατάσταση 183
+
+    constant  πήγαινε στην κατάσταση 184
+
+
+Κατάσταση 161 
+
+   26 vals: vals "," "id" value_list .
+
+    $default  ελάττωση με χρήση του κανόνα 26 (vals)
+
+
+Κατάσταση 162 
+
+   82 goto_statement: "goto" "id" "," "(" $@5 . labels ")" $@6
+
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 23
+
+    label   πήγαινε στην κατάσταση 185
+    labels  πήγαινε στην κατάσταση 186
+
+
+Κατάσταση 163 
+
+   63 variable: "id" .
+   95 read_item: "(" read_list "," "id" . "=" iter_space ")"
+
+    "="  ολίσθηση, και μετάβαση στη κατάσταση 187
+
+    $default  ελάττωση με χρήση του κανόνα 63 (variable)
+
+
+Κατάσταση 164 
+
+   78 expression: "(" $@4 expression ")" .
+
+    $default  ελάττωση με χρήση του κανόνα 78 (expression)
+
+
+Κατάσταση 165 
+
+   63 variable: "id" .
+  102 write_item: "(" write_list "," "id" . "=" iter_space ")"
+
+    "="  ολίσθηση, και μετάβαση στη κατάσταση 188
+
+    $default  ελάττωση με χρήση του κανόνα 63 (variable)
+
+
+Κατάσταση 166 
+
+   85 if_statement: "if" "(" expression ")" label . "," label "," label
+
+    ","  ολίσθηση, και μετάβαση στη κατάσταση 189
+
+
+Κατάσταση 167 
+
+   86 if_statement: "if" "(" expression ")" simple_statement .
+
+    $default  ελάττωση με χρήση του κανόνα 86 (if_statement)
+
+
+Κατάσταση 168 
+
+  108 branch_statement: "if" "(" $@7 expression ")" . $@8 "then" body tail
+
+    $default  ελάττωση με χρήση του κανόνα 107 ($@8)
+
+    $@8  πήγαινε στην κατάσταση 190
+
+
+Κατάσταση 169 
+
+   96 iter_space: expression "," . expression step
+
+    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
+    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
+    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
+    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
+    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
+    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
+    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+
+    constant    πήγαινε στην κατάσταση 62
+    variable    πήγαινε στην κατάσταση 63
+    expression  πήγαινε στην κατάσταση 191
+
+
+Κατάσταση 170 
+
+  111 loop_statement: "do" "id" "=" iter_space body . "enddo"
+
+    "enddo"  ολίσθηση, και μετάβαση στη κατάσταση 192
+
+
+Κατάσταση 171 
+
+   21 dim: "id" .
+
+    $default  ελάττωση με χρήση του κανόνα 21 (dim)
+
+
+Κατάσταση 172 
+
+   20 dim: "iconst" .
+
+    $default  ελάττωση με χρήση του κανόνα 20 (dim)
+
+
+Κατάσταση 173 
+
+   16 undef_variable: "id" "(" $@1 dims . ")" $@2
+   18 dims: dims . "," dim
+
+    ")"  ολίσθηση, και μετάβαση στη κατάσταση 193
+    ","  ολίσθηση, και μετάβαση στη κατάσταση 194
+
+
+Κατάσταση 174 
+
+   19 dims: dim .
+
+    $default  ελάττωση με χρήση του κανόνα 19 (dims)
+
+
+Κατάσταση 175 
+
+   62 variable: variable "(" $@3 expressions ")" .
+
+    $default  ελάττωση με χρήση του κανόνα 62 (variable)
+
+
+Κατάσταση 176 
+
+   64 expressions: expressions "," . expression
+
+    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
+    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
+    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
+    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
+    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
+    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
+    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+
+    constant    πήγαινε στην κατάσταση 62
+    variable    πήγαινε στην κατάσταση 63
+    expression  πήγαινε στην κατάσταση 195
+
+
+Κατάσταση 177 
+
+  120 header: "subroutine" "id" "(" $@11 . formal_parameters ")" $@12
+
+    "integer"    ολίσθηση, και μετάβαση στη κατάσταση 7
+    "real"       ολίσθηση, και μετάβαση στη κατάσταση 8
+    "logical"    ολίσθηση, και μετάβαση στη κατάσταση 9
+    "character"  ολίσθηση, και μετάβαση στη κατάσταση 10
+
+    type               πήγαινε στην κατάσταση 196
+    formal_parameters  πήγαινε στην κατάσταση 197
+
+
+Κατάσταση 178 
+
+  117 header: type "function" "id" "(" . $@9 formal_parameters ")" $@10
+
+    $default  ελάττωση με χρήση του κανόνα 115 ($@9)
+
+    $@9  πήγαινε στην κατάσταση 198
+
+
+Κατάσταση 179 
+
+   85 if_statement: "if" "(" . expression ")" label "," label "," label
+   86             | "if" "(" . expression ")" simple_statement
+
+    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
+    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
+    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
+    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
+    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
+    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
+    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+
+    constant    πήγαινε στην κατάσταση 62
+    variable    πήγαινε στην κατάσταση 63
+    expression  πήγαινε στην κατάσταση 105
+
+
+Κατάσταση 180 
+
+   87 if_statement: error "(" expression ")" label "," . label "," label
+
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 23
+
+    label  πήγαινε στην κατάσταση 199
+
+
+Κατάσταση 181 
+
+   29 values: values "," value .
+
+    $default  ελάττωση με χρήση του κανόνα 29 (values)
+
+
+Κατάσταση 182 
+
+   31 value: repeat "*" "+|-" . constant
+
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
+    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
+    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
+    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+
+    constant  πήγαινε στην κατάσταση 200
+
+
+Κατάσταση 183 
+
+   33 value: repeat "*" "string" .
+
+    $default  ελάττωση με χρήση του κανόνα 33 (value)
+
+
+Κατάσταση 184 
+
+   32 value: repeat "*" constant .
+
+    $default  ελάττωση με χρήση του κανόνα 32 (value)
+
+
+Κατάσταση 185 
+
+   84 labels: label .
+
+    $default  ελάττωση με χρήση του κανόνα 84 (labels)
+
+
+Κατάσταση 186 
+
+   82 goto_statement: "goto" "id" "," "(" $@5 labels . ")" $@6
+   83 labels: labels . "," label
+
+    ")"  ολίσθηση, και μετάβαση στη κατάσταση 201
+    ","  ολίσθηση, και μετάβαση στη κατάσταση 202
+
+
+Κατάσταση 187 
+
+   95 read_item: "(" read_list "," "id" "=" . iter_space ")"
+
+    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
+    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
+    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
+    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
+    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
+    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
+    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+
+    constant    πήγαινε στην κατάσταση 62
+    variable    πήγαινε στην κατάσταση 63
+    expression  πήγαινε στην κατάσταση 143
+    iter_space  πήγαινε στην κατάσταση 203
+
+
+Κατάσταση 188 
+
+  102 write_item: "(" write_list "," "id" "=" . iter_space ")"
+
+    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
+    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
+    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
+    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
+    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
+    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
+    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+
+    constant    πήγαινε στην κατάσταση 62
+    variable    πήγαινε στην κατάσταση 63
+    expression  πήγαινε στην κατάσταση 143
+    iter_space  πήγαινε στην κατάσταση 204
+
+
+Κατάσταση 189 
+
+   85 if_statement: "if" "(" expression ")" label "," . label "," label
+
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 23
+
+    label  πήγαινε στην κατάσταση 205
+
+
+Κατάσταση 190 
+
+  108 branch_statement: "if" "(" $@7 expression ")" $@8 . "then" body tail
+
+    "then"  ολίσθηση, και μετάβαση στη κατάσταση 206
+
+
+Κατάσταση 191 
+
+   66 expression: expression . ".OR." expression
+   67           | expression . ".AND." expression
+   68           | expression . ".GT." expression
+   69           | expression . "+|-" expression
+   70           | expression . "*" expression
+   71           | expression . "/" expression
+   72           | expression . "**" expression
+   96 iter_space: expression "," expression . step
+
+    ".OR."   ολίσθηση, και μετάβαση στη κατάσταση 97
+    ".AND."  ολίσθηση, και μετάβαση στη κατάσταση 98
+    ".GT."   ολίσθηση, και μετάβαση στη κατάσταση 99
+    "+|-"    ολίσθηση, και μετάβαση στη κατάσταση 100
+    "*"      ολίσθηση, και μετάβαση στη κατάσταση 101
+    "/"      ολίσθηση, και μετάβαση στη κατάσταση 102
+    "**"     ολίσθηση, και μετάβαση στη κατάσταση 103
+    ","      ολίσθηση, και μετάβαση στη κατάσταση 207
+
+    $default  ελάττωση με χρήση του κανόνα 98 (step)
+
+    step  πήγαινε στην κατάσταση 208
+
+
+Κατάσταση 192 
+
+  111 loop_statement: "do" "id" "=" iter_space body "enddo" .
+
+    $default  ελάττωση με χρήση του κανόνα 111 (loop_statement)
+
+
+Κατάσταση 193 
+
+   16 undef_variable: "id" "(" $@1 dims ")" . $@2
+
+    $default  ελάττωση με χρήση του κανόνα 15 ($@2)
+
+    $@2  πήγαινε στην κατάσταση 209
+
+
+Κατάσταση 194 
+
+   18 dims: dims "," . dim
+
+    "id"      ολίσθηση, και μετάβαση στη κατάσταση 171
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 172
+
+    dim  πήγαινε στην κατάσταση 210
+
+
+Κατάσταση 195 
+
+   64 expressions: expressions "," expression .
+   66 expression: expression . ".OR." expression
+   67           | expression . ".AND." expression
+   68           | expression . ".GT." expression
+   69           | expression . "+|-" expression
+   70           | expression . "*" expression
+   71           | expression . "/" expression
+   72           | expression . "**" expression
+
+    ".OR."   ολίσθηση, και μετάβαση στη κατάσταση 97
+    ".AND."  ολίσθηση, και μετάβαση στη κατάσταση 98
+    ".GT."   ολίσθηση, και μετάβαση στη κατάσταση 99
+    "+|-"    ολίσθηση, και μετάβαση στη κατάσταση 100
+    "*"      ολίσθηση, και μετάβαση στη κατάσταση 101
+    "/"      ολίσθηση, και μετάβαση στη κατάσταση 102
+    "**"     ολίσθηση, και μετάβαση στη κατάσταση 103
+
+    $default  ελάττωση με χρήση του κανόνα 64 (expressions)
+
+
+Κατάσταση 196 
+
+  122 formal_parameters: type . vars "," formal_parameters
+  123                  | type . vars
+
+    "id"  ολίσθηση, και μετάβαση στη κατάσταση 69
+
+    vars            πήγαινε στην κατάσταση 211
+    undef_variable  πήγαινε στην κατάσταση 71
+
+
+Κατάσταση 197 
+
+  120 header: "subroutine" "id" "(" $@11 formal_parameters . ")" $@12
+
+    ")"  ολίσθηση, και μετάβαση στη κατάσταση 212
+
+
+Κατάσταση 198 
+
+  117 header: type "function" "id" "(" $@9 . formal_parameters ")" $@10
+
+    "integer"    ολίσθηση, και μετάβαση στη κατάσταση 7
+    "real"       ολίσθηση, και μετάβαση στη κατάσταση 8
+    "logical"    ολίσθηση, και μετάβαση στη κατάσταση 9
+    "character"  ολίσθηση, και μετάβαση στη κατάσταση 10
+
+    type               πήγαινε στην κατάσταση 196
+    formal_parameters  πήγαινε στην κατάσταση 213
+
+
+Κατάσταση 199 
+
+   87 if_statement: error "(" expression ")" label "," label . "," label
+
+    ","  ολίσθηση, και μετάβαση στη κατάσταση 214
+
+
+Κατάσταση 200 
+
+   31 value: repeat "*" "+|-" constant .
+
+    $default  ελάττωση με χρήση του κανόνα 31 (value)
+
+
+Κατάσταση 201 
+
+   82 goto_statement: "goto" "id" "," "(" $@5 labels ")" . $@6
+
+    $default  ελάττωση με χρήση του κανόνα 81 ($@6)
+
+    $@6  πήγαινε στην κατάσταση 215
+
+
+Κατάσταση 202 
+
+   83 labels: labels "," . label
+
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 23
+
+    label  πήγαινε στην κατάσταση 216
+
+
+Κατάσταση 203 
+
+   95 read_item: "(" read_list "," "id" "=" iter_space . ")"
+
+    ")"  ολίσθηση, και μετάβαση στη κατάσταση 217
+
+
+Κατάσταση 204 
+
+  102 write_item: "(" write_list "," "id" "=" iter_space . ")"
+
+    ")"  ολίσθηση, και μετάβαση στη κατάσταση 218
+
+
+Κατάσταση 205 
+
+   85 if_statement: "if" "(" expression ")" label "," label . "," label
+
+    ","  ολίσθηση, και μετάβαση στη κατάσταση 219
+
+
+Κατάσταση 206 
+
+  108 branch_statement: "if" "(" $@7 expression ")" $@8 "then" . body tail
+
+    $default  ελάττωση με χρήση του κανόνα 6 (declarations)
+
+    body          πήγαινε στην κατάσταση 220
+    declarations  πήγαινε στην κατάσταση 3
+
+
+Κατάσταση 207 
+
+   97 step: "," . expression
+
+    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
+    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
+    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
+    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
+    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
+    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
+    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+
+    constant    πήγαινε στην κατάσταση 62
+    variable    πήγαινε στην κατάσταση 63
+    expression  πήγαινε στην κατάσταση 221
+
+
+Κατάσταση 208 
+
+   96 iter_space: expression "," expression step .
+
+    $default  ελάττωση με χρήση του κανόνα 96 (iter_space)
+
+
+Κατάσταση 209 
+
+   16 undef_variable: "id" "(" $@1 dims ")" $@2 .
+
+    $default  ελάττωση με χρήση του κανόνα 16 (undef_variable)
+
+
+Κατάσταση 210 
+
+   18 dims: dims "," dim .
+
+    $default  ελάττωση με χρήση του κανόνα 18 (dims)
+
+
+Κατάσταση 211 
+
+   11 vars: vars . "," undef_variable
+   12     | vars . "," error
+  122 formal_parameters: type vars . "," formal_parameters
+  123                  | type vars .
+
+    ","  ολίσθηση, και μετάβαση στη κατάσταση 222
+
+    $default  ελάττωση με χρήση του κανόνα 123 (formal_parameters)
+
+
+Κατάσταση 212 
+
+  120 header: "subroutine" "id" "(" $@11 formal_parameters ")" . $@12
+
+    $default  ελάττωση με χρήση του κανόνα 119 ($@12)
+
+    $@12  πήγαινε στην κατάσταση 223
+
+
+Κατάσταση 213 
+
+  117 header: type "function" "id" "(" $@9 formal_parameters . ")" $@10
+
+    ")"  ολίσθηση, και μετάβαση στη κατάσταση 224
+
+
+Κατάσταση 214 
+
+   87 if_statement: error "(" expression ")" label "," label "," . label
+
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 23
+
+    label  πήγαινε στην κατάσταση 225
+
+
+Κατάσταση 215 
+
+   82 goto_statement: "goto" "id" "," "(" $@5 labels ")" $@6 .
+
+    $default  ελάττωση με χρήση του κανόνα 82 (goto_statement)
+
+
+Κατάσταση 216 
+
+   83 labels: labels "," label .
+
+    $default  ελάττωση με χρήση του κανόνα 83 (labels)
+
+
+Κατάσταση 217 
+
+   95 read_item: "(" read_list "," "id" "=" iter_space ")" .
+
+    $default  ελάττωση με χρήση του κανόνα 95 (read_item)
+
+
+Κατάσταση 218 
+
+  102 write_item: "(" write_list "," "id" "=" iter_space ")" .
+
+    $default  ελάττωση με χρήση του κανόνα 102 (write_item)
+
+
+Κατάσταση 219 
+
+   85 if_statement: "if" "(" expression ")" label "," label "," . label
+
+    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 23
+
+    label  πήγαινε στην κατάσταση 226
+
+
+Κατάσταση 220 
+
+  108 branch_statement: "if" "(" $@7 expression ")" $@8 "then" body . tail
+
+    "else"   ολίσθηση, και μετάβαση στη κατάσταση 227
+    "endif"  ολίσθηση, και μετάβαση στη κατάσταση 228
+
+    tail  πήγαινε στην κατάσταση 229
+
+
+Κατάσταση 221 
+
+   66 expression: expression . ".OR." expression
+   67           | expression . ".AND." expression
+   68           | expression . ".GT." expression
+   69           | expression . "+|-" expression
+   70           | expression . "*" expression
+   71           | expression . "/" expression
+   72           | expression . "**" expression
+   97 step: "," expression .
+
+    ".OR."   ολίσθηση, και μετάβαση στη κατάσταση 97
+    ".AND."  ολίσθηση, και μετάβαση στη κατάσταση 98
+    ".GT."   ολίσθηση, και μετάβαση στη κατάσταση 99
+    "+|-"    ολίσθηση, και μετάβαση στη κατάσταση 100
+    "*"      ολίσθηση, και μετάβαση στη κατάσταση 101
+    "/"      ολίσθηση, και μετάβαση στη κατάσταση 102
+    "**"     ολίσθηση, και μετάβαση στη κατάσταση 103
+
+    $default  ελάττωση με χρήση του κανόνα 97 (step)
+
+
+Κατάσταση 222 
+
+   11 vars: vars "," . undef_variable
+   12     | vars "," . error
+  122 formal_parameters: type vars "," . formal_parameters
+
+    error        ολίσθηση, και μετάβαση στη κατάσταση 146
+    "integer"    ολίσθηση, και μετάβαση στη κατάσταση 7
+    "real"       ολίσθηση, και μετάβαση στη κατάσταση 8
+    "logical"    ολίσθηση, και μετάβαση στη κατάσταση 9
+    "character"  ολίσθηση, και μετάβαση στη κατάσταση 10
+    "id"         ολίσθηση, και μετάβαση στη κατάσταση 69
+
+    type               πήγαινε στην κατάσταση 196
+    undef_variable     πήγαινε στην κατάσταση 147
+    formal_parameters  πήγαινε στην κατάσταση 230
+
+
+Κατάσταση 223 
+
+  120 header: "subroutine" "id" "(" $@11 formal_parameters ")" $@12 .
+
+    $default  ελάττωση με χρήση του κανόνα 120 (header)
+
+
+Κατάσταση 224 
+
+  117 header: type "function" "id" "(" $@9 formal_parameters ")" . $@10
+
+    $default  ελάττωση με χρήση του κανόνα 116 ($@10)
+
+    $@10  πήγαινε στην κατάσταση 231
+
+
+Κατάσταση 225 
+
+   87 if_statement: error "(" expression ")" label "," label "," label .
+
+    $default  ελάττωση με χρήση του κανόνα 87 (if_statement)
+
+
+Κατάσταση 226 
+
+   85 if_statement: "if" "(" expression ")" label "," label "," label .
+
+    $default  ελάττωση με χρήση του κανόνα 85 (if_statement)
+
+
+Κατάσταση 227 
+
+  109 tail: "else" . body "endif"
+
+    $default  ελάττωση με χρήση του κανόνα 6 (declarations)
+
+    body          πήγαινε στην κατάσταση 232
+    declarations  πήγαινε στην κατάσταση 3
+
+
+Κατάσταση 228 
+
+  110 tail: "endif" .
+
+    $default  ελάττωση με χρήση του κανόνα 110 (tail)
+
+
+Κατάσταση 229 
+
+  108 branch_statement: "if" "(" $@7 expression ")" $@8 "then" body tail .
+
+    $default  ελάττωση με χρήση του κανόνα 108 (branch_statement)
+
+
+Κατάσταση 230 
+
+  122 formal_parameters: type vars "," formal_parameters .
+
+    $default  ελάττωση με χρήση του κανόνα 122 (formal_parameters)
+
+
+Κατάσταση 231 
+
+  117 header: type "function" "id" "(" $@9 formal_parameters ")" $@10 .
+
+    $default  ελάττωση με χρήση του κανόνα 117 (header)
+
+
+Κατάσταση 232 
+
+  109 tail: "else" body . "endif"
+
+    "endif"  ολίσθηση, και μετάβαση στη κατάσταση 233
+
+
+Κατάσταση 233 
+
+  109 tail: "else" body "endif" .
+
+    $default  ελάττωση με χρήση του κανόνα 109 (tail)
