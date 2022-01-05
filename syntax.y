@@ -6,7 +6,11 @@
     #include <stdio.h>
     #include <stdlib.h>
     #include <stdbool.h>
-    #include "hashtbl.h"
+    #include "hashtable\hashtbl.h"
+    /*
+        κάνουμε extern το *yyin, yylex() και yyerror 
+        που είναι γραμμένα είτε απο εμάς είτε από το flex αλλού
+    */
     extern FILE *yyin;
     extern int yylex();
     extern void yyerror(const char* error);
@@ -14,9 +18,9 @@
     HASHTBL *hashtbl;
     int scope = 0;
 %}
-
+/* το error-verbose είναι option του bison και μας δίνει πιο λεπτομερή error reporting που θέλει η εργασία */
 %error-verbose 
-
+ 
 %union{
     int int_val;
     float real_val;
@@ -53,7 +57,7 @@
 %token T_OROP             ".OR." 
 %token T_ANDOP            ".AND." 
 %token T_NOTOP            ".NOT" 
-%token T_RELOP            ".GT." 
+%token T_RELOP            ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE." 
 %token T_ADDOP            "+|-"
 %token T_MULOP            "*"   
 %token T_DIVOP            "/"   
@@ -78,19 +82,22 @@
 %token <string_val>T_STRING "string"
 
 %token T_EOF       0       "EOF"
-/*
-%type <string_val> program body declarations type undef_variable dims dim fields field vals value_list values value repeat constant statements labeled_statement label 
-                   statement simple_statement assignment variable expressions expression goto_statement labels if_statement subroutine_call io_statement read_list read_item 
-                   iter_space step write_list write_item compound_statement branch_statement tail loop_statement subprograms header formal_parameters
-*/
-%left T_NOTOP 
+
+%type <string_val>  program body declarations type undef_variable dims dim fields field vals
+%type <string_val>  value_list values value repeat constant statements labeled_statement label 
+%type <string_val>  statement simple_statement assignment variable expressions expression goto_statement 
+%type <string_val>  labels if_statement subroutine_call io_statement read_list read_item iter_space step
+%type <string_val>  write_list write_item compound_statement branch_statement tail loop_statement 
+%type <string_val>  subprograms header formal_parameters
+
+%left T_NOTOP
 %left T_POWEROP
 %left T_MULOP T_DIVOP
 %left T_ADDOP
 %left T_RELOP
-%left T_ANDOP T_OROP
-%right T_ASSIGN 
-
+%left T_ANDOP
+%left T_OROP
+%right T_ASSIGN
 
 %%
 
@@ -109,13 +116,13 @@ vars:               vars T_COMMA undef_variable
                     |vars T_COMMA error 
                     | undef_variable
 ;
-undef_variable:     T_ID T_LPAREN{scope++;} dims T_RPAREN{scope--;}    { hashtbl_insert(hashtbl, $1, NULL, scope); }
-                    | T_ID                         { hashtbl_insert(hashtbl, $1, NULL, scope); }
+undef_variable:     T_ID T_LPAREN{scope++;} dims T_RPAREN{scope--;}                                 { hashtbl_insert(hashtbl, $1, NULL, scope); }
+                    | T_ID                                                                          { hashtbl_insert(hashtbl, $1, NULL, scope); }
 ;
 dims:               dims T_COMMA dim
                     | dim
 ;
-dim:                T_ICONST | T_ID                { hashtbl_insert(hashtbl, $1, NULL, scope); }
+dim:                T_ICONST | T_ID                                                                 { hashtbl_insert(hashtbl, $1, NULL, scope); }
 ;
 fields:             fields field
                     | field
@@ -123,8 +130,8 @@ fields:             fields field
 field:              type vars
                     | T_RECORD fields T_ENDREC vars
 ;
-vals:               vals T_COMMA T_ID value_list   { hashtbl_insert(hashtbl, $3, NULL, scope); }
-                    | T_ID value_list              { hashtbl_insert(hashtbl, $1, NULL, scope); }
+vals:               vals T_COMMA T_ID value_list                                                    { hashtbl_insert(hashtbl, $3, NULL, scope); }
+                    | T_ID value_list                                                               { hashtbl_insert(hashtbl, $1, NULL, scope); }
 ;
 value_list:         T_DIVOP values T_DIVOP
 ;
@@ -165,9 +172,9 @@ simple_statement:   assignment
 assignment:         variable T_ASSIGN expression
                     | variable T_ASSIGN T_STRING
 ;
-variable:           variable T_COLON T_ID                      { hashtbl_insert(hashtbl, $3, NULL, scope); }
+variable:           variable T_COLON T_ID                                                           { hashtbl_insert(hashtbl, $3, NULL, scope); }
                     | variable T_LPAREN{scope++;} expressions T_RPAREN{scope--;}   
-                    | T_ID                                     { hashtbl_insert(hashtbl, $1, NULL, scope); }
+                    | T_ID                                                                          { hashtbl_insert(hashtbl, $1, NULL, scope); }
 ;
 expressions:        expressions T_COMMA expression
                     | expression
@@ -186,15 +193,15 @@ expression:         expression T_OROP expression
                     | T_LPAREN{scope++;} expression T_RPAREN{scope--;}
 ;
 goto_statement:     T_GOTO label
-                    | T_GOTO T_ID T_COMMA T_LPAREN{scope++;} labels T_RPAREN{scope--;}            { hashtbl_insert(hashtbl, $2, NULL, scope); }
+                    | T_GOTO T_ID T_COMMA T_LPAREN{scope++;} labels T_RPAREN{scope--;}              { hashtbl_insert(hashtbl, $2, NULL, scope); }
 ;
 labels:             labels T_COMMA label
                     | label
 ;
-if_statement:       T_IF T_LPAREN expression T_RPAREN label T_COMMA label T_COMMA label  { scope++; }
-                    | T_IF T_LPAREN expression T_RPAREN simple_statement                 { scope++; scope--; }
-                    |error T_LPAREN expression T_RPAREN label T_COMMA label T_COMMA label { scope++; scope--; yyerror("no if found"); yyerrok;}
-                    |error T_LPAREN expression T_RPAREN simple_statement { scope++; scope--; yyerror("no if found"); yyerrok;}
+if_statement:       T_IF T_LPAREN expression T_RPAREN label T_COMMA label T_COMMA label             { scope++; }
+                    | T_IF T_LPAREN expression T_RPAREN simple_statement                            { scope++; scope--; }
+                    |error T_LPAREN expression T_RPAREN label T_COMMA label T_COMMA label           { scope++; scope--; yyerror("no if found"); yyerrok;}
+                    |error T_LPAREN expression T_RPAREN simple_statement                            { scope++; scope--; yyerror("no if found"); yyerrok;}
 ;
 subroutine_call:    T_CALL variable
 ;
@@ -205,7 +212,7 @@ read_list:          read_list T_COMMA read_item
                     | read_item
 ;
 read_item:          variable
-                    | T_LPAREN read_list T_COMMA T_ID T_ASSIGN iter_space T_RPAREN      { hashtbl_insert(hashtbl, $4, NULL, scope); }
+                    | T_LPAREN read_list T_COMMA T_ID T_ASSIGN iter_space T_RPAREN                  { hashtbl_insert(hashtbl, $4, NULL, scope); }
 ;
 iter_space:         expression T_COMMA expression step
 ;
@@ -216,7 +223,7 @@ write_list:         write_list T_COMMA write_item
                     | write_item
 ;
 write_item:         expression
-                    | T_LPAREN write_list T_COMMA T_ID T_ASSIGN iter_space T_RPAREN        { hashtbl_insert(hashtbl, $4, NULL, scope); }
+                    | T_LPAREN write_list T_COMMA T_ID T_ASSIGN iter_space T_RPAREN                 { hashtbl_insert(hashtbl, $4, NULL, scope); }
                     | T_STRING
 ;
 compound_statement: branch_statement
@@ -225,18 +232,18 @@ compound_statement: branch_statement
 branch_statement:   T_IF T_LPAREN{scope++;} expression T_RPAREN{scope--;} T_THEN body tail
 ;
 tail:               T_ELSE body T_ENDIF
-                    | T_ENDIF
+                    | T_ENDIF  
 ;
-loop_statement:     T_DO T_ID T_ASSIGN iter_space body T_ENDDO                              { hashtbl_insert(hashtbl, $2, NULL, scope); }
+loop_statement:     T_DO T_ID T_ASSIGN iter_space body T_ENDDO                                      { hashtbl_insert(hashtbl, $2, NULL, scope); }
 ;
 subprograms:        subprograms subprogram
                     | %empty     { }
 ;
 subprogram:         header body T_END
 ;
-header:             type T_FUNCTION T_ID T_LPAREN{scope++;} formal_parameters T_RPAREN{scope--;}                { hashtbl_insert(hashtbl, $3, NULL, scope); }
-                    | T_SUBROUTINE T_ID T_LPAREN{scope++;} formal_parameters T_RPAREN{scope--;}                 { hashtbl_insert(hashtbl, $2, NULL, scope); }
-                    | T_SUBROUTINE T_ID                                                     { hashtbl_insert(hashtbl, $2, NULL, scope); }
+header:             type T_FUNCTION T_ID T_LPAREN{scope++;} formal_parameters T_RPAREN{scope--;}   { hashtbl_insert(hashtbl, $3, NULL, scope); }
+                    | T_SUBROUTINE T_ID T_LPAREN{scope++;} formal_parameters T_RPAREN{scope--;}    { hashtbl_insert(hashtbl, $2, NULL, scope); }
+                    | T_SUBROUTINE T_ID                                                            { hashtbl_insert(hashtbl, $2, NULL, scope); }
 ;
 formal_parameters:  type vars T_COMMA formal_parameters
                     | type vars

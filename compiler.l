@@ -8,6 +8,7 @@
     #include <stdlib.h>
     #include <math.h>
     #include "syntax.tab.h"
+    //το FLEX_DEBUG 0 κάνει print το αποτέλεσμα της λεκτικής ανάλυσης και το 1 δεν το δείχει  
     #define FLEX_DEBUG 1
 
     void print_token(int token_id);

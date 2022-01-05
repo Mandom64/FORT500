@@ -1,4 +1,0 @@
-function
-"sadasd"
-$ comment 
-$comment 
