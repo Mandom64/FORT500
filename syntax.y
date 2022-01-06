@@ -1,6 +1,10 @@
 /*
-    Γεωργιάδης Χρήστος 
-    2116088
+    Γεωργιάδης Χρήστος 2116088
+    TO DO:
+    *   resolve remaining collisions                                            *
+    *   να φτιαχτεί το hashtable με τα scopes                                   *
+    *   να δω αν χρειαστεί να πιάσω κιάλλα obvious errors στην γραμματική       *
+    *   να φτιάξω πίνακα συμβόλων                                               *
 */
 %{
     #include <stdio.h>
@@ -18,6 +22,7 @@
     HASHTBL *hashtbl;
     int scope = 0;
 %}
+
 /* το error-verbose είναι option του bison και μας δίνει πιο λεπτομερή error reporting που θέλει η εργασία */
 %error-verbose 
  
@@ -29,50 +34,46 @@
     _Bool bool_val;
 }
 
-%token T_FUNCTION         "function"
-%token T_SUBROUTINE       "subroutine"
-%token T_END              "end"
-%token T_INTEGER          "integer"
-%token T_REAL             "real"
-%token T_LOGICAL          "logical"
-%token T_CHARACTER        "character"
-%token T_RECORD           "record"
-%token T_ENDREC           "endrec"
-%token T_DATA             "data" 
-%token T_CONTINUE         "continue" 
-%token T_GOTO             "goto" 
-%token T_CALL             "call" 
-%token T_READ             "read" 
-%token T_WRITE            "write" 
-%token T_IF               "if" 
-%token T_THEN             "then" 
-%token T_ELSE             "else" 
-%token T_ENDIF            "endif" 
-%token T_DO               "do" 
-%token T_ENDDO            "enddo" 
-%token T_STOP             "stop" 
-%token T_RETURN           "return" 
+%token <string_val> T_FUNCTION         "function"
+%token <string_val> T_SUBROUTINE       "subroutine"
+%token <string_val> T_END              "end"
+%token <string_val> T_INTEGER          "integer"
+%token <string_val> T_REAL             "real"
+%token <string_val> T_LOGICAL          "logical"
+%token <string_val> T_CHARACTER        "character"
+%token <string_val> T_RECORD           "record"
+%token <string_val> T_ENDREC           "endrec"
+%token <string_val> T_DATA             "data" 
+%token <string_val> T_CONTINUE         "continue" 
+%token <string_val> T_GOTO             "goto" 
+%token <string_val> T_CALL             "call" 
+%token <string_val> T_READ             "read" 
+%token <string_val> T_WRITE            "write" 
+%token <string_val> T_IF               "if" 
+%token <string_val> T_THEN             "then" 
+%token <string_val> T_ELSE             "else" 
+%token <string_val> T_ENDIF            "endif" 
+%token <string_val> T_DO               "do" 
+%token <string_val> T_ENDDO            "enddo" 
+%token <string_val> T_STOP             "stop" 
+%token <string_val> T_RETURN           "return" 
 
-
-%token T_OROP             ".OR." 
-%token T_ANDOP            ".AND." 
-%token T_NOTOP            ".NOT" 
-%token T_RELOP            ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE." 
-%token T_ADDOP            "+|-"
-%token T_MULOP            "*"   
-%token T_DIVOP            "/"   
-%token T_POWEROP          "**"   
-
-
-%token T_LPAREN           "(" 
-%token T_RPAREN           ")" 
-%token T_COMMA            "," 
-%token T_ASSIGN           "=" 
-%token T_COLON            ":" 
-
+%token <string_val> T_OROP             ".OR." 
+%token <string_val> T_ANDOP            ".AND." 
+%token <string_val> T_NOTOP            ".NOT" 
+%token <string_val> T_RELOP            ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE." 
+%token <string_val> T_ADDOP            "+|-"
+%token <string_val> T_MULOP            "*"   
+%token <string_val> T_DIVOP            "/"   
+%token <string_val> T_POWEROP          "**"   
+ 
+%token <string_val> T_LPAREN           "(" 
+%token <string_val> T_RPAREN           ")" 
+%token <string_val> T_COMMA            "," 
+%token <string_val> T_ASSIGN           "=" 
+%token <string_val> T_COLON            ":" 
 
 %token <string_val>T_ID   "id" 
-
 
 %token <int_val>T_ICONST   "iconst" 
 %token <real_val>T_RCONST  "rconst" 
@@ -90,6 +91,7 @@
 %type <string_val>  write_list write_item compound_statement branch_statement tail loop_statement 
 %type <string_val>  subprograms header formal_parameters
 
+
 %left T_NOTOP
 %left T_POWEROP
 %left T_MULOP T_DIVOP
@@ -98,7 +100,11 @@
 %left T_ANDOP
 %left T_OROP
 %right T_ASSIGN
-
+/*
+    Aρχικό σύμβολο της γραμματικής είναι το program, δεν χρειάζετε να το 
+    κάνουμε declare γιατί το bison αρχήζει από μόνο του με τον πρώτο κανόνα.
+*/
+%start program 
 %%
 
 program:            body T_END subprograms
@@ -229,7 +235,7 @@ write_item:         expression
 compound_statement: branch_statement
                     | loop_statement
 ;
-branch_statement:   T_IF T_LPAREN{scope++;} expression T_RPAREN{scope--;} T_THEN body tail
+branch_statement:   T_IF T_LPAREN{scope++;} expression {scope--;} T_THEN body tail
 ;
 tail:               T_ELSE body T_ENDIF
                     | T_ENDIF  

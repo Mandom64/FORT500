@@ -96,7 +96,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 24 "syntax.y" /* yacc.c:1909  */
+#line 29 "syntax.y" /* yacc.c:1909  */
 
     int int_val;
     float real_val;

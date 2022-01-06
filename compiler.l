@@ -1,6 +1,9 @@
 /*
-    Γεωργιάδης Χρήστος 
-    2116088
+    Γεωργιάδης Χρήστος 2116088
+    TO DO:
+    *   CCONST yylval ειδικές περιπτώσεις \ν....      *
+    *   RCONST το regex θέλει λίγη ακόμα δουλειά      *    
+    *   απότι φένεται και το IDENTIFIER έχει θέμα...  *
 */
 
 %{
@@ -8,7 +11,10 @@
     #include <stdlib.h>
     #include <math.h>
     #include "syntax.tab.h"
-    //το FLEX_DEBUG 0 κάνει print το αποτέλεσμα της λεκτικής ανάλυσης και το 1 δεν το δείχει  
+    /*
+        FLEX DEBUG 0 prints lexical analysis to console 
+        FLEX DEBUG 1 doesn't print lexical analysis to console
+    */ 
     #define FLEX_DEBUG 1
 
     void print_token(int token_id);

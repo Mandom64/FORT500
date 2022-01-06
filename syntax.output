@@ -166,7 +166,7 @@
 
   107 $@8: %empty
 
-  108 branch_statement: "if" "(" $@7 expression ")" $@8 "then" body tail
+  108 branch_statement: "if" "(" $@7 expression $@8 "then" body tail
 
   109 tail: "else" body "endif"
   110     | "endif"
@@ -231,7 +231,7 @@ error (256) 12 87 88
 "/" (287) 28 71
 "**" (288) 72
 "(" (289) 16 62 78 82 85 86 87 88 95 102 108 117 120
-")" (290) 16 62 78 82 85 86 87 88 95 102 108 117 120
+")" (290) 16 62 78 82 85 86 87 88 95 102 117 120
 "," (291) 11 12 18 26 29 64 82 83 85 87 92 95 96 97 99 102 122
 "=" (292) 58 59 95 102 111
 ":" (293) 60
@@ -576,7 +576,7 @@ formal_parameters (101)
 
    85 if_statement: "if" . "(" expression ")" label "," label "," label
    86             | "if" . "(" expression ")" simple_statement
-  108 branch_statement: "if" . "(" $@7 expression ")" $@8 "then" body tail
+  108 branch_statement: "if" . "(" $@7 expression $@8 "then" body tail
 
     "("  ολίσθηση, και μετάβαση στη κατάσταση 67
 
@@ -1118,7 +1118,7 @@ formal_parameters (101)
 
    85 if_statement: "if" "(" . expression ")" label "," label "," label
    86             | "if" "(" . expression ")" simple_statement
-  108 branch_statement: "if" "(" . $@7 expression ")" $@8 "then" body tail
+  108 branch_statement: "if" "(" . $@7 expression $@8 "then" body tail
 
     ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
     "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
@@ -1631,7 +1631,7 @@ formal_parameters (101)
 
 Κατάσταση 106 
 
-  108 branch_statement: "if" "(" $@7 . expression ")" $@8 "then" body tail
+  108 branch_statement: "if" "(" $@7 . expression $@8 "then" body tail
 
     ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
     "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
@@ -2119,7 +2119,7 @@ formal_parameters (101)
    70           | expression . "*" expression
    71           | expression . "/" expression
    72           | expression . "**" expression
-  108 branch_statement: "if" "(" $@7 expression . ")" $@8 "then" body tail
+  108 branch_statement: "if" "(" $@7 expression . $@8 "then" body tail
 
     ".OR."                                     ολίσθηση, και μετάβαση στη κατάσταση 97
     ".AND."                                    ολίσθηση, και μετάβαση στη κατάσταση 98
@@ -2128,7 +2128,10 @@ formal_parameters (101)
     "*"                                        ολίσθηση, και μετάβαση στη κατάσταση 101
     "/"                                        ολίσθηση, και μετάβαση στη κατάσταση 102
     "**"                                       ολίσθηση, και μετάβαση στη κατάσταση 103
-    ")"                                        ολίσθηση, και μετάβαση στη κατάσταση 168
+
+    $default  ελάττωση με χρήση του κανόνα 107 ($@8)
+
+    $@8  πήγαινε στην κατάσταση 168
 
 
 Κατάσταση 143 
@@ -2382,11 +2385,9 @@ formal_parameters (101)
 
 Κατάσταση 168 
 
-  108 branch_statement: "if" "(" $@7 expression ")" . $@8 "then" body tail
+  108 branch_statement: "if" "(" $@7 expression $@8 . "then" body tail
 
-    $default  ελάττωση με χρήση του κανόνα 107 ($@8)
-
-    $@8  πήγαινε στην κατάσταση 190
+    "then"  ολίσθηση, και μετάβαση στη κατάσταση 190
 
 
 Κατάσταση 169 
@@ -2617,9 +2618,12 @@ formal_parameters (101)
 
 Κατάσταση 190 
 
-  108 branch_statement: "if" "(" $@7 expression ")" $@8 . "then" body tail
+  108 branch_statement: "if" "(" $@7 expression $@8 "then" . body tail
 
-    "then"  ολίσθηση, και μετάβαση στη κατάσταση 206
+    $default  ελάττωση με χρήση του κανόνα 6 (declarations)
+
+    body          πήγαινε στην κατάσταση 206
+    declarations  πήγαινε στην κατάσταση 3
 
 
 Κατάσταση 191 
@@ -2781,12 +2785,12 @@ formal_parameters (101)
 
 Κατάσταση 206 
 
-  108 branch_statement: "if" "(" $@7 expression ")" $@8 "then" . body tail
+  108 branch_statement: "if" "(" $@7 expression $@8 "then" body . tail
 
-    $default  ελάττωση με χρήση του κανόνα 6 (declarations)
+    "else"   ολίσθηση, και μετάβαση στη κατάσταση 220
+    "endif"  ολίσθηση, και μετάβαση στη κατάσταση 221
 
-    body          πήγαινε στην κατάσταση 220
-    declarations  πήγαινε στην κατάσταση 3
+    tail  πήγαινε στην κατάσταση 222
 
 
 Κατάσταση 207 
@@ -2804,7 +2808,7 @@ formal_parameters (101)
 
     constant    πήγαινε στην κατάσταση 62
     variable    πήγαινε στην κατάσταση 63
-    expression  πήγαινε στην κατάσταση 221
+    expression  πήγαινε στην κατάσταση 223
 
 
 Κατάσταση 208 
@@ -2835,7 +2839,7 @@ formal_parameters (101)
   122 formal_parameters: type vars . "," formal_parameters
   123                  | type vars .
 
-    ","  ολίσθηση, και μετάβαση στη κατάσταση 222
+    ","  ολίσθηση, και μετάβαση στη κατάσταση 224
 
     $default  ελάττωση με χρήση του κανόνα 123 (formal_parameters)
 
@@ -2846,14 +2850,14 @@ formal_parameters (101)
 
     $default  ελάττωση με χρήση του κανόνα 119 ($@12)
 
-    $@12  πήγαινε στην κατάσταση 223
+    $@12  πήγαινε στην κατάσταση 225
 
 
 Κατάσταση 213 
 
   117 header: type "function" "id" "(" $@9 formal_parameters . ")" $@10
 
-    ")"  ολίσθηση, και μετάβαση στη κατάσταση 224
+    ")"  ολίσθηση, και μετάβαση στη κατάσταση 226
 
 
 Κατάσταση 214 
@@ -2862,7 +2866,7 @@ formal_parameters (101)
 
     "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 23
 
-    label  πήγαινε στην κατάσταση 225
+    label  πήγαινε στην κατάσταση 227
 
 
 Κατάσταση 215 
@@ -2899,20 +2903,34 @@ formal_parameters (101)
 
     "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 23
 
-    label  πήγαινε στην κατάσταση 226
+    label  πήγαινε στην κατάσταση 228
 
 
 Κατάσταση 220 
 
-  108 branch_statement: "if" "(" $@7 expression ")" $@8 "then" body . tail
+  109 tail: "else" . body "endif"
 
-    "else"   ολίσθηση, και μετάβαση στη κατάσταση 227
-    "endif"  ολίσθηση, και μετάβαση στη κατάσταση 228
+    $default  ελάττωση με χρήση του κανόνα 6 (declarations)
 
-    tail  πήγαινε στην κατάσταση 229
+    body          πήγαινε στην κατάσταση 229
+    declarations  πήγαινε στην κατάσταση 3
 
 
 Κατάσταση 221 
+
+  110 tail: "endif" .
+
+    $default  ελάττωση με χρήση του κανόνα 110 (tail)
+
+
+Κατάσταση 222 
+
+  108 branch_statement: "if" "(" $@7 expression $@8 "then" body tail .
+
+    $default  ελάττωση με χρήση του κανόνα 108 (branch_statement)
+
+
+Κατάσταση 223 
 
    66 expression: expression . ".OR." expression
    67           | expression . ".AND." expression
@@ -2934,7 +2952,7 @@ formal_parameters (101)
     $default  ελάττωση με χρήση του κανόνα 97 (step)
 
 
-Κατάσταση 222 
+Κατάσταση 224 
 
    11 vars: vars "," . undef_variable
    12     | vars "," . error
@@ -2952,14 +2970,14 @@ formal_parameters (101)
     formal_parameters  πήγαινε στην κατάσταση 230
 
 
-Κατάσταση 223 
+Κατάσταση 225 
 
   120 header: "subroutine" "id" "(" $@11 formal_parameters ")" $@12 .
 
     $default  ελάττωση με χρήση του κανόνα 120 (header)
 
 
-Κατάσταση 224 
+Κατάσταση 226 
 
   117 header: type "function" "id" "(" $@9 formal_parameters ")" . $@10
 
@@ -2968,42 +2986,25 @@ formal_parameters (101)
     $@10  πήγαινε στην κατάσταση 231
 
 
-Κατάσταση 225 
+Κατάσταση 227 
 
    87 if_statement: error "(" expression ")" label "," label "," label .
 
     $default  ελάττωση με χρήση του κανόνα 87 (if_statement)
 
 
-Κατάσταση 226 
+Κατάσταση 228 
 
    85 if_statement: "if" "(" expression ")" label "," label "," label .
 
     $default  ελάττωση με χρήση του κανόνα 85 (if_statement)
 
 
-Κατάσταση 227 
-
-  109 tail: "else" . body "endif"
-
-    $default  ελάττωση με χρήση του κανόνα 6 (declarations)
-
-    body          πήγαινε στην κατάσταση 232
-    declarations  πήγαινε στην κατάσταση 3
-
-
-Κατάσταση 228 
-
-  110 tail: "endif" .
-
-    $default  ελάττωση με χρήση του κανόνα 110 (tail)
-
-
 Κατάσταση 229 
 
-  108 branch_statement: "if" "(" $@7 expression ")" $@8 "then" body tail .
+  109 tail: "else" body . "endif"
 
-    $default  ελάττωση με χρήση του κανόνα 108 (branch_statement)
+    "endif"  ολίσθηση, και μετάβαση στη κατάσταση 232
 
 
 Κατάσταση 230 
@@ -3021,13 +3022,6 @@ formal_parameters (101)
 
 
 Κατάσταση 232 
-
-  109 tail: "else" body . "endif"
-
-    "endif"  ολίσθηση, και μετάβαση στη κατάσταση 233
-
-
-Κατάσταση 233 
 
   109 tail: "else" body "endif" .
 
