@@ -4,6 +4,7 @@
     *   CCONST yylval ειδικές περιπτώσεις \ν....      *
     *   RCONST το regex θέλει λίγη ακόμα δουλειά      *    
     *   απότι φένεται και το IDENTIFIER έχει θέμα...  *
+    *   πιθανώς και τα conversion dec,float,hec θεμα  *
 */
 
 %{
@@ -28,7 +29,10 @@
     char str_buf[256];
     int error_counter = 0;
 %}
-
+/*
+    noyywrap: read 1 file only
+    yylineno: get line number 
+*/
 %option noyywrap
 %option yylineno
 %option case-insensitive
@@ -46,7 +50,7 @@ ICONST                       ([1-9][0-9]*|0[^hbHB])|(0H[abcdefABCDEF1-9][abcdefA
 RCONST                       ({DIGIT}*\.{DIGIT}*|{DIGIT}\.{DIGIT}*)|([1-9]{DIGIT}*E[+-]?{DIGIT}+)|(0B1[01]*\.[01]*)|(0H[abcdefABCDEF0-9][abcdefABCDEF0-9]*\.[abcdefABCDEF0-9]*)
 CCONST                       (\'(([^\\])|(\\[nftrbv]))\')
 LCONST                       ".TRUE."|".FALSE."
-
+/*({[a-zA-Z]}{{[a-zA-Z]}|{[0-9]}}*)|(_(({{[a-zA-Z]}|{[0-9]}}|{{[a-zA-Z]}|{[0-9]}}_{{[a-zA-Z]}|{[0-9]}}))*_)*/
 
 %%
 
@@ -123,8 +127,8 @@ LCONST                       ".TRUE."|".FALSE."
 
 ".OR."                       { print_token(T_OROP); return T_OROP; }  
 ".AND."                      { print_token(T_ANDOP); return T_ANDOP; }  
-".NOT"                       { print_token(T_NOTOP); return T_NOTOP; }  
-".GT."|".GE."|".LT."|".LE."|".EQ."|".NE"  { print_token(T_RELOP); return T_RELOP; } 
+".NOT."                       { print_token(T_NOTOP); return T_NOTOP; }  
+".GT."|".GE."|".LT."|".LE."|".EQ."|".NE."  { print_token(T_RELOP); return T_RELOP; } 
 "+"|"-"                      { print_token(T_ADDOP); return T_ADDOP; } 
 "*"                          { print_token(T_MULOP); return T_MULOP; }
 "/"                          { print_token(T_DIVOP); return T_DIVOP; }

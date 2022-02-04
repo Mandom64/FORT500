@@ -1,10 +1,10 @@
 /*
     Γεωργιάδης Χρήστος 2116088
     TO DO:
-    *   resolve remaining collisions                                            *
-    *   να φτιαχτεί το hashtable με τα scopes                                   *
-    *   να δω αν χρειαστεί να πιάσω κιάλλα obvious errors στην γραμματική       *
-    *   να φτιάξω πίνακα συμβόλων                                               *
+    *   1)resolve remaining collisions                                            *
+    *   2)να φτιαχτεί το hashtable με τα scopes                                   *
+    *   3)να δω αν χρειαστεί να πιάσω κιάλλα obvious errors στην γραμματική       *
+    *   4)να φτιάξω πίνακα συμβόλων                                               *
 */
 %{
     #include <stdio.h>
@@ -83,14 +83,14 @@
 %token <string_val>T_STRING "string"
 
 %token T_EOF       0       "EOF"
-
+/*
 %type <string_val>  program body declarations type undef_variable dims dim fields field vals
 %type <string_val>  value_list values value repeat constant statements labeled_statement label 
 %type <string_val>  statement simple_statement assignment variable expressions expression goto_statement 
 %type <string_val>  labels if_statement subroutine_call io_statement read_list read_item iter_space step
 %type <string_val>  write_list write_item compound_statement branch_statement tail loop_statement 
 %type <string_val>  subprograms header formal_parameters
-
+*/
 
 %left T_NOTOP
 %left T_POWEROP
