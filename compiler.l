@@ -1,30 +1,29 @@
 /*
     Γεωργιάδης Χρήστος 2116088
     TO DO:
-    *   CCONST yylval ειδικές περιπτώσεις \ν....      *
-    *   RCONST το regex θέλει λίγη ακόμα δουλειά      *    
-    *   απότι φένεται και το IDENTIFIER έχει θέμα...  *
-    *   πιθανώς και τα conversion dec,float,hec θεμα  *
+    *   τα REGEX έχουν θέμα                           *    
 */
 
+/* ========================================================================STATEMENTS BLOCK========================================================================*/
 %{
     #include <stdio.h>
     #include <stdlib.h>
     #include <math.h>
+    #include <stdbool.h>
     #include "syntax.tab.h"
     /*
         FLEX DEBUG 0 prints lexical analysis to console 
         FLEX DEBUG 1 doesn't print lexical analysis to console
     */ 
-    #define FLEX_DEBUG 1
+    #define FLEX_DEBUG 0
 
-    void print_token(int token_id);
-    void print_token_binary(int token_id);
-    void print_token_hex(int token_id);
-    void yyerror(const char* error);
-    int  str_to_int(char *str);
+    int   str_to_int(char *str);
     float bin_to_float(char *str);
     float hex_to_float(char *str);
+    void  print_token(int token_id);
+    void  print_token_binary(int token_id);
+    void  print_token_hex(int token_id);
+    void  yyerror(const char* error);
 
     char str_buf[256];
     int error_counter = 0;
@@ -40,18 +39,24 @@
 %x STRING
 %x SINGLE_LINE_COMMENT
 
+/*
+    Τα regx δεν είναι τελίως σωστά για αυτό στο fort500test1.f βγάζει segmetation fault sto "5E2",
+    και παίρνει ξεχωριστά το ".314159" από το ".314159e-31" και το κάνει float ενώ πρέπει να το απορρίψει.
+*/
 LETTER                       [a-zA-Z]
 DIGIT                        [0-9]
 ALPHANUM                     {LETTER}|{DIGIT}
-/* το flex δεν παίρνει anchors αυτό το ver. βρίσκει μόνο τα σωστά ID's(^{LETTER}{ALPHANUM}*$)|(^_(({ALPHANUM}|{ALPHANUM}_{ALPHANUM}))*_$)*/
+/* 
+    το flex δεν παίρνει anchors αυτό το ver. βρίσκει μόνο τα σωστά ID's(^{LETTER}{ALPHANUM}*$)|(^_(({ALPHANUM}|{ALPHANUM}_{ALPHANUM}))*_$)
+*/
 IDENTIFIER                   ({LETTER}{ALPHANUM}*)|(_(({ALPHANUM}|{ALPHANUM}_{ALPHANUM}))*_)
 ICONST                       ([1-9][0-9]*|0[^hbHB])|(0H[abcdefABCDEF1-9][abcdefABCDEF0-9]*)|(0B1[01]*)
-/* κάτι με το '0' έχω θέμα εδώ κάτι λείπει*/
 RCONST                       ({DIGIT}*\.{DIGIT}*|{DIGIT}\.{DIGIT}*)|([1-9]{DIGIT}*E[+-]?{DIGIT}+)|(0B1[01]*\.[01]*)|(0H[abcdefABCDEF0-9][abcdefABCDEF0-9]*\.[abcdefABCDEF0-9]*)
 CCONST                       (\'(([^\\])|(\\[nftrbv]))\')
 LCONST                       ".TRUE."|".FALSE."
 /*({[a-zA-Z]}{{[a-zA-Z]}|{[0-9]}}*)|(_(({{[a-zA-Z]}|{[0-9]}}|{{[a-zA-Z]}|{[0-9]}}_{{[a-zA-Z]}|{[0-9]}}))*_)*/
 
+/* ========================================================================RULES BLOCK========================================================================*/
 %%
 
 "FUNCTION"                   { print_token(T_FUNCTION); return T_FUNCTION; }
@@ -79,15 +84,35 @@ LCONST                       ".TRUE."|".FALSE."
 "RETURN"                     { print_token(T_RETURN); return T_RETURN; }
 
 {IDENTIFIER}                 { print_token(T_ID); yylval.string_val = strdup(yytext); return T_ID;  }
-{ICONST}                     { print_token(T_ICONST); yylval.int_val = str_to_int(yytext); return T_ICONST; }
-{RCONST}                     { if(strcmp(&yytext[1],"B")){ print_token_binary(T_RCONST); yylval.real_val = bin_to_float(yytext); }
-                               else if((strcmp(&yytext[1],"H"))){ print_token_hex(T_RCONST); yylval.real_val = hex_to_float(yytext); } return T_RCONST; }
 {CCONST}                     { print_token(T_CCONST); yylval.char_val = strdup(yytext); return T_CCONST; }
-{LCONST}                     { print_token(T_LCONST); yylval.bool_val = str_to_int(yytext); return T_LCONST; }
+{ICONST}                     { print_token(T_ICONST); yylval.int_val = str_to_int(yytext); return T_ICONST; }
+{RCONST}                     { 
+                                if(strcmp(&yytext[1],"B")){
+                                    print_token_binary(T_RCONST); 
+                                    yylval.real_val = bin_to_float(yytext);
+                                }
+                                else if(strcmp(&yytext[1],"H")){ 
+                                    print_token_hex(T_RCONST); 
+                                    yylval.real_val = hex_to_float(yytext);
+                                }
+                                return T_RCONST; 
+
+                             }
+{LCONST}                     { 
+                                if(strcasecmp(yytext, ".FALSE.")){
+                                    print_token(T_LCONST);
+                                    yylval.bool_val = false;
+                                }
+                                else if(strcasecmp(yytext, ".TRUE.")){
+                                    print_token(T_LCONST);
+                                    yylval.bool_val = true;
+                                }
+                                return T_LCONST; 
+                             }
 
 
 \"                           { strcpy(str_buf,""); BEGIN(STRING); }
-<STRING>\"                   { BEGIN(INITIAL); /*printf("\n[STRING] %s [LINE %d]", str_buf, yylineno);*/ yylval.string_val = strdup(str_buf); return T_STRING; }
+<STRING>\"                   { BEGIN(INITIAL); printf("\n[STRING] %s [LINE %d]", str_buf, yylineno); yylval.string_val = strdup(str_buf); return T_STRING; }
 <STRING>(\\\n|\\\r\n)        {  }
 <STRING>(\\.|[^"\\])         {
                                 if(strlen(yytext) == 2){
@@ -147,8 +172,9 @@ LCONST                       ".TRUE."|".FALSE."
 <<EOF>>                      { print_token(T_EOF); return T_EOF; }
 .                            { yyerror("Unrecognized Character"); }
 
-%%
 
+%%
+/* ========================================================================USER FUNCTIONS BLOCK========================================================================*/
 void print_token(int token_id){
     
     if(FLEX_DEBUG == 1) return;
@@ -194,7 +220,6 @@ int str_to_int(char *str){
 }
 
 float bin_to_float(char *str){
-
     float number = 0.0;
     char *dot = strchr(str, '.');
     int length_real = strlen(dot) - 1;
@@ -226,7 +251,7 @@ float hex_to_float(char *str){
 
 void yyerror(const char* error){
     error_counter++;
-    printf("\n[ERROR %s LINE %d] %s", yytext, yylineno, error);
+    printf("\n[ERROR %s LINE %d] %s\n", yytext, yylineno, error);
 
     if(error_counter == 5){
         printf("\n[MAXIMUM ERRORS FOUND]");

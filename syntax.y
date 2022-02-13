@@ -1,9 +1,7 @@
 /*
     Γεωργιάδης Χρήστος 2116088
     TO DO:
-    *   1)resolve remaining collisions                                            *
     *   2)να φτιαχτεί το hashtable με τα scopes                                   *
-    *   3)να δω αν χρειαστεί να πιάσω κιάλλα obvious errors στην γραμματική       *
     *   4)να φτιάξω πίνακα συμβόλων                                               *
 */
 %{
@@ -29,7 +27,7 @@
 %union{
     int int_val;
     float real_val;
-    char* char_val;
+    char char_val;
     char* string_val;
     _Bool bool_val;
 }
@@ -73,23 +71,23 @@
 %token <string_val> T_ASSIGN           "=" 
 %token <string_val> T_COLON            ":" 
 
-%token <string_val>T_ID   "id" 
+%token <string_val>T_ID                "id" 
 
-%token <int_val>T_ICONST   "iconst" 
-%token <real_val>T_RCONST  "rconst" 
-%token <char_val>T_CCONST  "cconst" 
-%token <bool_val>T_LCONST  "lconst"
+%token <int_val>T_ICONST               "iconst" 
+%token <real_val>T_RCONST              "rconst" 
+%token <char_val>T_CCONST              "cconst" 
+%token <bool_val>T_LCONST              "lconst"
 
 %token <string_val>T_STRING "string"
 
 %token T_EOF       0       "EOF"
 /*
-%type <string_val>  program body declarations type undef_variable dims dim fields field vals
-%type <string_val>  value_list values value repeat constant statements labeled_statement label 
-%type <string_val>  statement simple_statement assignment variable expressions expression goto_statement 
-%type <string_val>  labels if_statement subroutine_call io_statement read_list read_item iter_space step
-%type <string_val>  write_list write_item compound_statement branch_statement tail loop_statement 
-%type <string_val>  subprograms header formal_parameters
+    %type <string_val>  program body declarations type undef_variable dims dim fields field vals
+    %type <string_val>  value_list values value repeat constant statements labeled_statement label 
+    %type <string_val>  statement simple_statement assignment variable expressions expression goto_statement 
+    %type <string_val>  labels if_statement subroutine_call io_statement read_list read_item iter_space step
+    %type <string_val>  write_list write_item compound_statement branch_statement tail loop_statement 
+    %type <string_val>  subprograms header formal_parameters
 */
 
 %left T_NOTOP
@@ -100,6 +98,7 @@
 %left T_ANDOP
 %left T_OROP
 %right T_ASSIGN
+
 /*
     Aρχικό σύμβολο της γραμματικής είναι το program, δεν χρειάζετε να το 
     κάνουμε declare γιατί το bison αρχήζει από μόνο του με τον πρώτο κανόνα.
@@ -107,14 +106,17 @@
 %start program 
 %%
 
-program:            body T_END subprograms
+/*
+    scopes: https://www.inscc.utah.edu/~krueger/6150/Scope_Fortran_90.pdf
+*/
+program:            body T_END subprograms                                                          { scope++; }  
 ;
 body:               declarations statements
 ;
 declarations:       declarations type vars
                     | declarations T_RECORD fields T_ENDREC vars
                     | declarations T_DATA vals
-                    | %empty         { }
+                    | %empty{ }
 ;
 type:               T_INTEGER | T_REAL | T_LOGICAL | T_CHARACTER
 
@@ -122,7 +124,7 @@ vars:               vars T_COMMA undef_variable
                     |vars T_COMMA error 
                     | undef_variable
 ;
-undef_variable:     T_ID T_LPAREN{scope++;} dims T_RPAREN{scope--;}                                 { hashtbl_insert(hashtbl, $1, NULL, scope); }
+undef_variable:     T_ID T_LPAREN dims T_RPAREN                                                     { hashtbl_insert(hashtbl, $1, NULL, scope); }
                     | T_ID                                                                          { hashtbl_insert(hashtbl, $1, NULL, scope); }
 ;
 dims:               dims T_COMMA dim
@@ -151,7 +153,7 @@ value:              repeat T_MULOP T_ADDOP constant
                     | constant
                     | T_STRING
 ;
-repeat:             T_ICONST | %empty  { }
+repeat:             T_ICONST | %empty{ }
 ;
 constant:           T_ICONST | T_RCONST | T_LCONST | T_CCONST
 ;
@@ -179,7 +181,7 @@ assignment:         variable T_ASSIGN expression
                     | variable T_ASSIGN T_STRING
 ;
 variable:           variable T_COLON T_ID                                                           { hashtbl_insert(hashtbl, $3, NULL, scope); }
-                    | variable T_LPAREN{scope++;} expressions T_RPAREN{scope--;}   
+                    | variable T_LPAREN expressions T_RPAREN  
                     | T_ID                                                                          { hashtbl_insert(hashtbl, $1, NULL, scope); }
 ;
 expressions:        expressions T_COMMA expression
@@ -196,18 +198,18 @@ expression:         expression T_OROP expression
                     | T_ADDOP expression
                     | variable
                     | constant
-                    | T_LPAREN{scope++;} expression T_RPAREN{scope--;}
+                    | T_LPAREN expression T_RPAREN
 ;
 goto_statement:     T_GOTO label
-                    | T_GOTO T_ID T_COMMA T_LPAREN{scope++;} labels T_RPAREN{scope--;}              { hashtbl_insert(hashtbl, $2, NULL, scope); }
+                    | T_GOTO T_ID T_COMMA T_LPAREN labels T_RPAREN                                  { hashtbl_insert(hashtbl, $2, NULL, scope); }
 ;
 labels:             labels T_COMMA label
                     | label
 ;
-if_statement:       T_IF T_LPAREN expression T_RPAREN label T_COMMA label T_COMMA label             { scope++; }
-                    | T_IF T_LPAREN expression T_RPAREN simple_statement                            { scope++; scope--; }
-                    |error T_LPAREN expression T_RPAREN label T_COMMA label T_COMMA label           { scope++; scope--; yyerror("no if found"); yyerrok;}
-                    |error T_LPAREN expression T_RPAREN simple_statement                            { scope++; scope--; yyerror("no if found"); yyerrok;}
+if_statement:       T_IF T_LPAREN expression T_RPAREN label T_COMMA label T_COMMA label             
+                    | T_IF T_LPAREN expression T_RPAREN simple_statement                            
+                    |error T_LPAREN expression T_RPAREN label T_COMMA label T_COMMA label           { yyerror("no if found"); yyerrok;}
+                    |error T_LPAREN expression T_RPAREN simple_statement                            { yyerror("no if found"); yyerrok;}
 ;
 subroutine_call:    T_CALL variable
 ;
@@ -223,7 +225,7 @@ read_item:          variable
 iter_space:         expression T_COMMA expression step
 ;
 step:               T_COMMA expression
-                    | %empty     { }
+                    | %empty{ }
 ;
 write_list:         write_list T_COMMA write_item
                     | write_item
@@ -235,21 +237,24 @@ write_item:         expression
 compound_statement: branch_statement
                     | loop_statement
 ;
-branch_statement:   T_IF T_LPAREN{scope++;} expression {scope--;} T_THEN body tail
+branch_statement:   T_IF T_LPAREN expression T_THEN body tail
 ;
-tail:               T_ELSE body T_ENDIF
+/* 
+    δεν είμαι σίγουρος αν η FORTRAN έχει dangling-else problem γιατί τελειώνει τα if, if else με keyword 
+*/
+tail:               T_ELSE body T_ENDIF                                         
                     | T_ENDIF  
 ;
 loop_statement:     T_DO T_ID T_ASSIGN iter_space body T_ENDDO                                      { hashtbl_insert(hashtbl, $2, NULL, scope); }
 ;
-subprograms:        subprograms subprogram
-                    | %empty     { }
+subprograms:        subprograms subprogram                                                          { scope++; }
+                    | %empty{ }
 ;
-subprogram:         header body T_END
+subprogram:         header body T_END                                                               { hashtbl_get(hashtbl, scope); scope--; }                               
 ;
-header:             type T_FUNCTION T_ID T_LPAREN{scope++;} formal_parameters T_RPAREN{scope--;}   { hashtbl_insert(hashtbl, $3, NULL, scope); }
-                    | T_SUBROUTINE T_ID T_LPAREN{scope++;} formal_parameters T_RPAREN{scope--;}    { hashtbl_insert(hashtbl, $2, NULL, scope); }
-                    | T_SUBROUTINE T_ID                                                            { hashtbl_insert(hashtbl, $2, NULL, scope); }
+header:             type T_FUNCTION T_ID T_LPAREN formal_parameters T_RPAREN                        { hashtbl_insert(hashtbl, $3, NULL, scope); }
+                    | T_SUBROUTINE T_ID T_LPAREN formal_parameters T_RPAREN                         { hashtbl_insert(hashtbl, $2, NULL, scope); }
+                    | T_SUBROUTINE T_ID                                                             { hashtbl_insert(hashtbl, $2, NULL, scope); }
 ;
 formal_parameters:  type vars T_COMMA formal_parameters
                     | type vars
