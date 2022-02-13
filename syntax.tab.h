@@ -96,11 +96,11 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 29 "syntax.y" /* yacc.c:1909  */
+#line 27 "syntax.y" /* yacc.c:1909  */
 
     int int_val;
     float real_val;
-    char* char_val;
+    char char_val;
     char* string_val;
     _Bool bool_val;
 

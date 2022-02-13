@@ -385,23 +385,23 @@ struct yy_trans_info
 static const flex_int16_t yy_accept[206] =
     {   0,
         0,    0,    0,    0,    0,    0,   56,   54,   51,   52,
-       54,   29,   35,   54,   46,   47,   43,   42,   48,   26,
-       44,   54,   25,   50,   49,   24,   24,   24,   24,   24,
+       54,   29,   35,   54,   46,   47,   43,   42,   48,   27,
+       44,   54,   26,   50,   49,   24,   24,   24,   24,   24,
        24,   24,   24,   24,   24,   24,   24,   54,   32,   32,
        32,   30,   34,   37,   36,   37,   53,    0,    0,   45,
-       26,    0,    0,    0,    0,    0,    0,    0,    0,   25,
-       25,   25,    0,    0,   26,   25,    0,   24,   24,   24,
+       27,    0,    0,    0,    0,    0,    0,    0,    0,   26,
+       26,   26,    0,    0,   27,   26,    0,   24,   24,   24,
        24,   24,   20,   24,   24,   24,   24,   16,   24,   24,
        24,   24,   24,   24,   24,    0,   24,   33,   32,   31,
-       32,   36,   27,    0,    0,    0,    0,    0,    0,    0,
+       32,   36,   25,    0,    0,    0,    0,    0,    0,    0,
 
-        0,    0,    0,    0,   26,   26,    0,   25,    0,   25,
-        0,   26,   24,   24,   24,   24,   24,    3,   24,   24,
+        0,    0,    0,    0,   27,   27,    0,   26,    0,   26,
+        0,   27,   24,   24,   24,   24,   24,    3,   24,   24,
        24,   24,   24,   24,   24,   24,   24,   24,   24,   24,
-        0,   41,    0,    0,   38,    0,   26,   25,   26,    0,
-       25,   13,   24,   24,   10,   18,   24,   24,   24,   24,
+        0,   41,    0,    0,   38,    0,   27,   26,   27,    0,
+       26,   13,   24,   24,   10,   18,   24,   24,   24,   24,
        12,   24,   24,   14,    5,   24,   24,   22,   24,   17,
-       24,    0,   39,    0,   40,    0,   26,   26,   24,   24,
+       24,    0,   39,    0,   40,    0,   27,   27,   24,   24,
        21,   19,   24,   24,   24,   24,   24,   24,   24,   15,
         0,   28,   24,   24,    9,   24,   24,   24,    8,   23,
        24,   24,   24,   24,    4,    6,   24,   24,   11,    1,
@@ -636,7 +636,7 @@ static const flex_int16_t yy_chk[531] =
 static const flex_int32_t yy_rule_can_match_eol[56] =
     {   0,
 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 
+    0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0,     };
 
 static yy_state_type yy_last_accepting_state;
@@ -657,42 +657,47 @@ char *yytext;
 /*
     Γεωργιάδης Χρήστος 2116088
     TO DO:
-    *   CCONST yylval ειδικές περιπτώσεις \ν....      *
-    *   RCONST το regex θέλει λίγη ακόμα δουλειά      *    
-    *   απότι φένεται και το IDENTIFIER έχει θέμα...  *
-    *   πιθανώς και τα conversion dec,float,hec θεμα  *
+    *   τα REGEX έχουν θέμα                           *    
 */
-#line 11 "compiler.l"
+/* ========================================================================STATEMENTS BLOCK========================================================================*/
+#line 9 "compiler.l"
     #include <stdio.h>
     #include <stdlib.h>
     #include <math.h>
+    #include <stdbool.h>
     #include "syntax.tab.h"
     /*
         FLEX DEBUG 0 prints lexical analysis to console 
         FLEX DEBUG 1 doesn't print lexical analysis to console
     */ 
-    #define FLEX_DEBUG 1
+    #define FLEX_DEBUG 0
 
-    void print_token(int token_id);
-    void print_token_binary(int token_id);
-    void print_token_hex(int token_id);
-    void yyerror(const char* error);
-    int  str_to_int(char *str);
+    int   str_to_int(char *str);
     float bin_to_float(char *str);
     float hex_to_float(char *str);
+    void  print_token(int token_id);
+    void  print_token_binary(int token_id);
+    void  print_token_hex(int token_id);
+    void  yyerror(const char* error);
 
     char str_buf[256];
     int error_counter = 0;
-#line 686 "lex.yy.c"
+#line 685 "lex.yy.c"
 /*
     noyywrap: read 1 file only
     yylineno: get line number 
 */
 
-/* το flex δεν παίρνει anchors αυτό το ver. βρίσκει μόνο τα σωστά ID's(^{LETTER}{ALPHANUM}*$)|(^_(({ALPHANUM}|{ALPHANUM}_{ALPHANUM}))*_$)*/
-/* κάτι με το '0' έχω θέμα εδώ κάτι λείπει*/
+/*
+    Τα regx δεν είναι τελίως σωστά για αυτό στο fort500test1.f βγάζει segmetation fault sto "5E2",
+    και παίρνει ξεχωριστά το ".314159" από το ".314159e-31" και το κάνει float ενώ πρέπει να το απορρίψει.
+*/
+/* 
+    το flex δεν παίρνει anchors αυτό το ver. βρίσκει μόνο τα σωστά ID's(^{LETTER}{ALPHANUM}*$)|(^_(({ALPHANUM}|{ALPHANUM}_{ALPHANUM}))*_$)
+*/
 /*({[a-zA-Z]}{{[a-zA-Z]}|{[0-9]}}*)|(_(({{[a-zA-Z]}|{[0-9]}}|{{[a-zA-Z]}|{[0-9]}}_{{[a-zA-Z]}|{[0-9]}}))*_)*/
-#line 695 "lex.yy.c"
+/* ========================================================================RULES BLOCK========================================================================*/
+#line 700 "lex.yy.c"
 
 #define INITIAL 0
 #define STRING 1
@@ -911,10 +916,10 @@ YY_DECL
 		}
 
 	{
-#line 55 "compiler.l"
+#line 60 "compiler.l"
 
 
-#line 917 "lex.yy.c"
+#line 922 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -983,167 +988,187 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 57 "compiler.l"
+#line 62 "compiler.l"
 { print_token(T_FUNCTION); return T_FUNCTION; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 58 "compiler.l"
+#line 63 "compiler.l"
 { print_token(T_SUBROUTINE); return T_SUBROUTINE; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 59 "compiler.l"
+#line 64 "compiler.l"
 { print_token(T_END); return T_END; }              
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 60 "compiler.l"
+#line 65 "compiler.l"
 { print_token(T_INTEGER); return T_INTEGER; }                   
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 61 "compiler.l"
+#line 66 "compiler.l"
 { print_token(T_REAL); return T_REAL; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 62 "compiler.l"
+#line 67 "compiler.l"
 { print_token(T_LOGICAL); return T_LOGICAL; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 63 "compiler.l"
+#line 68 "compiler.l"
 { print_token(T_CHARACTER); return T_CHARACTER; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 64 "compiler.l"
+#line 69 "compiler.l"
 { print_token(T_RECORD); return T_RECORD; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 65 "compiler.l"
+#line 70 "compiler.l"
 { print_token(T_ENDREC); return T_ENDREC; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 66 "compiler.l"
+#line 71 "compiler.l"
 { print_token(T_DATA); return T_DATA; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 67 "compiler.l"
+#line 72 "compiler.l"
 { print_token(T_CONTINUE); return T_CONTINUE; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 68 "compiler.l"
+#line 73 "compiler.l"
 { print_token(T_GOTO); return T_GOTO; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 69 "compiler.l"
+#line 74 "compiler.l"
 { print_token(T_CALL); return T_CALL; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 70 "compiler.l"
+#line 75 "compiler.l"
 { print_token(T_READ); return T_READ; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 71 "compiler.l"
+#line 76 "compiler.l"
 { print_token(T_WRITE); return T_WRITE; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 72 "compiler.l"
+#line 77 "compiler.l"
 { print_token(T_IF); return T_IF; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 73 "compiler.l"
+#line 78 "compiler.l"
 { print_token(T_THEN); return T_THEN; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 74 "compiler.l"
+#line 79 "compiler.l"
 { print_token(T_ELSE); return T_ELSE; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 75 "compiler.l"
+#line 80 "compiler.l"
 { print_token(T_ENDIF); return T_ENDIF; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 76 "compiler.l"
+#line 81 "compiler.l"
 { print_token(T_DO); return T_DO; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 77 "compiler.l"
+#line 82 "compiler.l"
 { print_token(T_ENDDO); return T_ENDDO; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 78 "compiler.l"
+#line 83 "compiler.l"
 { print_token(T_STOP); return T_STOP; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 79 "compiler.l"
+#line 84 "compiler.l"
 { print_token(T_RETURN); return T_RETURN; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 81 "compiler.l"
+#line 86 "compiler.l"
 { print_token(T_ID); yylval.string_val = strdup(yytext); return T_ID;  }
 	YY_BREAK
 case 25:
 /* rule 25 can match eol */
 YY_RULE_SETUP
-#line 82 "compiler.l"
-{ print_token(T_ICONST); yylval.int_val = str_to_int(yytext); return T_ICONST; }
+#line 87 "compiler.l"
+{ print_token(T_CCONST); yylval.char_val = strdup(yytext); return T_CCONST; }
 	YY_BREAK
 case 26:
+/* rule 26 can match eol */
 YY_RULE_SETUP
-#line 83 "compiler.l"
-{ if(strcmp(&yytext[1],"B")){ print_token_binary(T_RCONST); yylval.real_val = bin_to_float(yytext); }
-                               else if((strcmp(&yytext[1],"H"))){ print_token_hex(T_RCONST); yylval.real_val = hex_to_float(yytext); } return T_RCONST; }
+#line 88 "compiler.l"
+{ print_token(T_ICONST); yylval.int_val = str_to_int(yytext); return T_ICONST; }
 	YY_BREAK
 case 27:
-/* rule 27 can match eol */
 YY_RULE_SETUP
-#line 85 "compiler.l"
-{ print_token(T_CCONST); yylval.char_val = strdup(yytext); return T_CCONST; }
+#line 89 "compiler.l"
+{ 
+                                if(strcmp(&yytext[1],"B")){
+                                    print_token_binary(T_RCONST); 
+                                    yylval.real_val = bin_to_float(yytext);
+                                }
+                                else if(strcmp(&yytext[1],"H")){ 
+                                    print_token_hex(T_RCONST); 
+                                    yylval.real_val = hex_to_float(yytext);
+                                }
+                                return T_RCONST; 
+
+                             }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 86 "compiler.l"
-{ print_token(T_LCONST); yylval.bool_val = str_to_int(yytext); return T_LCONST; }
+#line 101 "compiler.l"
+{ 
+                                if(strcasecmp(yytext, ".FALSE.")){
+                                    print_token(T_LCONST);
+                                    yylval.bool_val = false;
+                                }
+                                else if(strcasecmp(yytext, ".TRUE.")){
+                                    print_token(T_LCONST);
+                                    yylval.bool_val = true;
+                                }
+                                return T_LCONST; 
+                             }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 89 "compiler.l"
+#line 114 "compiler.l"
 { strcpy(str_buf,""); BEGIN(STRING); }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 90 "compiler.l"
-{ BEGIN(INITIAL); /*printf("\n[STRING] %s [LINE %d]", str_buf, yylineno);*/ yylval.string_val = strdup(str_buf); return T_STRING; }
+#line 115 "compiler.l"
+{ BEGIN(INITIAL); printf("\n[STRING] %s [LINE %d]", str_buf, yylineno); yylval.string_val = strdup(str_buf); return T_STRING; }
 	YY_BREAK
 case 31:
 /* rule 31 can match eol */
 YY_RULE_SETUP
-#line 91 "compiler.l"
+#line 116 "compiler.l"
 {  }
 	YY_BREAK
 case 32:
 /* rule 32 can match eol */
 YY_RULE_SETUP
-#line 92 "compiler.l"
+#line 117 "compiler.l"
 {
                                 if(strlen(yytext) == 2){
                                     if(strcmp(yytext, "\\n") == 0){
@@ -1176,132 +1201,132 @@ YY_RULE_SETUP
 case 33:
 /* rule 33 can match eol */
 YY_RULE_SETUP
-#line 120 "compiler.l"
+#line 145 "compiler.l"
 { yyerror("New line without \\"); }
 	YY_BREAK
 case YY_STATE_EOF(STRING):
-#line 121 "compiler.l"
+#line 146 "compiler.l"
 { yyerror("End of string without closing with\""); }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 122 "compiler.l"
+#line 147 "compiler.l"
 { yyerror("Unknown Character"); }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 124 "compiler.l"
+#line 149 "compiler.l"
 { BEGIN(SINGLE_LINE_COMMENT); }
 	YY_BREAK
 case 36:
 /* rule 36 can match eol */
 YY_RULE_SETUP
-#line 125 "compiler.l"
+#line 150 "compiler.l"
 { BEGIN(INITIAL); /*printf("\n[COMMENT LINE %d]", yylineno-1);*/ }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 126 "compiler.l"
+#line 151 "compiler.l"
 { }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 128 "compiler.l"
+#line 153 "compiler.l"
 { print_token(T_OROP); return T_OROP; }  
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 129 "compiler.l"
+#line 154 "compiler.l"
 { print_token(T_ANDOP); return T_ANDOP; }  
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 130 "compiler.l"
+#line 155 "compiler.l"
 { print_token(T_NOTOP); return T_NOTOP; }  
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 131 "compiler.l"
+#line 156 "compiler.l"
 { print_token(T_RELOP); return T_RELOP; } 
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 132 "compiler.l"
+#line 157 "compiler.l"
 { print_token(T_ADDOP); return T_ADDOP; } 
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 133 "compiler.l"
+#line 158 "compiler.l"
 { print_token(T_MULOP); return T_MULOP; }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 134 "compiler.l"
+#line 159 "compiler.l"
 { print_token(T_DIVOP); return T_DIVOP; }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 135 "compiler.l"
+#line 160 "compiler.l"
 { print_token(T_POWEROP); return T_POWEROP; }  
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 137 "compiler.l"
+#line 162 "compiler.l"
 { print_token(T_LPAREN); return T_LPAREN; } 
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 138 "compiler.l"
+#line 163 "compiler.l"
 { print_token(T_RPAREN); return T_RPAREN; } 
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 139 "compiler.l"
+#line 164 "compiler.l"
 { print_token(T_COMMA); return T_COMMA; } 
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 140 "compiler.l"
+#line 165 "compiler.l"
 { print_token(T_ASSIGN); return T_ASSIGN; } 
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 141 "compiler.l"
+#line 166 "compiler.l"
 { print_token(T_COLON); return T_COLON; } 
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 144 "compiler.l"
+#line 169 "compiler.l"
 { }
 	YY_BREAK
 case 52:
 /* rule 52 can match eol */
 YY_RULE_SETUP
-#line 145 "compiler.l"
+#line 170 "compiler.l"
 { }
 	YY_BREAK
 case 53:
 /* rule 53 can match eol */
 YY_RULE_SETUP
-#line 146 "compiler.l"
+#line 171 "compiler.l"
 { }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(SINGLE_LINE_COMMENT):
-#line 147 "compiler.l"
+#line 172 "compiler.l"
 { print_token(T_EOF); return T_EOF; }
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 148 "compiler.l"
+#line 173 "compiler.l"
 { yyerror("Unrecognized Character"); }
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 150 "compiler.l"
+#line 176 "compiler.l"
 ECHO;
 	YY_BREAK
-#line 1304 "lex.yy.c"
+#line 1329 "lex.yy.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2316,9 +2341,9 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 150 "compiler.l"
+#line 176 "compiler.l"
 
-
+/* ========================================================================USER FUNCTIONS BLOCK========================================================================*/
 void print_token(int token_id){
     
     if(FLEX_DEBUG == 1) return;
@@ -2364,7 +2389,6 @@ int str_to_int(char *str){
 }
 
 float bin_to_float(char *str){
-
     float number = 0.0;
     char *dot = strchr(str, '.');
     int length_real = strlen(dot) - 1;
@@ -2396,7 +2420,7 @@ float hex_to_float(char *str){
 
 void yyerror(const char* error){
     error_counter++;
-    printf("\n[ERROR %s LINE %d] %s", yytext, yylineno, error);
+    printf("\n[ERROR %s LINE %d] %s\n", yytext, yylineno, error);
 
     if(error_counter == 5){
         printf("\n[MAXIMUM ERRORS FOUND]");
