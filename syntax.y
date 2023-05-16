@@ -8,7 +8,7 @@
     #include <stdio.h>
     #include <stdlib.h>
     #include <stdbool.h>
-    #include "hashtable\hashtbl.h"
+    #include "hashtable/hashtbl.h"
     /*
         κάνουμε extern το *yyin, yylex() και yyerror 
         που είναι γραμμένα είτε απο εμάς είτε από το flex αλλού
@@ -16,20 +16,19 @@
     extern FILE *yyin;
     extern int yylex();
     extern void yyerror(const char* error);
-    
     HASHTBL *hashtbl;
     int scope = 0;
 %}
 
 /* το error-verbose είναι option του bison και μας δίνει πιο λεπτομερή error reporting που θέλει η εργασία */
-%error-verbose 
+%define parse.error verbose
  
 %union{
-    int int_val;
-    float real_val;
-    char char_val;
-    char* string_val;
-    _Bool bool_val;
+    _Bool   bool_val;
+    int     int_val;
+    float   real_val;
+    char    char_val;
+    char*   string_val;
 }
 
 %token <string_val> T_FUNCTION         "function"
@@ -78,9 +77,9 @@
 %token <char_val>T_CCONST              "cconst" 
 %token <bool_val>T_LCONST              "lconst"
 
-%token <string_val>T_STRING "string"
+%token <string_val>T_STRING            "string"
 
-%token T_EOF       0       "EOF"
+%token T_EOF       0                   "EOF"
 /*
     %type <string_val>  program body declarations type undef_variable dims dim fields field vals
     %type <string_val>  value_list values value repeat constant statements labeled_statement label 
@@ -262,23 +261,21 @@ formal_parameters:  type vars T_COMMA formal_parameters
 
 %%
 
-int main(int argc, char* argv[]){
-
+int main(int argc, char* argv[])
+{
     int token;
-    if(!(hashtbl = hashtbl_create(10, NULL))){
+    if(!(hashtbl = hashtbl_create(10, NULL)))
         puts("Error failed to initialize hashtable");
-    }
-    if(argc > 1){
+    if(argc > 1)
+    {
         yyin = fopen(argv[1], "r");
         if(yyin == NULL){
             perror("[ERROR] COULD NOT OPEN FILE ");
             return -1;
         }
     }
-   
     yyparse();
     fclose(yyin);
     hashtbl_destroy(hashtbl);
-    return 0;
-
+    return EXIT_SUCCESS;
 }

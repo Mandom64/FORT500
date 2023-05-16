@@ -56,8 +56,8 @@
 #define T_EOF               0
 
 
-char* TOKEN_NAMES[] = {
-
+char* TOKEN_NAMES[] = 
+{
     "T_EOF",
     "T_FUNCTION",
     "T_SUBROUTINE",
@@ -101,5 +101,4 @@ char* TOKEN_NAMES[] = {
     "T_CCONST",
     "T_LCONST",
     "T_STRING"
-
 };

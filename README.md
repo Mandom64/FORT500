@@ -1,2 +1,2 @@
 # FORT500
-A simplified compiler for the fake language FORT500
+Small compiler for a FORTRAN-like language

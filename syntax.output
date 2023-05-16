@@ -1,4 +1,4 @@
-Γραμματική
+Grammar
 
     0 $accept: program "EOF"
 
@@ -158,853 +158,890 @@
   111                  | type vars
 
 
-Τερματικά σύμβολα, με κανόνες όπου εμφανίζονται
+Terminals, with rules where they appear
 
-"EOF" (0) 0
-error (256) 12 81 82
-"function" (258) 107
-"subroutine" (259) 108 109
-"end" (260) 1 106
-"integer" (261) 7
-"real" (262) 8
-"logical" (263) 9
-"character" (264) 10
-"record" (265) 4 23
-"endrec" (266) 4 23
-"data" (267) 5
-"continue" (268) 53
-"goto" (269) 75 76
-"call" (270) 83
-"read" (271) 84
-"write" (272) 85
-"if" (273) 79 80 100
-"then" (274) 100
-"else" (275) 101
-"endif" (276) 101 102
-"do" (277) 103
-"enddo" (278) 103
-"stop" (279) 55
-"return" (280) 54
-".OR." (281) 63
-".AND." (282) 64
-".NOT" (283) 70
-".GT. | .GE. | .LT. | .LE. | .EQ. | .NE." (284) 65
-"+|-" (285) 29 32 66 71
-"*" (286) 29 30 31 67
-"/" (287) 26 68
-"**" (288) 69
-"(" (289) 14 59 74 76 79 80 81 82 89 96 100 107 108
-")" (290) 14 59 74 76 79 80 81 82 89 96 107 108
-"," (291) 11 12 16 24 27 61 76 77 79 81 86 89 90 91 93 96 110
-"=" (292) 56 57 89 96 103
-":" (293) 58
-"id" (294) 14 15 19 24 25 58 60 76 89 96 103 107 108 109
-"iconst" (295) 18 35 37 45
-"rconst" (296) 38
-"cconst" (297) 40
-"lconst" (298) 39
-"string" (299) 31 34 57 97
-
-
-Μη τερματικά σύμβολα, με κανόνες όπου εμφανίζονται
-
-$accept (45)
-   στα αριστερά: 0
-program (46)
-   στα αριστερά: 1,στα δεξιά: 0
-body (47)
-   στα αριστερά: 2,στα δεξιά: 1 100 101 103 106
-declarations (48)
-   στα αριστερά: 3 4 5 6,στα δεξιά: 2 3 4 5
-type (49)
-   στα αριστερά: 7 8 9 10,στα δεξιά: 3 22 107 110
-    111
-vars (50)
-   στα αριστερά: 11 12 13,στα δεξιά: 3 4 11 12 22
-    23 110 111
-undef_variable (51)
-   στα αριστερά: 14 15,στα δεξιά: 11 13
-dims (52)
-   στα αριστερά: 16 17,στα δεξιά: 14 16
-dim (53)
-   στα αριστερά: 18 19,στα δεξιά: 16 17
-fields (54)
-   στα αριστερά: 20 21,στα δεξιά: 4 20 23
-field (55)
-   στα αριστερά: 22 23,στα δεξιά: 20 21
-vals (56)
-   στα αριστερά: 24 25,στα δεξιά: 5 24
-value_list (57)
-   στα αριστερά: 26,στα δεξιά: 24 25
-values (58)
-   στα αριστερά: 27 28,στα δεξιά: 26 27
-value (59)
-   στα αριστερά: 29 30 31 32 33 34,στα δεξιά: 27
-    28
-repeat (60)
-   στα αριστερά: 35 36,στα δεξιά: 29 30 31
-constant (61)
-   στα αριστερά: 37 38 39 40,στα δεξιά: 29 30 32
-    33 73
-statements (62)
-   στα αριστερά: 41 42,στα δεξιά: 2 41
-labeled_statement (63)
-   στα αριστερά: 43 44,στα δεξιά: 41 42
-label (64)
-   στα αριστερά: 45,στα δεξιά: 43 75 77 78 79 81
-statement (65)
-   στα αριστερά: 46 47,στα δεξιά: 43 44
-simple_statement (66)
-   στα αριστερά: 48 49 50 51 52 53 54 55,στα δεξιά:
-    46 80 82
-assignment (67)
-   στα αριστερά: 56 57,στα δεξιά: 48
-variable (68)
-   στα αριστερά: 58 59 60,στα δεξιά: 56 57 58 59
-    72 83 88
-expressions (69)
-   στα αριστερά: 61 62,στα δεξιά: 59 61
-expression (70)
-   στα αριστερά: 63 64 65 66 67 68 69 70 71 72 73 74,στα δεξιά:
-    56 61 62 63 64 65 66 67 68 69 70 71 74 79 80 81 82 90 91 95 100
-goto_statement (71)
-   στα αριστερά: 75 76,στα δεξιά: 49
-labels (72)
-   στα αριστερά: 77 78,στα δεξιά: 76 77
-if_statement (73)
-   στα αριστερά: 79 80 81 82,στα δεξιά: 50
-subroutine_call (74)
-   στα αριστερά: 83,στα δεξιά: 51
-io_statement (75)
-   στα αριστερά: 84 85,στα δεξιά: 52
-read_list (76)
-   στα αριστερά: 86 87,στα δεξιά: 84 86 89
-read_item (77)
-   στα αριστερά: 88 89,στα δεξιά: 86 87
-iter_space (78)
-   στα αριστερά: 90,στα δεξιά: 89 96 103
-step (79)
-   στα αριστερά: 91 92,στα δεξιά: 90
-write_list (80)
-   στα αριστερά: 93 94,στα δεξιά: 85 93 96
-write_item (81)
-   στα αριστερά: 95 96 97,στα δεξιά: 93 94
-compound_statement (82)
-   στα αριστερά: 98 99,στα δεξιά: 47
-branch_statement (83)
-   στα αριστερά: 100,στα δεξιά: 98
-tail (84)
-   στα αριστερά: 101 102,στα δεξιά: 100
-loop_statement (85)
-   στα αριστερά: 103,στα δεξιά: 99
-subprograms (86)
-   στα αριστερά: 104 105,στα δεξιά: 1 104
-subprogram (87)
-   στα αριστερά: 106,στα δεξιά: 104
-header (88)
-   στα αριστερά: 107 108 109,στα δεξιά: 106
-formal_parameters (89)
-   στα αριστερά: 110 111,στα δεξιά: 107 108 110
+    "EOF" (0) 0
+    error (256) 12 81 82
+    "function" <string_val> (258) 107
+    "subroutine" <string_val> (259) 108 109
+    "end" <string_val> (260) 1 106
+    "integer" <string_val> (261) 7
+    "real" <string_val> (262) 8
+    "logical" <string_val> (263) 9
+    "character" <string_val> (264) 10
+    "record" <string_val> (265) 4 23
+    "endrec" <string_val> (266) 4 23
+    "data" <string_val> (267) 5
+    "continue" <string_val> (268) 53
+    "goto" <string_val> (269) 75 76
+    "call" <string_val> (270) 83
+    "read" <string_val> (271) 84
+    "write" <string_val> (272) 85
+    "if" <string_val> (273) 79 80 100
+    "then" <string_val> (274) 100
+    "else" <string_val> (275) 101
+    "endif" <string_val> (276) 101 102
+    "do" <string_val> (277) 103
+    "enddo" <string_val> (278) 103
+    "stop" <string_val> (279) 55
+    "return" <string_val> (280) 54
+    ".OR." <string_val> (281) 63
+    ".AND." <string_val> (282) 64
+    ".NOT" <string_val> (283) 70
+    ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE." <string_val> (284) 65
+    "+|-" <string_val> (285) 29 32 66 71
+    "*" <string_val> (286) 29 30 31 67
+    "/" <string_val> (287) 26 68
+    "**" <string_val> (288) 69
+    "(" <string_val> (289) 14 59 74 76 79 80 81 82 89 96 100 107 108
+    ")" <string_val> (290) 14 59 74 76 79 80 81 82 89 96 107 108
+    "," <string_val> (291) 11 12 16 24 27 61 76 77 79 81 86 89 90 91 93 96 110
+    "=" <string_val> (292) 56 57 89 96 103
+    ":" <string_val> (293) 58
+    "id" <string_val> (294) 14 15 19 24 25 58 60 76 89 96 103 107 108 109
+    "iconst" <int_val> (295) 18 35 37 45
+    "rconst" <real_val> (296) 38
+    "cconst" <char_val> (297) 40
+    "lconst" <bool_val> (298) 39
+    "string" <string_val> (299) 31 34 57 97
 
 
-Κατάσταση 0 
+Nonterminals, with rules where they appear
+
+    $accept (45)
+        on left: 0
+    program (46)
+        on left: 1
+        on right: 0
+    body (47)
+        on left: 2
+        on right: 1 100 101 103 106
+    declarations (48)
+        on left: 3 4 5 6
+        on right: 2 3 4 5
+    type (49)
+        on left: 7 8 9 10
+        on right: 3 22 107 110 111
+    vars (50)
+        on left: 11 12 13
+        on right: 3 4 11 12 22 23 110 111
+    undef_variable (51)
+        on left: 14 15
+        on right: 11 13
+    dims (52)
+        on left: 16 17
+        on right: 14 16
+    dim (53)
+        on left: 18 19
+        on right: 16 17
+    fields (54)
+        on left: 20 21
+        on right: 4 20 23
+    field (55)
+        on left: 22 23
+        on right: 20 21
+    vals (56)
+        on left: 24 25
+        on right: 5 24
+    value_list (57)
+        on left: 26
+        on right: 24 25
+    values (58)
+        on left: 27 28
+        on right: 26 27
+    value (59)
+        on left: 29 30 31 32 33 34
+        on right: 27 28
+    repeat (60)
+        on left: 35 36
+        on right: 29 30 31
+    constant (61)
+        on left: 37 38 39 40
+        on right: 29 30 32 33 73
+    statements (62)
+        on left: 41 42
+        on right: 2 41
+    labeled_statement (63)
+        on left: 43 44
+        on right: 41 42
+    label (64)
+        on left: 45
+        on right: 43 75 77 78 79 81
+    statement (65)
+        on left: 46 47
+        on right: 43 44
+    simple_statement (66)
+        on left: 48 49 50 51 52 53 54 55
+        on right: 46 80 82
+    assignment (67)
+        on left: 56 57
+        on right: 48
+    variable (68)
+        on left: 58 59 60
+        on right: 56 57 58 59 72 83 88
+    expressions (69)
+        on left: 61 62
+        on right: 59 61
+    expression (70)
+        on left: 63 64 65 66 67 68 69 70 71 72 73 74
+        on right: 56 61 62 63 64 65 66 67 68 69 70 71 74 79 80 81 82 90 91 95 100
+    goto_statement (71)
+        on left: 75 76
+        on right: 49
+    labels (72)
+        on left: 77 78
+        on right: 76 77
+    if_statement (73)
+        on left: 79 80 81 82
+        on right: 50
+    subroutine_call (74)
+        on left: 83
+        on right: 51
+    io_statement (75)
+        on left: 84 85
+        on right: 52
+    read_list (76)
+        on left: 86 87
+        on right: 84 86 89
+    read_item (77)
+        on left: 88 89
+        on right: 86 87
+    iter_space (78)
+        on left: 90
+        on right: 89 96 103
+    step (79)
+        on left: 91 92
+        on right: 90
+    write_list (80)
+        on left: 93 94
+        on right: 85 93 96
+    write_item (81)
+        on left: 95 96 97
+        on right: 93 94
+    compound_statement (82)
+        on left: 98 99
+        on right: 47
+    branch_statement (83)
+        on left: 100
+        on right: 98
+    tail (84)
+        on left: 101 102
+        on right: 100
+    loop_statement (85)
+        on left: 103
+        on right: 99
+    subprograms (86)
+        on left: 104 105
+        on right: 1 104
+    subprogram (87)
+        on left: 106
+        on right: 104
+    header (88)
+        on left: 107 108 109
+        on right: 106
+    formal_parameters (89)
+        on left: 110 111
+        on right: 107 108 110
+
+
+State 0
 
     0 $accept: . program "EOF"
 
-    $default  ελάττωση με χρήση του κανόνα 6 (declarations)
+    $default  reduce using rule 6 (declarations)
 
-    program       πήγαινε στην κατάσταση 1
-    body          πήγαινε στην κατάσταση 2
-    declarations  πήγαινε στην κατάσταση 3
+    program       go to state 1
+    body          go to state 2
+    declarations  go to state 3
 
 
-Κατάσταση 1 
+State 1
 
     0 $accept: program . "EOF"
 
-    "EOF"  ολίσθηση, και μετάβαση στη κατάσταση 4
+    "EOF"  shift, and go to state 4
 
 
-Κατάσταση 2 
+State 2
 
     1 program: body . "end" subprograms
 
-    "end"  ολίσθηση, και μετάβαση στη κατάσταση 5
+    "end"  shift, and go to state 5
 
 
-Κατάσταση 3 
+State 3
 
     2 body: declarations . statements
     3 declarations: declarations . type vars
     4             | declarations . "record" fields "endrec" vars
     5             | declarations . "data" vals
 
-    error        ολίσθηση, και μετάβαση στη κατάσταση 6
-    "integer"    ολίσθηση, και μετάβαση στη κατάσταση 7
-    "real"       ολίσθηση, και μετάβαση στη κατάσταση 8
-    "logical"    ολίσθηση, και μετάβαση στη κατάσταση 9
-    "character"  ολίσθηση, και μετάβαση στη κατάσταση 10
-    "record"     ολίσθηση, και μετάβαση στη κατάσταση 11
-    "data"       ολίσθηση, και μετάβαση στη κατάσταση 12
-    "continue"   ολίσθηση, και μετάβαση στη κατάσταση 13
-    "goto"       ολίσθηση, και μετάβαση στη κατάσταση 14
-    "call"       ολίσθηση, και μετάβαση στη κατάσταση 15
-    "read"       ολίσθηση, και μετάβαση στη κατάσταση 16
-    "write"      ολίσθηση, και μετάβαση στη κατάσταση 17
-    "if"         ολίσθηση, και μετάβαση στη κατάσταση 18
-    "do"         ολίσθηση, και μετάβαση στη κατάσταση 19
-    "stop"       ολίσθηση, και μετάβαση στη κατάσταση 20
-    "return"     ολίσθηση, και μετάβαση στη κατάσταση 21
-    "id"         ολίσθηση, και μετάβαση στη κατάσταση 22
-    "iconst"     ολίσθηση, και μετάβαση στη κατάσταση 23
+    error        shift, and go to state 6
+    "integer"    shift, and go to state 7
+    "real"       shift, and go to state 8
+    "logical"    shift, and go to state 9
+    "character"  shift, and go to state 10
+    "record"     shift, and go to state 11
+    "data"       shift, and go to state 12
+    "continue"   shift, and go to state 13
+    "goto"       shift, and go to state 14
+    "call"       shift, and go to state 15
+    "read"       shift, and go to state 16
+    "write"      shift, and go to state 17
+    "if"         shift, and go to state 18
+    "do"         shift, and go to state 19
+    "stop"       shift, and go to state 20
+    "return"     shift, and go to state 21
+    "id"         shift, and go to state 22
+    "iconst"     shift, and go to state 23
 
-    type                πήγαινε στην κατάσταση 24
-    statements          πήγαινε στην κατάσταση 25
-    labeled_statement   πήγαινε στην κατάσταση 26
-    label               πήγαινε στην κατάσταση 27
-    statement           πήγαινε στην κατάσταση 28
-    simple_statement    πήγαινε στην κατάσταση 29
-    assignment          πήγαινε στην κατάσταση 30
-    variable            πήγαινε στην κατάσταση 31
-    goto_statement      πήγαινε στην κατάσταση 32
-    if_statement        πήγαινε στην κατάσταση 33
-    subroutine_call     πήγαινε στην κατάσταση 34
-    io_statement        πήγαινε στην κατάσταση 35
-    compound_statement  πήγαινε στην κατάσταση 36
-    branch_statement    πήγαινε στην κατάσταση 37
-    loop_statement      πήγαινε στην κατάσταση 38
+    type                go to state 24
+    statements          go to state 25
+    labeled_statement   go to state 26
+    label               go to state 27
+    statement           go to state 28
+    simple_statement    go to state 29
+    assignment          go to state 30
+    variable            go to state 31
+    goto_statement      go to state 32
+    if_statement        go to state 33
+    subroutine_call     go to state 34
+    io_statement        go to state 35
+    compound_statement  go to state 36
+    branch_statement    go to state 37
+    loop_statement      go to state 38
 
 
-Κατάσταση 4 
+State 4
 
     0 $accept: program "EOF" .
 
-    $default  αποδοχή
+    $default  accept
 
 
-Κατάσταση 5 
+State 5
 
     1 program: body "end" . subprograms
 
-    $default  ελάττωση με χρήση του κανόνα 105 (subprograms)
+    $default  reduce using rule 105 (subprograms)
 
-    subprograms  πήγαινε στην κατάσταση 39
+    subprograms  go to state 39
 
 
-Κατάσταση 6 
+State 6
 
    81 if_statement: error . "(" expression ")" label "," label "," label
    82             | error . "(" expression ")" simple_statement
 
-    "("  ολίσθηση, και μετάβαση στη κατάσταση 40
+    "("  shift, and go to state 40
 
 
-Κατάσταση 7 
+State 7
 
     7 type: "integer" .
 
-    $default  ελάττωση με χρήση του κανόνα 7 (type)
+    $default  reduce using rule 7 (type)
 
 
-Κατάσταση 8 
+State 8
 
     8 type: "real" .
 
-    $default  ελάττωση με χρήση του κανόνα 8 (type)
+    $default  reduce using rule 8 (type)
 
 
-Κατάσταση 9 
+State 9
 
     9 type: "logical" .
 
-    $default  ελάττωση με χρήση του κανόνα 9 (type)
+    $default  reduce using rule 9 (type)
 
 
-Κατάσταση 10 
+State 10
 
    10 type: "character" .
 
-    $default  ελάττωση με χρήση του κανόνα 10 (type)
+    $default  reduce using rule 10 (type)
 
 
-Κατάσταση 11 
+State 11
 
     4 declarations: declarations "record" . fields "endrec" vars
 
-    "integer"    ολίσθηση, και μετάβαση στη κατάσταση 7
-    "real"       ολίσθηση, και μετάβαση στη κατάσταση 8
-    "logical"    ολίσθηση, και μετάβαση στη κατάσταση 9
-    "character"  ολίσθηση, και μετάβαση στη κατάσταση 10
-    "record"     ολίσθηση, και μετάβαση στη κατάσταση 41
+    "integer"    shift, and go to state 7
+    "real"       shift, and go to state 8
+    "logical"    shift, and go to state 9
+    "character"  shift, and go to state 10
+    "record"     shift, and go to state 41
 
-    type    πήγαινε στην κατάσταση 42
-    fields  πήγαινε στην κατάσταση 43
-    field   πήγαινε στην κατάσταση 44
+    type    go to state 42
+    fields  go to state 43
+    field   go to state 44
 
 
-Κατάσταση 12 
+State 12
 
     5 declarations: declarations "data" . vals
 
-    "id"  ολίσθηση, και μετάβαση στη κατάσταση 45
+    "id"  shift, and go to state 45
 
-    vals  πήγαινε στην κατάσταση 46
+    vals  go to state 46
 
 
-Κατάσταση 13 
+State 13
 
    53 simple_statement: "continue" .
 
-    $default  ελάττωση με χρήση του κανόνα 53 (simple_statement)
+    $default  reduce using rule 53 (simple_statement)
 
 
-Κατάσταση 14 
+State 14
 
    75 goto_statement: "goto" . label
    76               | "goto" . "id" "," "(" labels ")"
 
-    "id"      ολίσθηση, και μετάβαση στη κατάσταση 47
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 23
+    "id"      shift, and go to state 47
+    "iconst"  shift, and go to state 23
 
-    label  πήγαινε στην κατάσταση 48
+    label  go to state 48
 
 
-Κατάσταση 15 
+State 15
 
    83 subroutine_call: "call" . variable
 
-    "id"  ολίσθηση, και μετάβαση στη κατάσταση 22
+    "id"  shift, and go to state 22
 
-    variable  πήγαινε στην κατάσταση 49
+    variable  go to state 49
 
 
-Κατάσταση 16 
+State 16
 
    84 io_statement: "read" . read_list
 
-    "("   ολίσθηση, και μετάβαση στη κατάσταση 50
-    "id"  ολίσθηση, και μετάβαση στη κατάσταση 22
+    "("   shift, and go to state 50
+    "id"  shift, and go to state 22
 
-    variable   πήγαινε στην κατάσταση 51
-    read_list  πήγαινε στην κατάσταση 52
-    read_item  πήγαινε στην κατάσταση 53
+    variable   go to state 51
+    read_list  go to state 52
+    read_item  go to state 53
 
 
-Κατάσταση 17 
+State 17
 
    85 io_statement: "write" . write_list
 
-    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
-    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
-    "("       ολίσθηση, και μετάβαση στη κατάσταση 56
-    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
-    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
-    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
-    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
-    "string"  ολίσθηση, και μετάβαση στη κατάσταση 61
+    ".NOT"    shift, and go to state 54
+    "+|-"     shift, and go to state 55
+    "("       shift, and go to state 56
+    "id"      shift, and go to state 22
+    "iconst"  shift, and go to state 57
+    "rconst"  shift, and go to state 58
+    "cconst"  shift, and go to state 59
+    "lconst"  shift, and go to state 60
+    "string"  shift, and go to state 61
 
-    constant    πήγαινε στην κατάσταση 62
-    variable    πήγαινε στην κατάσταση 63
-    expression  πήγαινε στην κατάσταση 64
-    write_list  πήγαινε στην κατάσταση 65
-    write_item  πήγαινε στην κατάσταση 66
+    constant    go to state 62
+    variable    go to state 63
+    expression  go to state 64
+    write_list  go to state 65
+    write_item  go to state 66
 
 
-Κατάσταση 18 
+State 18
 
    79 if_statement: "if" . "(" expression ")" label "," label "," label
    80             | "if" . "(" expression ")" simple_statement
   100 branch_statement: "if" . "(" expression "then" body tail
 
-    "("  ολίσθηση, και μετάβαση στη κατάσταση 67
+    "("  shift, and go to state 67
 
 
-Κατάσταση 19 
+State 19
 
   103 loop_statement: "do" . "id" "=" iter_space body "enddo"
 
-    "id"  ολίσθηση, και μετάβαση στη κατάσταση 68
+    "id"  shift, and go to state 68
 
 
-Κατάσταση 20 
+State 20
 
    55 simple_statement: "stop" .
 
-    $default  ελάττωση με χρήση του κανόνα 55 (simple_statement)
+    $default  reduce using rule 55 (simple_statement)
 
 
-Κατάσταση 21 
+State 21
 
    54 simple_statement: "return" .
 
-    $default  ελάττωση με χρήση του κανόνα 54 (simple_statement)
+    $default  reduce using rule 54 (simple_statement)
 
 
-Κατάσταση 22 
+State 22
 
    60 variable: "id" .
 
-    $default  ελάττωση με χρήση του κανόνα 60 (variable)
+    $default  reduce using rule 60 (variable)
 
 
-Κατάσταση 23 
+State 23
 
    45 label: "iconst" .
 
-    $default  ελάττωση με χρήση του κανόνα 45 (label)
+    $default  reduce using rule 45 (label)
 
 
-Κατάσταση 24 
+State 24
 
     3 declarations: declarations type . vars
 
-    "id"  ολίσθηση, και μετάβαση στη κατάσταση 69
+    "id"  shift, and go to state 69
 
-    vars            πήγαινε στην κατάσταση 70
-    undef_variable  πήγαινε στην κατάσταση 71
+    vars            go to state 70
+    undef_variable  go to state 71
 
 
-Κατάσταση 25 
+State 25
 
     2 body: declarations statements .
    41 statements: statements . labeled_statement
 
-    error       ολίσθηση, και μετάβαση στη κατάσταση 6
-    "continue"  ολίσθηση, και μετάβαση στη κατάσταση 13
-    "goto"      ολίσθηση, και μετάβαση στη κατάσταση 14
-    "call"      ολίσθηση, και μετάβαση στη κατάσταση 15
-    "read"      ολίσθηση, και μετάβαση στη κατάσταση 16
-    "write"     ολίσθηση, και μετάβαση στη κατάσταση 17
-    "if"        ολίσθηση, και μετάβαση στη κατάσταση 18
-    "do"        ολίσθηση, και μετάβαση στη κατάσταση 19
-    "stop"      ολίσθηση, και μετάβαση στη κατάσταση 20
-    "return"    ολίσθηση, και μετάβαση στη κατάσταση 21
-    "id"        ολίσθηση, και μετάβαση στη κατάσταση 22
-    "iconst"    ολίσθηση, και μετάβαση στη κατάσταση 23
+    error       shift, and go to state 6
+    "continue"  shift, and go to state 13
+    "goto"      shift, and go to state 14
+    "call"      shift, and go to state 15
+    "read"      shift, and go to state 16
+    "write"     shift, and go to state 17
+    "if"        shift, and go to state 18
+    "do"        shift, and go to state 19
+    "stop"      shift, and go to state 20
+    "return"    shift, and go to state 21
+    "id"        shift, and go to state 22
+    "iconst"    shift, and go to state 23
 
-    "end"    ελάττωση με χρήση του κανόνα 2 (body)
-    "else"   ελάττωση με χρήση του κανόνα 2 (body)
-    "endif"  ελάττωση με χρήση του κανόνα 2 (body)
-    "enddo"  ελάττωση με χρήση του κανόνα 2 (body)
+    "end"    reduce using rule 2 (body)
+    "else"   reduce using rule 2 (body)
+    "endif"  reduce using rule 2 (body)
+    "enddo"  reduce using rule 2 (body)
 
-    labeled_statement   πήγαινε στην κατάσταση 72
-    label               πήγαινε στην κατάσταση 27
-    statement           πήγαινε στην κατάσταση 28
-    simple_statement    πήγαινε στην κατάσταση 29
-    assignment          πήγαινε στην κατάσταση 30
-    variable            πήγαινε στην κατάσταση 31
-    goto_statement      πήγαινε στην κατάσταση 32
-    if_statement        πήγαινε στην κατάσταση 33
-    subroutine_call     πήγαινε στην κατάσταση 34
-    io_statement        πήγαινε στην κατάσταση 35
-    compound_statement  πήγαινε στην κατάσταση 36
-    branch_statement    πήγαινε στην κατάσταση 37
-    loop_statement      πήγαινε στην κατάσταση 38
+    labeled_statement   go to state 72
+    label               go to state 27
+    statement           go to state 28
+    simple_statement    go to state 29
+    assignment          go to state 30
+    variable            go to state 31
+    goto_statement      go to state 32
+    if_statement        go to state 33
+    subroutine_call     go to state 34
+    io_statement        go to state 35
+    compound_statement  go to state 36
+    branch_statement    go to state 37
+    loop_statement      go to state 38
 
 
-Κατάσταση 26 
+State 26
 
    42 statements: labeled_statement .
 
-    $default  ελάττωση με χρήση του κανόνα 42 (statements)
+    $default  reduce using rule 42 (statements)
 
 
-Κατάσταση 27 
+State 27
 
    43 labeled_statement: label . statement
 
-    error       ολίσθηση, και μετάβαση στη κατάσταση 6
-    "continue"  ολίσθηση, και μετάβαση στη κατάσταση 13
-    "goto"      ολίσθηση, και μετάβαση στη κατάσταση 14
-    "call"      ολίσθηση, και μετάβαση στη κατάσταση 15
-    "read"      ολίσθηση, και μετάβαση στη κατάσταση 16
-    "write"     ολίσθηση, και μετάβαση στη κατάσταση 17
-    "if"        ολίσθηση, και μετάβαση στη κατάσταση 18
-    "do"        ολίσθηση, και μετάβαση στη κατάσταση 19
-    "stop"      ολίσθηση, και μετάβαση στη κατάσταση 20
-    "return"    ολίσθηση, και μετάβαση στη κατάσταση 21
-    "id"        ολίσθηση, και μετάβαση στη κατάσταση 22
+    error       shift, and go to state 6
+    "continue"  shift, and go to state 13
+    "goto"      shift, and go to state 14
+    "call"      shift, and go to state 15
+    "read"      shift, and go to state 16
+    "write"     shift, and go to state 17
+    "if"        shift, and go to state 18
+    "do"        shift, and go to state 19
+    "stop"      shift, and go to state 20
+    "return"    shift, and go to state 21
+    "id"        shift, and go to state 22
 
-    statement           πήγαινε στην κατάσταση 73
-    simple_statement    πήγαινε στην κατάσταση 29
-    assignment          πήγαινε στην κατάσταση 30
-    variable            πήγαινε στην κατάσταση 31
-    goto_statement      πήγαινε στην κατάσταση 32
-    if_statement        πήγαινε στην κατάσταση 33
-    subroutine_call     πήγαινε στην κατάσταση 34
-    io_statement        πήγαινε στην κατάσταση 35
-    compound_statement  πήγαινε στην κατάσταση 36
-    branch_statement    πήγαινε στην κατάσταση 37
-    loop_statement      πήγαινε στην κατάσταση 38
+    statement           go to state 73
+    simple_statement    go to state 29
+    assignment          go to state 30
+    variable            go to state 31
+    goto_statement      go to state 32
+    if_statement        go to state 33
+    subroutine_call     go to state 34
+    io_statement        go to state 35
+    compound_statement  go to state 36
+    branch_statement    go to state 37
+    loop_statement      go to state 38
 
 
-Κατάσταση 28 
+State 28
 
    44 labeled_statement: statement .
 
-    $default  ελάττωση με χρήση του κανόνα 44 (labeled_statement)
+    $default  reduce using rule 44 (labeled_statement)
 
 
-Κατάσταση 29 
+State 29
 
    46 statement: simple_statement .
 
-    $default  ελάττωση με χρήση του κανόνα 46 (statement)
+    $default  reduce using rule 46 (statement)
 
 
-Κατάσταση 30 
+State 30
 
    48 simple_statement: assignment .
 
-    $default  ελάττωση με χρήση του κανόνα 48 (simple_statement)
+    $default  reduce using rule 48 (simple_statement)
 
 
-Κατάσταση 31 
+State 31
 
    56 assignment: variable . "=" expression
    57           | variable . "=" "string"
    58 variable: variable . ":" "id"
    59         | variable . "(" expressions ")"
 
-    "("  ολίσθηση, και μετάβαση στη κατάσταση 74
-    "="  ολίσθηση, και μετάβαση στη κατάσταση 75
-    ":"  ολίσθηση, και μετάβαση στη κατάσταση 76
+    "("  shift, and go to state 74
+    "="  shift, and go to state 75
+    ":"  shift, and go to state 76
 
 
-Κατάσταση 32 
+State 32
 
    49 simple_statement: goto_statement .
 
-    $default  ελάττωση με χρήση του κανόνα 49 (simple_statement)
+    $default  reduce using rule 49 (simple_statement)
 
 
-Κατάσταση 33 
+State 33
 
    50 simple_statement: if_statement .
 
-    $default  ελάττωση με χρήση του κανόνα 50 (simple_statement)
+    $default  reduce using rule 50 (simple_statement)
 
 
-Κατάσταση 34 
+State 34
 
    51 simple_statement: subroutine_call .
 
-    $default  ελάττωση με χρήση του κανόνα 51 (simple_statement)
+    $default  reduce using rule 51 (simple_statement)
 
 
-Κατάσταση 35 
+State 35
 
    52 simple_statement: io_statement .
 
-    $default  ελάττωση με χρήση του κανόνα 52 (simple_statement)
+    $default  reduce using rule 52 (simple_statement)
 
 
-Κατάσταση 36 
+State 36
 
    47 statement: compound_statement .
 
-    $default  ελάττωση με χρήση του κανόνα 47 (statement)
+    $default  reduce using rule 47 (statement)
 
 
-Κατάσταση 37 
+State 37
 
    98 compound_statement: branch_statement .
 
-    $default  ελάττωση με χρήση του κανόνα 98 (compound_statement)
+    $default  reduce using rule 98 (compound_statement)
 
 
-Κατάσταση 38 
+State 38
 
    99 compound_statement: loop_statement .
 
-    $default  ελάττωση με χρήση του κανόνα 99 (compound_statement)
+    $default  reduce using rule 99 (compound_statement)
 
 
-Κατάσταση 39 
+State 39
 
     1 program: body "end" subprograms .
   104 subprograms: subprograms . subprogram
 
-    "subroutine"  ολίσθηση, και μετάβαση στη κατάσταση 77
-    "integer"     ολίσθηση, και μετάβαση στη κατάσταση 7
-    "real"        ολίσθηση, και μετάβαση στη κατάσταση 8
-    "logical"     ολίσθηση, και μετάβαση στη κατάσταση 9
-    "character"   ολίσθηση, και μετάβαση στη κατάσταση 10
+    "subroutine"  shift, and go to state 77
+    "integer"     shift, and go to state 7
+    "real"        shift, and go to state 8
+    "logical"     shift, and go to state 9
+    "character"   shift, and go to state 10
 
-    $default  ελάττωση με χρήση του κανόνα 1 (program)
+    $default  reduce using rule 1 (program)
 
-    type        πήγαινε στην κατάσταση 78
-    subprogram  πήγαινε στην κατάσταση 79
-    header      πήγαινε στην κατάσταση 80
+    type        go to state 78
+    subprogram  go to state 79
+    header      go to state 80
 
 
-Κατάσταση 40 
+State 40
 
    81 if_statement: error "(" . expression ")" label "," label "," label
    82             | error "(" . expression ")" simple_statement
 
-    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
-    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
-    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
-    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
-    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
-    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
-    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+    ".NOT"    shift, and go to state 54
+    "+|-"     shift, and go to state 55
+    "("       shift, and go to state 81
+    "id"      shift, and go to state 22
+    "iconst"  shift, and go to state 57
+    "rconst"  shift, and go to state 58
+    "cconst"  shift, and go to state 59
+    "lconst"  shift, and go to state 60
 
-    constant    πήγαινε στην κατάσταση 62
-    variable    πήγαινε στην κατάσταση 63
-    expression  πήγαινε στην κατάσταση 82
+    constant    go to state 62
+    variable    go to state 63
+    expression  go to state 82
 
 
-Κατάσταση 41 
+State 41
 
    23 field: "record" . fields "endrec" vars
 
-    "integer"    ολίσθηση, και μετάβαση στη κατάσταση 7
-    "real"       ολίσθηση, και μετάβαση στη κατάσταση 8
-    "logical"    ολίσθηση, και μετάβαση στη κατάσταση 9
-    "character"  ολίσθηση, και μετάβαση στη κατάσταση 10
-    "record"     ολίσθηση, και μετάβαση στη κατάσταση 41
+    "integer"    shift, and go to state 7
+    "real"       shift, and go to state 8
+    "logical"    shift, and go to state 9
+    "character"  shift, and go to state 10
+    "record"     shift, and go to state 41
 
-    type    πήγαινε στην κατάσταση 42
-    fields  πήγαινε στην κατάσταση 83
-    field   πήγαινε στην κατάσταση 44
+    type    go to state 42
+    fields  go to state 83
+    field   go to state 44
 
 
-Κατάσταση 42 
+State 42
 
    22 field: type . vars
 
-    "id"  ολίσθηση, και μετάβαση στη κατάσταση 69
+    "id"  shift, and go to state 69
 
-    vars            πήγαινε στην κατάσταση 84
-    undef_variable  πήγαινε στην κατάσταση 71
+    vars            go to state 84
+    undef_variable  go to state 71
 
 
-Κατάσταση 43 
+State 43
 
     4 declarations: declarations "record" fields . "endrec" vars
    20 fields: fields . field
 
-    "integer"    ολίσθηση, και μετάβαση στη κατάσταση 7
-    "real"       ολίσθηση, και μετάβαση στη κατάσταση 8
-    "logical"    ολίσθηση, και μετάβαση στη κατάσταση 9
-    "character"  ολίσθηση, και μετάβαση στη κατάσταση 10
-    "record"     ολίσθηση, και μετάβαση στη κατάσταση 41
-    "endrec"     ολίσθηση, και μετάβαση στη κατάσταση 85
+    "integer"    shift, and go to state 7
+    "real"       shift, and go to state 8
+    "logical"    shift, and go to state 9
+    "character"  shift, and go to state 10
+    "record"     shift, and go to state 41
+    "endrec"     shift, and go to state 85
 
-    type   πήγαινε στην κατάσταση 42
-    field  πήγαινε στην κατάσταση 86
+    type   go to state 42
+    field  go to state 86
 
 
-Κατάσταση 44 
+State 44
 
    21 fields: field .
 
-    $default  ελάττωση με χρήση του κανόνα 21 (fields)
+    $default  reduce using rule 21 (fields)
 
 
-Κατάσταση 45 
+State 45
 
    25 vals: "id" . value_list
 
-    "/"  ολίσθηση, και μετάβαση στη κατάσταση 87
+    "/"  shift, and go to state 87
 
-    value_list  πήγαινε στην κατάσταση 88
+    value_list  go to state 88
 
 
-Κατάσταση 46 
+State 46
 
     5 declarations: declarations "data" vals .
    24 vals: vals . "," "id" value_list
 
-    ","  ολίσθηση, και μετάβαση στη κατάσταση 89
+    ","  shift, and go to state 89
 
-    $default  ελάττωση με χρήση του κανόνα 5 (declarations)
+    $default  reduce using rule 5 (declarations)
 
 
-Κατάσταση 47 
+State 47
 
    76 goto_statement: "goto" "id" . "," "(" labels ")"
 
-    ","  ολίσθηση, και μετάβαση στη κατάσταση 90
+    ","  shift, and go to state 90
 
 
-Κατάσταση 48 
+State 48
 
    75 goto_statement: "goto" label .
 
-    $default  ελάττωση με χρήση του κανόνα 75 (goto_statement)
+    $default  reduce using rule 75 (goto_statement)
 
 
-Κατάσταση 49 
+State 49
 
    58 variable: variable . ":" "id"
    59         | variable . "(" expressions ")"
    83 subroutine_call: "call" variable .
 
-    "("  ολίσθηση, και μετάβαση στη κατάσταση 74
-    ":"  ολίσθηση, και μετάβαση στη κατάσταση 76
+    "("  shift, and go to state 74
+    ":"  shift, and go to state 76
 
-    $default  ελάττωση με χρήση του κανόνα 83 (subroutine_call)
+    $default  reduce using rule 83 (subroutine_call)
 
 
-Κατάσταση 50 
+State 50
 
    89 read_item: "(" . read_list "," "id" "=" iter_space ")"
 
-    "("   ολίσθηση, και μετάβαση στη κατάσταση 50
-    "id"  ολίσθηση, και μετάβαση στη κατάσταση 22
+    "("   shift, and go to state 50
+    "id"  shift, and go to state 22
 
-    variable   πήγαινε στην κατάσταση 51
-    read_list  πήγαινε στην κατάσταση 91
-    read_item  πήγαινε στην κατάσταση 53
+    variable   go to state 51
+    read_list  go to state 91
+    read_item  go to state 53
 
 
-Κατάσταση 51 
+State 51
 
    58 variable: variable . ":" "id"
    59         | variable . "(" expressions ")"
    88 read_item: variable .
 
-    "("  ολίσθηση, και μετάβαση στη κατάσταση 74
-    ":"  ολίσθηση, και μετάβαση στη κατάσταση 76
+    "("  shift, and go to state 74
+    ":"  shift, and go to state 76
 
-    $default  ελάττωση με χρήση του κανόνα 88 (read_item)
+    $default  reduce using rule 88 (read_item)
 
 
-Κατάσταση 52 
+State 52
 
    84 io_statement: "read" read_list .
    86 read_list: read_list . "," read_item
 
-    ","  ολίσθηση, και μετάβαση στη κατάσταση 92
+    ","  shift, and go to state 92
 
-    $default  ελάττωση με χρήση του κανόνα 84 (io_statement)
+    $default  reduce using rule 84 (io_statement)
 
 
-Κατάσταση 53 
+State 53
 
    87 read_list: read_item .
 
-    $default  ελάττωση με χρήση του κανόνα 87 (read_list)
+    $default  reduce using rule 87 (read_list)
 
 
-Κατάσταση 54 
+State 54
 
    70 expression: ".NOT" . expression
 
-    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
-    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
-    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
-    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
-    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
-    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
-    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+    ".NOT"    shift, and go to state 54
+    "+|-"     shift, and go to state 55
+    "("       shift, and go to state 81
+    "id"      shift, and go to state 22
+    "iconst"  shift, and go to state 57
+    "rconst"  shift, and go to state 58
+    "cconst"  shift, and go to state 59
+    "lconst"  shift, and go to state 60
 
-    constant    πήγαινε στην κατάσταση 62
-    variable    πήγαινε στην κατάσταση 63
-    expression  πήγαινε στην κατάσταση 93
+    constant    go to state 62
+    variable    go to state 63
+    expression  go to state 93
 
 
-Κατάσταση 55 
+State 55
 
    71 expression: "+|-" . expression
 
-    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
-    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
-    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
-    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
-    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
-    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
-    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+    ".NOT"    shift, and go to state 54
+    "+|-"     shift, and go to state 55
+    "("       shift, and go to state 81
+    "id"      shift, and go to state 22
+    "iconst"  shift, and go to state 57
+    "rconst"  shift, and go to state 58
+    "cconst"  shift, and go to state 59
+    "lconst"  shift, and go to state 60
 
-    constant    πήγαινε στην κατάσταση 62
-    variable    πήγαινε στην κατάσταση 63
-    expression  πήγαινε στην κατάσταση 94
+    constant    go to state 62
+    variable    go to state 63
+    expression  go to state 94
 
 
-Κατάσταση 56 
+State 56
 
    74 expression: "(" . expression ")"
    96 write_item: "(" . write_list "," "id" "=" iter_space ")"
 
-    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
-    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
-    "("       ολίσθηση, και μετάβαση στη κατάσταση 56
-    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
-    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
-    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
-    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
-    "string"  ολίσθηση, και μετάβαση στη κατάσταση 61
+    ".NOT"    shift, and go to state 54
+    "+|-"     shift, and go to state 55
+    "("       shift, and go to state 56
+    "id"      shift, and go to state 22
+    "iconst"  shift, and go to state 57
+    "rconst"  shift, and go to state 58
+    "cconst"  shift, and go to state 59
+    "lconst"  shift, and go to state 60
+    "string"  shift, and go to state 61
 
-    constant    πήγαινε στην κατάσταση 62
-    variable    πήγαινε στην κατάσταση 63
-    expression  πήγαινε στην κατάσταση 95
-    write_list  πήγαινε στην κατάσταση 96
-    write_item  πήγαινε στην κατάσταση 66
+    constant    go to state 62
+    variable    go to state 63
+    expression  go to state 95
+    write_list  go to state 96
+    write_item  go to state 66
 
 
-Κατάσταση 57 
+State 57
 
    37 constant: "iconst" .
 
-    $default  ελάττωση με χρήση του κανόνα 37 (constant)
+    $default  reduce using rule 37 (constant)
 
 
-Κατάσταση 58 
+State 58
 
    38 constant: "rconst" .
 
-    $default  ελάττωση με χρήση του κανόνα 38 (constant)
+    $default  reduce using rule 38 (constant)
 
 
-Κατάσταση 59 
+State 59
 
    40 constant: "cconst" .
 
-    $default  ελάττωση με χρήση του κανόνα 40 (constant)
+    $default  reduce using rule 40 (constant)
 
 
-Κατάσταση 60 
+State 60
 
    39 constant: "lconst" .
 
-    $default  ελάττωση με χρήση του κανόνα 39 (constant)
+    $default  reduce using rule 39 (constant)
 
 
-Κατάσταση 61 
+State 61
 
    97 write_item: "string" .
 
-    $default  ελάττωση με χρήση του κανόνα 97 (write_item)
+    $default  reduce using rule 97 (write_item)
 
 
-Κατάσταση 62 
+State 62
 
    73 expression: constant .
 
-    $default  ελάττωση με χρήση του κανόνα 73 (expression)
+    $default  reduce using rule 73 (expression)
 
 
-Κατάσταση 63 
+State 63
 
    58 variable: variable . ":" "id"
    59         | variable . "(" expressions ")"
    72 expression: variable .
 
-    "("  ολίσθηση, και μετάβαση στη κατάσταση 74
-    ":"  ολίσθηση, και μετάβαση στη κατάσταση 76
+    "("  shift, and go to state 74
+    ":"  shift, and go to state 76
 
-    $default  ελάττωση με χρήση του κανόνα 72 (expression)
+    $default  reduce using rule 72 (expression)
 
 
-Κατάσταση 64 
+State 64
 
    63 expression: expression . ".OR." expression
    64           | expression . ".AND." expression
@@ -1015,200 +1052,200 @@ formal_parameters (89)
    69           | expression . "**" expression
    95 write_item: expression .
 
-    ".OR."                                     ολίσθηση, και μετάβαση στη κατάσταση 97
-    ".AND."                                    ολίσθηση, και μετάβαση στη κατάσταση 98
-    ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE."  ολίσθηση, και μετάβαση στη κατάσταση 99
-    "+|-"                                      ολίσθηση, και μετάβαση στη κατάσταση 100
-    "*"                                        ολίσθηση, και μετάβαση στη κατάσταση 101
-    "/"                                        ολίσθηση, και μετάβαση στη κατάσταση 102
-    "**"                                       ολίσθηση, και μετάβαση στη κατάσταση 103
+    ".OR."                                     shift, and go to state 97
+    ".AND."                                    shift, and go to state 98
+    ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE."  shift, and go to state 99
+    "+|-"                                      shift, and go to state 100
+    "*"                                        shift, and go to state 101
+    "/"                                        shift, and go to state 102
+    "**"                                       shift, and go to state 103
 
-    $default  ελάττωση με χρήση του κανόνα 95 (write_item)
+    $default  reduce using rule 95 (write_item)
 
 
-Κατάσταση 65 
+State 65
 
    85 io_statement: "write" write_list .
    93 write_list: write_list . "," write_item
 
-    ","  ολίσθηση, και μετάβαση στη κατάσταση 104
+    ","  shift, and go to state 104
 
-    $default  ελάττωση με χρήση του κανόνα 85 (io_statement)
+    $default  reduce using rule 85 (io_statement)
 
 
-Κατάσταση 66 
+State 66
 
    94 write_list: write_item .
 
-    $default  ελάττωση με χρήση του κανόνα 94 (write_list)
+    $default  reduce using rule 94 (write_list)
 
 
-Κατάσταση 67 
+State 67
 
    79 if_statement: "if" "(" . expression ")" label "," label "," label
    80             | "if" "(" . expression ")" simple_statement
   100 branch_statement: "if" "(" . expression "then" body tail
 
-    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
-    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
-    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
-    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
-    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
-    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
-    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+    ".NOT"    shift, and go to state 54
+    "+|-"     shift, and go to state 55
+    "("       shift, and go to state 81
+    "id"      shift, and go to state 22
+    "iconst"  shift, and go to state 57
+    "rconst"  shift, and go to state 58
+    "cconst"  shift, and go to state 59
+    "lconst"  shift, and go to state 60
 
-    constant    πήγαινε στην κατάσταση 62
-    variable    πήγαινε στην κατάσταση 63
-    expression  πήγαινε στην κατάσταση 105
+    constant    go to state 62
+    variable    go to state 63
+    expression  go to state 105
 
 
-Κατάσταση 68 
+State 68
 
   103 loop_statement: "do" "id" . "=" iter_space body "enddo"
 
-    "="  ολίσθηση, και μετάβαση στη κατάσταση 106
+    "="  shift, and go to state 106
 
 
-Κατάσταση 69 
+State 69
 
    14 undef_variable: "id" . "(" dims ")"
    15               | "id" .
 
-    "("  ολίσθηση, και μετάβαση στη κατάσταση 107
+    "("  shift, and go to state 107
 
-    $default  ελάττωση με χρήση του κανόνα 15 (undef_variable)
+    $default  reduce using rule 15 (undef_variable)
 
 
-Κατάσταση 70 
+State 70
 
     3 declarations: declarations type vars .
    11 vars: vars . "," undef_variable
    12     | vars . "," error
 
-    ","  ολίσθηση, και μετάβαση στη κατάσταση 108
+    ","  shift, and go to state 108
 
-    $default  ελάττωση με χρήση του κανόνα 3 (declarations)
+    $default  reduce using rule 3 (declarations)
 
 
-Κατάσταση 71 
+State 71
 
    13 vars: undef_variable .
 
-    $default  ελάττωση με χρήση του κανόνα 13 (vars)
+    $default  reduce using rule 13 (vars)
 
 
-Κατάσταση 72 
+State 72
 
    41 statements: statements labeled_statement .
 
-    $default  ελάττωση με χρήση του κανόνα 41 (statements)
+    $default  reduce using rule 41 (statements)
 
 
-Κατάσταση 73 
+State 73
 
    43 labeled_statement: label statement .
 
-    $default  ελάττωση με χρήση του κανόνα 43 (labeled_statement)
+    $default  reduce using rule 43 (labeled_statement)
 
 
-Κατάσταση 74 
+State 74
 
    59 variable: variable "(" . expressions ")"
 
-    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
-    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
-    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
-    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
-    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
-    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
-    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+    ".NOT"    shift, and go to state 54
+    "+|-"     shift, and go to state 55
+    "("       shift, and go to state 81
+    "id"      shift, and go to state 22
+    "iconst"  shift, and go to state 57
+    "rconst"  shift, and go to state 58
+    "cconst"  shift, and go to state 59
+    "lconst"  shift, and go to state 60
 
-    constant     πήγαινε στην κατάσταση 62
-    variable     πήγαινε στην κατάσταση 63
-    expressions  πήγαινε στην κατάσταση 109
-    expression   πήγαινε στην κατάσταση 110
+    constant     go to state 62
+    variable     go to state 63
+    expressions  go to state 109
+    expression   go to state 110
 
 
-Κατάσταση 75 
+State 75
 
    56 assignment: variable "=" . expression
    57           | variable "=" . "string"
 
-    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
-    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
-    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
-    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
-    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
-    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
-    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
-    "string"  ολίσθηση, και μετάβαση στη κατάσταση 111
+    ".NOT"    shift, and go to state 54
+    "+|-"     shift, and go to state 55
+    "("       shift, and go to state 81
+    "id"      shift, and go to state 22
+    "iconst"  shift, and go to state 57
+    "rconst"  shift, and go to state 58
+    "cconst"  shift, and go to state 59
+    "lconst"  shift, and go to state 60
+    "string"  shift, and go to state 111
 
-    constant    πήγαινε στην κατάσταση 62
-    variable    πήγαινε στην κατάσταση 63
-    expression  πήγαινε στην κατάσταση 112
+    constant    go to state 62
+    variable    go to state 63
+    expression  go to state 112
 
 
-Κατάσταση 76 
+State 76
 
    58 variable: variable ":" . "id"
 
-    "id"  ολίσθηση, και μετάβαση στη κατάσταση 113
+    "id"  shift, and go to state 113
 
 
-Κατάσταση 77 
+State 77
 
   108 header: "subroutine" . "id" "(" formal_parameters ")"
   109       | "subroutine" . "id"
 
-    "id"  ολίσθηση, και μετάβαση στη κατάσταση 114
+    "id"  shift, and go to state 114
 
 
-Κατάσταση 78 
+State 78
 
   107 header: type . "function" "id" "(" formal_parameters ")"
 
-    "function"  ολίσθηση, και μετάβαση στη κατάσταση 115
+    "function"  shift, and go to state 115
 
 
-Κατάσταση 79 
+State 79
 
   104 subprograms: subprograms subprogram .
 
-    $default  ελάττωση με χρήση του κανόνα 104 (subprograms)
+    $default  reduce using rule 104 (subprograms)
 
 
-Κατάσταση 80 
+State 80
 
   106 subprogram: header . body "end"
 
-    $default  ελάττωση με χρήση του κανόνα 6 (declarations)
+    $default  reduce using rule 6 (declarations)
 
-    body          πήγαινε στην κατάσταση 116
-    declarations  πήγαινε στην κατάσταση 3
+    body          go to state 116
+    declarations  go to state 3
 
 
-Κατάσταση 81 
+State 81
 
    74 expression: "(" . expression ")"
 
-    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
-    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
-    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
-    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
-    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
-    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
-    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+    ".NOT"    shift, and go to state 54
+    "+|-"     shift, and go to state 55
+    "("       shift, and go to state 81
+    "id"      shift, and go to state 22
+    "iconst"  shift, and go to state 57
+    "rconst"  shift, and go to state 58
+    "cconst"  shift, and go to state 59
+    "lconst"  shift, and go to state 60
 
-    constant    πήγαινε στην κατάσταση 62
-    variable    πήγαινε στην κατάσταση 63
-    expression  πήγαινε στην κατάσταση 117
+    constant    go to state 62
+    variable    go to state 63
+    expression  go to state 117
 
 
-Κατάσταση 82 
+State 82
 
    63 expression: expression . ".OR." expression
    64           | expression . ".AND." expression
@@ -1220,120 +1257,120 @@ formal_parameters (89)
    81 if_statement: error "(" expression . ")" label "," label "," label
    82             | error "(" expression . ")" simple_statement
 
-    ".OR."                                     ολίσθηση, και μετάβαση στη κατάσταση 97
-    ".AND."                                    ολίσθηση, και μετάβαση στη κατάσταση 98
-    ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE."  ολίσθηση, και μετάβαση στη κατάσταση 99
-    "+|-"                                      ολίσθηση, και μετάβαση στη κατάσταση 100
-    "*"                                        ολίσθηση, και μετάβαση στη κατάσταση 101
-    "/"                                        ολίσθηση, και μετάβαση στη κατάσταση 102
-    "**"                                       ολίσθηση, και μετάβαση στη κατάσταση 103
-    ")"                                        ολίσθηση, και μετάβαση στη κατάσταση 118
+    ".OR."                                     shift, and go to state 97
+    ".AND."                                    shift, and go to state 98
+    ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE."  shift, and go to state 99
+    "+|-"                                      shift, and go to state 100
+    "*"                                        shift, and go to state 101
+    "/"                                        shift, and go to state 102
+    "**"                                       shift, and go to state 103
+    ")"                                        shift, and go to state 118
 
 
-Κατάσταση 83 
+State 83
 
    20 fields: fields . field
    23 field: "record" fields . "endrec" vars
 
-    "integer"    ολίσθηση, και μετάβαση στη κατάσταση 7
-    "real"       ολίσθηση, και μετάβαση στη κατάσταση 8
-    "logical"    ολίσθηση, και μετάβαση στη κατάσταση 9
-    "character"  ολίσθηση, και μετάβαση στη κατάσταση 10
-    "record"     ολίσθηση, και μετάβαση στη κατάσταση 41
-    "endrec"     ολίσθηση, και μετάβαση στη κατάσταση 119
+    "integer"    shift, and go to state 7
+    "real"       shift, and go to state 8
+    "logical"    shift, and go to state 9
+    "character"  shift, and go to state 10
+    "record"     shift, and go to state 41
+    "endrec"     shift, and go to state 119
 
-    type   πήγαινε στην κατάσταση 42
-    field  πήγαινε στην κατάσταση 86
+    type   go to state 42
+    field  go to state 86
 
 
-Κατάσταση 84 
+State 84
 
    11 vars: vars . "," undef_variable
    12     | vars . "," error
    22 field: type vars .
 
-    ","  ολίσθηση, και μετάβαση στη κατάσταση 108
+    ","  shift, and go to state 108
 
-    $default  ελάττωση με χρήση του κανόνα 22 (field)
+    $default  reduce using rule 22 (field)
 
 
-Κατάσταση 85 
+State 85
 
     4 declarations: declarations "record" fields "endrec" . vars
 
-    "id"  ολίσθηση, και μετάβαση στη κατάσταση 69
+    "id"  shift, and go to state 69
 
-    vars            πήγαινε στην κατάσταση 120
-    undef_variable  πήγαινε στην κατάσταση 71
+    vars            go to state 120
+    undef_variable  go to state 71
 
 
-Κατάσταση 86 
+State 86
 
    20 fields: fields field .
 
-    $default  ελάττωση με χρήση του κανόνα 20 (fields)
+    $default  reduce using rule 20 (fields)
 
 
-Κατάσταση 87 
+State 87
 
    26 value_list: "/" . values "/"
 
-    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 121
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 122
-    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
-    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
-    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
-    "string"  ολίσθηση, και μετάβαση στη κατάσταση 123
+    "+|-"     shift, and go to state 121
+    "iconst"  shift, and go to state 122
+    "rconst"  shift, and go to state 58
+    "cconst"  shift, and go to state 59
+    "lconst"  shift, and go to state 60
+    "string"  shift, and go to state 123
 
-    $default  ελάττωση με χρήση του κανόνα 36 (repeat)
+    $default  reduce using rule 36 (repeat)
 
-    values    πήγαινε στην κατάσταση 124
-    value     πήγαινε στην κατάσταση 125
-    repeat    πήγαινε στην κατάσταση 126
-    constant  πήγαινε στην κατάσταση 127
+    values    go to state 124
+    value     go to state 125
+    repeat    go to state 126
+    constant  go to state 127
 
 
-Κατάσταση 88 
+State 88
 
    25 vals: "id" value_list .
 
-    $default  ελάττωση με χρήση του κανόνα 25 (vals)
+    $default  reduce using rule 25 (vals)
 
 
-Κατάσταση 89 
+State 89
 
    24 vals: vals "," . "id" value_list
 
-    "id"  ολίσθηση, και μετάβαση στη κατάσταση 128
+    "id"  shift, and go to state 128
 
 
-Κατάσταση 90 
+State 90
 
    76 goto_statement: "goto" "id" "," . "(" labels ")"
 
-    "("  ολίσθηση, και μετάβαση στη κατάσταση 129
+    "("  shift, and go to state 129
 
 
-Κατάσταση 91 
+State 91
 
    86 read_list: read_list . "," read_item
    89 read_item: "(" read_list . "," "id" "=" iter_space ")"
 
-    ","  ολίσθηση, και μετάβαση στη κατάσταση 130
+    ","  shift, and go to state 130
 
 
-Κατάσταση 92 
+State 92
 
    86 read_list: read_list "," . read_item
 
-    "("   ολίσθηση, και μετάβαση στη κατάσταση 50
-    "id"  ολίσθηση, και μετάβαση στη κατάσταση 22
+    "("   shift, and go to state 50
+    "id"  shift, and go to state 22
 
-    variable   πήγαινε στην κατάσταση 51
-    read_item  πήγαινε στην κατάσταση 131
+    variable   go to state 51
+    read_item  go to state 131
 
 
-Κατάσταση 93 
+State 93
 
    63 expression: expression . ".OR." expression
    64           | expression . ".AND." expression
@@ -1344,18 +1381,18 @@ formal_parameters (89)
    69           | expression . "**" expression
    70           | ".NOT" expression .
 
-    ".OR."                                     ολίσθηση, και μετάβαση στη κατάσταση 97
-    ".AND."                                    ολίσθηση, και μετάβαση στη κατάσταση 98
-    ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE."  ολίσθηση, και μετάβαση στη κατάσταση 99
-    "+|-"                                      ολίσθηση, και μετάβαση στη κατάσταση 100
-    "*"                                        ολίσθηση, και μετάβαση στη κατάσταση 101
-    "/"                                        ολίσθηση, και μετάβαση στη κατάσταση 102
-    "**"                                       ολίσθηση, και μετάβαση στη κατάσταση 103
+    ".OR."                                     shift, and go to state 97
+    ".AND."                                    shift, and go to state 98
+    ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE."  shift, and go to state 99
+    "+|-"                                      shift, and go to state 100
+    "*"                                        shift, and go to state 101
+    "/"                                        shift, and go to state 102
+    "**"                                       shift, and go to state 103
 
-    $default  ελάττωση με χρήση του κανόνα 70 (expression)
+    $default  reduce using rule 70 (expression)
 
 
-Κατάσταση 94 
+State 94
 
    63 expression: expression . ".OR." expression
    64           | expression . ".AND." expression
@@ -1366,14 +1403,14 @@ formal_parameters (89)
    69           | expression . "**" expression
    71           | "+|-" expression .
 
-    ".OR."                                     ολίσθηση, και μετάβαση στη κατάσταση 97
-    ".AND."                                    ολίσθηση, και μετάβαση στη κατάσταση 98
-    ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE."  ολίσθηση, και μετάβαση στη κατάσταση 99
+    ".OR."                                     shift, and go to state 97
+    ".AND."                                    shift, and go to state 98
+    ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE."  shift, and go to state 99
 
-    $default  ελάττωση με χρήση του κανόνα 71 (expression)
+    $default  reduce using rule 71 (expression)
 
 
-Κατάσταση 95 
+State 95
 
    63 expression: expression . ".OR." expression
    64           | expression . ".AND." expression
@@ -1385,173 +1422,173 @@ formal_parameters (89)
    74           | "(" expression . ")"
    95 write_item: expression .
 
-    ".OR."                                     ολίσθηση, και μετάβαση στη κατάσταση 97
-    ".AND."                                    ολίσθηση, και μετάβαση στη κατάσταση 98
-    ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE."  ολίσθηση, και μετάβαση στη κατάσταση 99
-    "+|-"                                      ολίσθηση, και μετάβαση στη κατάσταση 100
-    "*"                                        ολίσθηση, και μετάβαση στη κατάσταση 101
-    "/"                                        ολίσθηση, και μετάβαση στη κατάσταση 102
-    "**"                                       ολίσθηση, και μετάβαση στη κατάσταση 103
-    ")"                                        ολίσθηση, και μετάβαση στη κατάσταση 132
+    ".OR."                                     shift, and go to state 97
+    ".AND."                                    shift, and go to state 98
+    ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE."  shift, and go to state 99
+    "+|-"                                      shift, and go to state 100
+    "*"                                        shift, and go to state 101
+    "/"                                        shift, and go to state 102
+    "**"                                       shift, and go to state 103
+    ")"                                        shift, and go to state 132
 
-    $default  ελάττωση με χρήση του κανόνα 95 (write_item)
+    $default  reduce using rule 95 (write_item)
 
 
-Κατάσταση 96 
+State 96
 
    93 write_list: write_list . "," write_item
    96 write_item: "(" write_list . "," "id" "=" iter_space ")"
 
-    ","  ολίσθηση, και μετάβαση στη κατάσταση 133
+    ","  shift, and go to state 133
 
 
-Κατάσταση 97 
+State 97
 
    63 expression: expression ".OR." . expression
 
-    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
-    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
-    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
-    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
-    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
-    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
-    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+    ".NOT"    shift, and go to state 54
+    "+|-"     shift, and go to state 55
+    "("       shift, and go to state 81
+    "id"      shift, and go to state 22
+    "iconst"  shift, and go to state 57
+    "rconst"  shift, and go to state 58
+    "cconst"  shift, and go to state 59
+    "lconst"  shift, and go to state 60
 
-    constant    πήγαινε στην κατάσταση 62
-    variable    πήγαινε στην κατάσταση 63
-    expression  πήγαινε στην κατάσταση 134
+    constant    go to state 62
+    variable    go to state 63
+    expression  go to state 134
 
 
-Κατάσταση 98 
+State 98
 
    64 expression: expression ".AND." . expression
 
-    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
-    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
-    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
-    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
-    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
-    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
-    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+    ".NOT"    shift, and go to state 54
+    "+|-"     shift, and go to state 55
+    "("       shift, and go to state 81
+    "id"      shift, and go to state 22
+    "iconst"  shift, and go to state 57
+    "rconst"  shift, and go to state 58
+    "cconst"  shift, and go to state 59
+    "lconst"  shift, and go to state 60
 
-    constant    πήγαινε στην κατάσταση 62
-    variable    πήγαινε στην κατάσταση 63
-    expression  πήγαινε στην κατάσταση 135
+    constant    go to state 62
+    variable    go to state 63
+    expression  go to state 135
 
 
-Κατάσταση 99 
+State 99
 
    65 expression: expression ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE." . expression
 
-    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
-    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
-    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
-    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
-    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
-    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
-    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+    ".NOT"    shift, and go to state 54
+    "+|-"     shift, and go to state 55
+    "("       shift, and go to state 81
+    "id"      shift, and go to state 22
+    "iconst"  shift, and go to state 57
+    "rconst"  shift, and go to state 58
+    "cconst"  shift, and go to state 59
+    "lconst"  shift, and go to state 60
 
-    constant    πήγαινε στην κατάσταση 62
-    variable    πήγαινε στην κατάσταση 63
-    expression  πήγαινε στην κατάσταση 136
+    constant    go to state 62
+    variable    go to state 63
+    expression  go to state 136
 
 
-Κατάσταση 100 
+State 100
 
    66 expression: expression "+|-" . expression
 
-    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
-    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
-    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
-    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
-    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
-    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
-    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+    ".NOT"    shift, and go to state 54
+    "+|-"     shift, and go to state 55
+    "("       shift, and go to state 81
+    "id"      shift, and go to state 22
+    "iconst"  shift, and go to state 57
+    "rconst"  shift, and go to state 58
+    "cconst"  shift, and go to state 59
+    "lconst"  shift, and go to state 60
 
-    constant    πήγαινε στην κατάσταση 62
-    variable    πήγαινε στην κατάσταση 63
-    expression  πήγαινε στην κατάσταση 137
+    constant    go to state 62
+    variable    go to state 63
+    expression  go to state 137
 
 
-Κατάσταση 101 
+State 101
 
    67 expression: expression "*" . expression
 
-    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
-    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
-    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
-    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
-    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
-    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
-    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+    ".NOT"    shift, and go to state 54
+    "+|-"     shift, and go to state 55
+    "("       shift, and go to state 81
+    "id"      shift, and go to state 22
+    "iconst"  shift, and go to state 57
+    "rconst"  shift, and go to state 58
+    "cconst"  shift, and go to state 59
+    "lconst"  shift, and go to state 60
 
-    constant    πήγαινε στην κατάσταση 62
-    variable    πήγαινε στην κατάσταση 63
-    expression  πήγαινε στην κατάσταση 138
+    constant    go to state 62
+    variable    go to state 63
+    expression  go to state 138
 
 
-Κατάσταση 102 
+State 102
 
    68 expression: expression "/" . expression
 
-    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
-    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
-    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
-    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
-    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
-    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
-    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+    ".NOT"    shift, and go to state 54
+    "+|-"     shift, and go to state 55
+    "("       shift, and go to state 81
+    "id"      shift, and go to state 22
+    "iconst"  shift, and go to state 57
+    "rconst"  shift, and go to state 58
+    "cconst"  shift, and go to state 59
+    "lconst"  shift, and go to state 60
 
-    constant    πήγαινε στην κατάσταση 62
-    variable    πήγαινε στην κατάσταση 63
-    expression  πήγαινε στην κατάσταση 139
+    constant    go to state 62
+    variable    go to state 63
+    expression  go to state 139
 
 
-Κατάσταση 103 
+State 103
 
    69 expression: expression "**" . expression
 
-    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
-    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
-    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
-    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
-    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
-    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
-    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+    ".NOT"    shift, and go to state 54
+    "+|-"     shift, and go to state 55
+    "("       shift, and go to state 81
+    "id"      shift, and go to state 22
+    "iconst"  shift, and go to state 57
+    "rconst"  shift, and go to state 58
+    "cconst"  shift, and go to state 59
+    "lconst"  shift, and go to state 60
 
-    constant    πήγαινε στην κατάσταση 62
-    variable    πήγαινε στην κατάσταση 63
-    expression  πήγαινε στην κατάσταση 140
+    constant    go to state 62
+    variable    go to state 63
+    expression  go to state 140
 
 
-Κατάσταση 104 
+State 104
 
    93 write_list: write_list "," . write_item
 
-    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
-    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
-    "("       ολίσθηση, και μετάβαση στη κατάσταση 56
-    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
-    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
-    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
-    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
-    "string"  ολίσθηση, και μετάβαση στη κατάσταση 61
+    ".NOT"    shift, and go to state 54
+    "+|-"     shift, and go to state 55
+    "("       shift, and go to state 56
+    "id"      shift, and go to state 22
+    "iconst"  shift, and go to state 57
+    "rconst"  shift, and go to state 58
+    "cconst"  shift, and go to state 59
+    "lconst"  shift, and go to state 60
+    "string"  shift, and go to state 61
 
-    constant    πήγαινε στην κατάσταση 62
-    variable    πήγαινε στην κατάσταση 63
-    expression  πήγαινε στην κατάσταση 64
-    write_item  πήγαινε στην κατάσταση 141
+    constant    go to state 62
+    variable    go to state 63
+    expression  go to state 64
+    write_item  go to state 141
 
 
-Κατάσταση 105 
+State 105
 
    63 expression: expression . ".OR." expression
    64           | expression . ".AND." expression
@@ -1564,68 +1601,68 @@ formal_parameters (89)
    80             | "if" "(" expression . ")" simple_statement
   100 branch_statement: "if" "(" expression . "then" body tail
 
-    "then"                                     ολίσθηση, και μετάβαση στη κατάσταση 142
-    ".OR."                                     ολίσθηση, και μετάβαση στη κατάσταση 97
-    ".AND."                                    ολίσθηση, και μετάβαση στη κατάσταση 98
-    ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE."  ολίσθηση, και μετάβαση στη κατάσταση 99
-    "+|-"                                      ολίσθηση, και μετάβαση στη κατάσταση 100
-    "*"                                        ολίσθηση, και μετάβαση στη κατάσταση 101
-    "/"                                        ολίσθηση, και μετάβαση στη κατάσταση 102
-    "**"                                       ολίσθηση, και μετάβαση στη κατάσταση 103
-    ")"                                        ολίσθηση, και μετάβαση στη κατάσταση 143
+    "then"                                     shift, and go to state 142
+    ".OR."                                     shift, and go to state 97
+    ".AND."                                    shift, and go to state 98
+    ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE."  shift, and go to state 99
+    "+|-"                                      shift, and go to state 100
+    "*"                                        shift, and go to state 101
+    "/"                                        shift, and go to state 102
+    "**"                                       shift, and go to state 103
+    ")"                                        shift, and go to state 143
 
 
-Κατάσταση 106 
+State 106
 
   103 loop_statement: "do" "id" "=" . iter_space body "enddo"
 
-    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
-    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
-    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
-    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
-    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
-    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
-    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+    ".NOT"    shift, and go to state 54
+    "+|-"     shift, and go to state 55
+    "("       shift, and go to state 81
+    "id"      shift, and go to state 22
+    "iconst"  shift, and go to state 57
+    "rconst"  shift, and go to state 58
+    "cconst"  shift, and go to state 59
+    "lconst"  shift, and go to state 60
 
-    constant    πήγαινε στην κατάσταση 62
-    variable    πήγαινε στην κατάσταση 63
-    expression  πήγαινε στην κατάσταση 144
-    iter_space  πήγαινε στην κατάσταση 145
+    constant    go to state 62
+    variable    go to state 63
+    expression  go to state 144
+    iter_space  go to state 145
 
 
-Κατάσταση 107 
+State 107
 
    14 undef_variable: "id" "(" . dims ")"
 
-    "id"      ολίσθηση, και μετάβαση στη κατάσταση 146
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 147
+    "id"      shift, and go to state 146
+    "iconst"  shift, and go to state 147
 
-    dims  πήγαινε στην κατάσταση 148
-    dim   πήγαινε στην κατάσταση 149
+    dims  go to state 148
+    dim   go to state 149
 
 
-Κατάσταση 108 
+State 108
 
    11 vars: vars "," . undef_variable
    12     | vars "," . error
 
-    error  ολίσθηση, και μετάβαση στη κατάσταση 150
-    "id"   ολίσθηση, και μετάβαση στη κατάσταση 69
+    error  shift, and go to state 150
+    "id"   shift, and go to state 69
 
-    undef_variable  πήγαινε στην κατάσταση 151
+    undef_variable  go to state 151
 
 
-Κατάσταση 109 
+State 109
 
    59 variable: variable "(" expressions . ")"
    61 expressions: expressions . "," expression
 
-    ")"  ολίσθηση, και μετάβαση στη κατάσταση 152
-    ","  ολίσθηση, και μετάβαση στη κατάσταση 153
+    ")"  shift, and go to state 152
+    ","  shift, and go to state 153
 
 
-Κατάσταση 110 
+State 110
 
    62 expressions: expression .
    63 expression: expression . ".OR." expression
@@ -1636,25 +1673,25 @@ formal_parameters (89)
    68           | expression . "/" expression
    69           | expression . "**" expression
 
-    ".OR."                                     ολίσθηση, και μετάβαση στη κατάσταση 97
-    ".AND."                                    ολίσθηση, και μετάβαση στη κατάσταση 98
-    ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE."  ολίσθηση, και μετάβαση στη κατάσταση 99
-    "+|-"                                      ολίσθηση, και μετάβαση στη κατάσταση 100
-    "*"                                        ολίσθηση, και μετάβαση στη κατάσταση 101
-    "/"                                        ολίσθηση, και μετάβαση στη κατάσταση 102
-    "**"                                       ολίσθηση, και μετάβαση στη κατάσταση 103
+    ".OR."                                     shift, and go to state 97
+    ".AND."                                    shift, and go to state 98
+    ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE."  shift, and go to state 99
+    "+|-"                                      shift, and go to state 100
+    "*"                                        shift, and go to state 101
+    "/"                                        shift, and go to state 102
+    "**"                                       shift, and go to state 103
 
-    $default  ελάττωση με χρήση του κανόνα 62 (expressions)
+    $default  reduce using rule 62 (expressions)
 
 
-Κατάσταση 111 
+State 111
 
    57 assignment: variable "=" "string" .
 
-    $default  ελάττωση με χρήση του κανόνα 57 (assignment)
+    $default  reduce using rule 57 (assignment)
 
 
-Κατάσταση 112 
+State 112
 
    56 assignment: variable "=" expression .
    63 expression: expression . ".OR." expression
@@ -1665,49 +1702,49 @@ formal_parameters (89)
    68           | expression . "/" expression
    69           | expression . "**" expression
 
-    ".OR."                                     ολίσθηση, και μετάβαση στη κατάσταση 97
-    ".AND."                                    ολίσθηση, και μετάβαση στη κατάσταση 98
-    ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE."  ολίσθηση, και μετάβαση στη κατάσταση 99
-    "+|-"                                      ολίσθηση, και μετάβαση στη κατάσταση 100
-    "*"                                        ολίσθηση, και μετάβαση στη κατάσταση 101
-    "/"                                        ολίσθηση, και μετάβαση στη κατάσταση 102
-    "**"                                       ολίσθηση, και μετάβαση στη κατάσταση 103
+    ".OR."                                     shift, and go to state 97
+    ".AND."                                    shift, and go to state 98
+    ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE."  shift, and go to state 99
+    "+|-"                                      shift, and go to state 100
+    "*"                                        shift, and go to state 101
+    "/"                                        shift, and go to state 102
+    "**"                                       shift, and go to state 103
 
-    $default  ελάττωση με χρήση του κανόνα 56 (assignment)
+    $default  reduce using rule 56 (assignment)
 
 
-Κατάσταση 113 
+State 113
 
    58 variable: variable ":" "id" .
 
-    $default  ελάττωση με χρήση του κανόνα 58 (variable)
+    $default  reduce using rule 58 (variable)
 
 
-Κατάσταση 114 
+State 114
 
   108 header: "subroutine" "id" . "(" formal_parameters ")"
   109       | "subroutine" "id" .
 
-    "("  ολίσθηση, και μετάβαση στη κατάσταση 154
+    "("  shift, and go to state 154
 
-    $default  ελάττωση με χρήση του κανόνα 109 (header)
+    $default  reduce using rule 109 (header)
 
 
-Κατάσταση 115 
+State 115
 
   107 header: type "function" . "id" "(" formal_parameters ")"
 
-    "id"  ολίσθηση, και μετάβαση στη κατάσταση 155
+    "id"  shift, and go to state 155
 
 
-Κατάσταση 116 
+State 116
 
   106 subprogram: header body . "end"
 
-    "end"  ολίσθηση, και μετάβαση στη κατάσταση 156
+    "end"  shift, and go to state 156
 
 
-Κατάσταση 117 
+State 117
 
    63 expression: expression . ".OR." expression
    64           | expression . ".AND." expression
@@ -1718,191 +1755,191 @@ formal_parameters (89)
    69           | expression . "**" expression
    74           | "(" expression . ")"
 
-    ".OR."                                     ολίσθηση, και μετάβαση στη κατάσταση 97
-    ".AND."                                    ολίσθηση, και μετάβαση στη κατάσταση 98
-    ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE."  ολίσθηση, και μετάβαση στη κατάσταση 99
-    "+|-"                                      ολίσθηση, και μετάβαση στη κατάσταση 100
-    "*"                                        ολίσθηση, και μετάβαση στη κατάσταση 101
-    "/"                                        ολίσθηση, και μετάβαση στη κατάσταση 102
-    "**"                                       ολίσθηση, και μετάβαση στη κατάσταση 103
-    ")"                                        ολίσθηση, και μετάβαση στη κατάσταση 132
+    ".OR."                                     shift, and go to state 97
+    ".AND."                                    shift, and go to state 98
+    ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE."  shift, and go to state 99
+    "+|-"                                      shift, and go to state 100
+    "*"                                        shift, and go to state 101
+    "/"                                        shift, and go to state 102
+    "**"                                       shift, and go to state 103
+    ")"                                        shift, and go to state 132
 
 
-Κατάσταση 118 
+State 118
 
    81 if_statement: error "(" expression ")" . label "," label "," label
    82             | error "(" expression ")" . simple_statement
 
-    error       ολίσθηση, και μετάβαση στη κατάσταση 6
-    "continue"  ολίσθηση, και μετάβαση στη κατάσταση 13
-    "goto"      ολίσθηση, και μετάβαση στη κατάσταση 14
-    "call"      ολίσθηση, και μετάβαση στη κατάσταση 15
-    "read"      ολίσθηση, και μετάβαση στη κατάσταση 16
-    "write"     ολίσθηση, και μετάβαση στη κατάσταση 17
-    "if"        ολίσθηση, και μετάβαση στη κατάσταση 157
-    "stop"      ολίσθηση, και μετάβαση στη κατάσταση 20
-    "return"    ολίσθηση, και μετάβαση στη κατάσταση 21
-    "id"        ολίσθηση, και μετάβαση στη κατάσταση 22
-    "iconst"    ολίσθηση, και μετάβαση στη κατάσταση 23
+    error       shift, and go to state 6
+    "continue"  shift, and go to state 13
+    "goto"      shift, and go to state 14
+    "call"      shift, and go to state 15
+    "read"      shift, and go to state 16
+    "write"     shift, and go to state 17
+    "if"        shift, and go to state 157
+    "stop"      shift, and go to state 20
+    "return"    shift, and go to state 21
+    "id"        shift, and go to state 22
+    "iconst"    shift, and go to state 23
 
-    label             πήγαινε στην κατάσταση 158
-    simple_statement  πήγαινε στην κατάσταση 159
-    assignment        πήγαινε στην κατάσταση 30
-    variable          πήγαινε στην κατάσταση 31
-    goto_statement    πήγαινε στην κατάσταση 32
-    if_statement      πήγαινε στην κατάσταση 33
-    subroutine_call   πήγαινε στην κατάσταση 34
-    io_statement      πήγαινε στην κατάσταση 35
+    label             go to state 158
+    simple_statement  go to state 159
+    assignment        go to state 30
+    variable          go to state 31
+    goto_statement    go to state 32
+    if_statement      go to state 33
+    subroutine_call   go to state 34
+    io_statement      go to state 35
 
 
-Κατάσταση 119 
+State 119
 
    23 field: "record" fields "endrec" . vars
 
-    "id"  ολίσθηση, και μετάβαση στη κατάσταση 69
+    "id"  shift, and go to state 69
 
-    vars            πήγαινε στην κατάσταση 160
-    undef_variable  πήγαινε στην κατάσταση 71
+    vars            go to state 160
+    undef_variable  go to state 71
 
 
-Κατάσταση 120 
+State 120
 
     4 declarations: declarations "record" fields "endrec" vars .
    11 vars: vars . "," undef_variable
    12     | vars . "," error
 
-    ","  ολίσθηση, και μετάβαση στη κατάσταση 108
+    ","  shift, and go to state 108
 
-    $default  ελάττωση με χρήση του κανόνα 4 (declarations)
+    $default  reduce using rule 4 (declarations)
 
 
-Κατάσταση 121 
+State 121
 
    32 value: "+|-" . constant
 
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
-    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
-    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
-    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+    "iconst"  shift, and go to state 57
+    "rconst"  shift, and go to state 58
+    "cconst"  shift, and go to state 59
+    "lconst"  shift, and go to state 60
 
-    constant  πήγαινε στην κατάσταση 161
+    constant  go to state 161
 
 
-Κατάσταση 122 
+State 122
 
    35 repeat: "iconst" .
    37 constant: "iconst" .
 
-    "*"       ελάττωση με χρήση του κανόνα 35 (repeat)
-    $default  ελάττωση με χρήση του κανόνα 37 (constant)
+    "*"       reduce using rule 35 (repeat)
+    $default  reduce using rule 37 (constant)
 
 
-Κατάσταση 123 
+State 123
 
    34 value: "string" .
 
-    $default  ελάττωση με χρήση του κανόνα 34 (value)
+    $default  reduce using rule 34 (value)
 
 
-Κατάσταση 124 
+State 124
 
    26 value_list: "/" values . "/"
    27 values: values . "," value
 
-    "/"  ολίσθηση, και μετάβαση στη κατάσταση 162
-    ","  ολίσθηση, και μετάβαση στη κατάσταση 163
+    "/"  shift, and go to state 162
+    ","  shift, and go to state 163
 
 
-Κατάσταση 125 
+State 125
 
    28 values: value .
 
-    $default  ελάττωση με χρήση του κανόνα 28 (values)
+    $default  reduce using rule 28 (values)
 
 
-Κατάσταση 126 
+State 126
 
    29 value: repeat . "*" "+|-" constant
    30      | repeat . "*" constant
    31      | repeat . "*" "string"
 
-    "*"  ολίσθηση, και μετάβαση στη κατάσταση 164
+    "*"  shift, and go to state 164
 
 
-Κατάσταση 127 
+State 127
 
    33 value: constant .
 
-    $default  ελάττωση με χρήση του κανόνα 33 (value)
+    $default  reduce using rule 33 (value)
 
 
-Κατάσταση 128 
+State 128
 
    24 vals: vals "," "id" . value_list
 
-    "/"  ολίσθηση, και μετάβαση στη κατάσταση 87
+    "/"  shift, and go to state 87
 
-    value_list  πήγαινε στην κατάσταση 165
+    value_list  go to state 165
 
 
-Κατάσταση 129 
+State 129
 
    76 goto_statement: "goto" "id" "," "(" . labels ")"
 
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 23
+    "iconst"  shift, and go to state 23
 
-    label   πήγαινε στην κατάσταση 166
-    labels  πήγαινε στην κατάσταση 167
+    label   go to state 166
+    labels  go to state 167
 
 
-Κατάσταση 130 
+State 130
 
    86 read_list: read_list "," . read_item
    89 read_item: "(" read_list "," . "id" "=" iter_space ")"
 
-    "("   ολίσθηση, και μετάβαση στη κατάσταση 50
-    "id"  ολίσθηση, και μετάβαση στη κατάσταση 168
+    "("   shift, and go to state 50
+    "id"  shift, and go to state 168
 
-    variable   πήγαινε στην κατάσταση 51
-    read_item  πήγαινε στην κατάσταση 131
+    variable   go to state 51
+    read_item  go to state 131
 
 
-Κατάσταση 131 
+State 131
 
    86 read_list: read_list "," read_item .
 
-    $default  ελάττωση με χρήση του κανόνα 86 (read_list)
+    $default  reduce using rule 86 (read_list)
 
 
-Κατάσταση 132 
+State 132
 
    74 expression: "(" expression ")" .
 
-    $default  ελάττωση με χρήση του κανόνα 74 (expression)
+    $default  reduce using rule 74 (expression)
 
 
-Κατάσταση 133 
+State 133
 
    93 write_list: write_list "," . write_item
    96 write_item: "(" write_list "," . "id" "=" iter_space ")"
 
-    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
-    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
-    "("       ολίσθηση, και μετάβαση στη κατάσταση 56
-    "id"      ολίσθηση, και μετάβαση στη κατάσταση 169
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
-    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
-    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
-    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
-    "string"  ολίσθηση, και μετάβαση στη κατάσταση 61
+    ".NOT"    shift, and go to state 54
+    "+|-"     shift, and go to state 55
+    "("       shift, and go to state 56
+    "id"      shift, and go to state 169
+    "iconst"  shift, and go to state 57
+    "rconst"  shift, and go to state 58
+    "cconst"  shift, and go to state 59
+    "lconst"  shift, and go to state 60
+    "string"  shift, and go to state 61
 
-    constant    πήγαινε στην κατάσταση 62
-    variable    πήγαινε στην κατάσταση 63
-    expression  πήγαινε στην κατάσταση 64
-    write_item  πήγαινε στην κατάσταση 141
+    constant    go to state 62
+    variable    go to state 63
+    expression  go to state 64
+    write_item  go to state 141
 
 
-Κατάσταση 134 
+State 134
 
    63 expression: expression . ".OR." expression
    63           | expression ".OR." expression .
@@ -1913,10 +1950,10 @@ formal_parameters (89)
    68           | expression . "/" expression
    69           | expression . "**" expression
 
-    $default  ελάττωση με χρήση του κανόνα 63 (expression)
+    $default  reduce using rule 63 (expression)
 
 
-Κατάσταση 135 
+State 135
 
    63 expression: expression . ".OR." expression
    64           | expression . ".AND." expression
@@ -1927,12 +1964,12 @@ formal_parameters (89)
    68           | expression . "/" expression
    69           | expression . "**" expression
 
-    ".OR."  ολίσθηση, και μετάβαση στη κατάσταση 97
+    ".OR."  shift, and go to state 97
 
-    $default  ελάττωση με χρήση του κανόνα 64 (expression)
+    $default  reduce using rule 64 (expression)
 
 
-Κατάσταση 136 
+State 136
 
    63 expression: expression . ".OR." expression
    64           | expression . ".AND." expression
@@ -1943,13 +1980,13 @@ formal_parameters (89)
    68           | expression . "/" expression
    69           | expression . "**" expression
 
-    ".OR."   ολίσθηση, και μετάβαση στη κατάσταση 97
-    ".AND."  ολίσθηση, και μετάβαση στη κατάσταση 98
+    ".OR."   shift, and go to state 97
+    ".AND."  shift, and go to state 98
 
-    $default  ελάττωση με χρήση του κανόνα 65 (expression)
+    $default  reduce using rule 65 (expression)
 
 
-Κατάσταση 137 
+State 137
 
    63 expression: expression . ".OR." expression
    64           | expression . ".AND." expression
@@ -1960,14 +1997,14 @@ formal_parameters (89)
    68           | expression . "/" expression
    69           | expression . "**" expression
 
-    ".OR."                                     ολίσθηση, και μετάβαση στη κατάσταση 97
-    ".AND."                                    ολίσθηση, και μετάβαση στη κατάσταση 98
-    ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE."  ολίσθηση, και μετάβαση στη κατάσταση 99
+    ".OR."                                     shift, and go to state 97
+    ".AND."                                    shift, and go to state 98
+    ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE."  shift, and go to state 99
 
-    $default  ελάττωση με χρήση του κανόνα 66 (expression)
+    $default  reduce using rule 66 (expression)
 
 
-Κατάσταση 138 
+State 138
 
    63 expression: expression . ".OR." expression
    64           | expression . ".AND." expression
@@ -1978,15 +2015,15 @@ formal_parameters (89)
    68           | expression . "/" expression
    69           | expression . "**" expression
 
-    ".OR."                                     ολίσθηση, και μετάβαση στη κατάσταση 97
-    ".AND."                                    ολίσθηση, και μετάβαση στη κατάσταση 98
-    ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE."  ολίσθηση, και μετάβαση στη κατάσταση 99
-    "+|-"                                      ολίσθηση, και μετάβαση στη κατάσταση 100
+    ".OR."                                     shift, and go to state 97
+    ".AND."                                    shift, and go to state 98
+    ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE."  shift, and go to state 99
+    "+|-"                                      shift, and go to state 100
 
-    $default  ελάττωση με χρήση του κανόνα 67 (expression)
+    $default  reduce using rule 67 (expression)
 
 
-Κατάσταση 139 
+State 139
 
    63 expression: expression . ".OR." expression
    64           | expression . ".AND." expression
@@ -1997,15 +2034,15 @@ formal_parameters (89)
    68           | expression "/" expression .
    69           | expression . "**" expression
 
-    ".OR."                                     ολίσθηση, και μετάβαση στη κατάσταση 97
-    ".AND."                                    ολίσθηση, και μετάβαση στη κατάσταση 98
-    ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE."  ολίσθηση, και μετάβαση στη κατάσταση 99
-    "+|-"                                      ολίσθηση, και μετάβαση στη κατάσταση 100
+    ".OR."                                     shift, and go to state 97
+    ".AND."                                    shift, and go to state 98
+    ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE."  shift, and go to state 99
+    "+|-"                                      shift, and go to state 100
 
-    $default  ελάττωση με χρήση του κανόνα 68 (expression)
+    $default  reduce using rule 68 (expression)
 
 
-Κατάσταση 140 
+State 140
 
    63 expression: expression . ".OR." expression
    64           | expression . ".AND." expression
@@ -2016,61 +2053,61 @@ formal_parameters (89)
    69           | expression . "**" expression
    69           | expression "**" expression .
 
-    ".OR."                                     ολίσθηση, και μετάβαση στη κατάσταση 97
-    ".AND."                                    ολίσθηση, και μετάβαση στη κατάσταση 98
-    ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE."  ολίσθηση, και μετάβαση στη κατάσταση 99
-    "+|-"                                      ολίσθηση, και μετάβαση στη κατάσταση 100
-    "*"                                        ολίσθηση, και μετάβαση στη κατάσταση 101
-    "/"                                        ολίσθηση, και μετάβαση στη κατάσταση 102
+    ".OR."                                     shift, and go to state 97
+    ".AND."                                    shift, and go to state 98
+    ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE."  shift, and go to state 99
+    "+|-"                                      shift, and go to state 100
+    "*"                                        shift, and go to state 101
+    "/"                                        shift, and go to state 102
 
-    $default  ελάττωση με χρήση του κανόνα 69 (expression)
+    $default  reduce using rule 69 (expression)
 
 
-Κατάσταση 141 
+State 141
 
    93 write_list: write_list "," write_item .
 
-    $default  ελάττωση με χρήση του κανόνα 93 (write_list)
+    $default  reduce using rule 93 (write_list)
 
 
-Κατάσταση 142 
+State 142
 
   100 branch_statement: "if" "(" expression "then" . body tail
 
-    $default  ελάττωση με χρήση του κανόνα 6 (declarations)
+    $default  reduce using rule 6 (declarations)
 
-    body          πήγαινε στην κατάσταση 170
-    declarations  πήγαινε στην κατάσταση 3
+    body          go to state 170
+    declarations  go to state 3
 
 
-Κατάσταση 143 
+State 143
 
    79 if_statement: "if" "(" expression ")" . label "," label "," label
    80             | "if" "(" expression ")" . simple_statement
 
-    error       ολίσθηση, και μετάβαση στη κατάσταση 6
-    "continue"  ολίσθηση, και μετάβαση στη κατάσταση 13
-    "goto"      ολίσθηση, και μετάβαση στη κατάσταση 14
-    "call"      ολίσθηση, και μετάβαση στη κατάσταση 15
-    "read"      ολίσθηση, και μετάβαση στη κατάσταση 16
-    "write"     ολίσθηση, και μετάβαση στη κατάσταση 17
-    "if"        ολίσθηση, και μετάβαση στη κατάσταση 157
-    "stop"      ολίσθηση, και μετάβαση στη κατάσταση 20
-    "return"    ολίσθηση, και μετάβαση στη κατάσταση 21
-    "id"        ολίσθηση, και μετάβαση στη κατάσταση 22
-    "iconst"    ολίσθηση, και μετάβαση στη κατάσταση 23
+    error       shift, and go to state 6
+    "continue"  shift, and go to state 13
+    "goto"      shift, and go to state 14
+    "call"      shift, and go to state 15
+    "read"      shift, and go to state 16
+    "write"     shift, and go to state 17
+    "if"        shift, and go to state 157
+    "stop"      shift, and go to state 20
+    "return"    shift, and go to state 21
+    "id"        shift, and go to state 22
+    "iconst"    shift, and go to state 23
 
-    label             πήγαινε στην κατάσταση 171
-    simple_statement  πήγαινε στην κατάσταση 172
-    assignment        πήγαινε στην κατάσταση 30
-    variable          πήγαινε στην κατάσταση 31
-    goto_statement    πήγαινε στην κατάσταση 32
-    if_statement      πήγαινε στην κατάσταση 33
-    subroutine_call   πήγαινε στην κατάσταση 34
-    io_statement      πήγαινε στην κατάσταση 35
+    label             go to state 171
+    simple_statement  go to state 172
+    assignment        go to state 30
+    variable          go to state 31
+    goto_statement    go to state 32
+    if_statement      go to state 33
+    subroutine_call   go to state 34
+    io_statement      go to state 35
 
 
-Κατάσταση 144 
+State 144
 
    63 expression: expression . ".OR." expression
    64           | expression . ".AND." expression
@@ -2081,313 +2118,313 @@ formal_parameters (89)
    69           | expression . "**" expression
    90 iter_space: expression . "," expression step
 
-    ".OR."                                     ολίσθηση, και μετάβαση στη κατάσταση 97
-    ".AND."                                    ολίσθηση, και μετάβαση στη κατάσταση 98
-    ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE."  ολίσθηση, και μετάβαση στη κατάσταση 99
-    "+|-"                                      ολίσθηση, και μετάβαση στη κατάσταση 100
-    "*"                                        ολίσθηση, και μετάβαση στη κατάσταση 101
-    "/"                                        ολίσθηση, και μετάβαση στη κατάσταση 102
-    "**"                                       ολίσθηση, και μετάβαση στη κατάσταση 103
-    ","                                        ολίσθηση, και μετάβαση στη κατάσταση 173
+    ".OR."                                     shift, and go to state 97
+    ".AND."                                    shift, and go to state 98
+    ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE."  shift, and go to state 99
+    "+|-"                                      shift, and go to state 100
+    "*"                                        shift, and go to state 101
+    "/"                                        shift, and go to state 102
+    "**"                                       shift, and go to state 103
+    ","                                        shift, and go to state 173
 
 
-Κατάσταση 145 
+State 145
 
   103 loop_statement: "do" "id" "=" iter_space . body "enddo"
 
-    $default  ελάττωση με χρήση του κανόνα 6 (declarations)
+    $default  reduce using rule 6 (declarations)
 
-    body          πήγαινε στην κατάσταση 174
-    declarations  πήγαινε στην κατάσταση 3
+    body          go to state 174
+    declarations  go to state 3
 
 
-Κατάσταση 146 
+State 146
 
    19 dim: "id" .
 
-    $default  ελάττωση με χρήση του κανόνα 19 (dim)
+    $default  reduce using rule 19 (dim)
 
 
-Κατάσταση 147 
+State 147
 
    18 dim: "iconst" .
 
-    $default  ελάττωση με χρήση του κανόνα 18 (dim)
+    $default  reduce using rule 18 (dim)
 
 
-Κατάσταση 148 
+State 148
 
    14 undef_variable: "id" "(" dims . ")"
    16 dims: dims . "," dim
 
-    ")"  ολίσθηση, και μετάβαση στη κατάσταση 175
-    ","  ολίσθηση, και μετάβαση στη κατάσταση 176
+    ")"  shift, and go to state 175
+    ","  shift, and go to state 176
 
 
-Κατάσταση 149 
+State 149
 
    17 dims: dim .
 
-    $default  ελάττωση με χρήση του κανόνα 17 (dims)
+    $default  reduce using rule 17 (dims)
 
 
-Κατάσταση 150 
+State 150
 
    12 vars: vars "," error .
 
-    $default  ελάττωση με χρήση του κανόνα 12 (vars)
+    $default  reduce using rule 12 (vars)
 
 
-Κατάσταση 151 
+State 151
 
    11 vars: vars "," undef_variable .
 
-    $default  ελάττωση με χρήση του κανόνα 11 (vars)
+    $default  reduce using rule 11 (vars)
 
 
-Κατάσταση 152 
+State 152
 
    59 variable: variable "(" expressions ")" .
 
-    $default  ελάττωση με χρήση του κανόνα 59 (variable)
+    $default  reduce using rule 59 (variable)
 
 
-Κατάσταση 153 
+State 153
 
    61 expressions: expressions "," . expression
 
-    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
-    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
-    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
-    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
-    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
-    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
-    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+    ".NOT"    shift, and go to state 54
+    "+|-"     shift, and go to state 55
+    "("       shift, and go to state 81
+    "id"      shift, and go to state 22
+    "iconst"  shift, and go to state 57
+    "rconst"  shift, and go to state 58
+    "cconst"  shift, and go to state 59
+    "lconst"  shift, and go to state 60
 
-    constant    πήγαινε στην κατάσταση 62
-    variable    πήγαινε στην κατάσταση 63
-    expression  πήγαινε στην κατάσταση 177
+    constant    go to state 62
+    variable    go to state 63
+    expression  go to state 177
 
 
-Κατάσταση 154 
+State 154
 
   108 header: "subroutine" "id" "(" . formal_parameters ")"
 
-    "integer"    ολίσθηση, και μετάβαση στη κατάσταση 7
-    "real"       ολίσθηση, και μετάβαση στη κατάσταση 8
-    "logical"    ολίσθηση, και μετάβαση στη κατάσταση 9
-    "character"  ολίσθηση, και μετάβαση στη κατάσταση 10
+    "integer"    shift, and go to state 7
+    "real"       shift, and go to state 8
+    "logical"    shift, and go to state 9
+    "character"  shift, and go to state 10
 
-    type               πήγαινε στην κατάσταση 178
-    formal_parameters  πήγαινε στην κατάσταση 179
+    type               go to state 178
+    formal_parameters  go to state 179
 
 
-Κατάσταση 155 
+State 155
 
   107 header: type "function" "id" . "(" formal_parameters ")"
 
-    "("  ολίσθηση, και μετάβαση στη κατάσταση 180
+    "("  shift, and go to state 180
 
 
-Κατάσταση 156 
+State 156
 
   106 subprogram: header body "end" .
 
-    $default  ελάττωση με χρήση του κανόνα 106 (subprogram)
+    $default  reduce using rule 106 (subprogram)
 
 
-Κατάσταση 157 
+State 157
 
    79 if_statement: "if" . "(" expression ")" label "," label "," label
    80             | "if" . "(" expression ")" simple_statement
 
-    "("  ολίσθηση, και μετάβαση στη κατάσταση 181
+    "("  shift, and go to state 181
 
 
-Κατάσταση 158 
+State 158
 
    81 if_statement: error "(" expression ")" label . "," label "," label
 
-    ","  ολίσθηση, και μετάβαση στη κατάσταση 182
+    ","  shift, and go to state 182
 
 
-Κατάσταση 159 
+State 159
 
    82 if_statement: error "(" expression ")" simple_statement .
 
-    $default  ελάττωση με χρήση του κανόνα 82 (if_statement)
+    $default  reduce using rule 82 (if_statement)
 
 
-Κατάσταση 160 
+State 160
 
    11 vars: vars . "," undef_variable
    12     | vars . "," error
    23 field: "record" fields "endrec" vars .
 
-    ","  ολίσθηση, και μετάβαση στη κατάσταση 108
+    ","  shift, and go to state 108
 
-    $default  ελάττωση με χρήση του κανόνα 23 (field)
+    $default  reduce using rule 23 (field)
 
 
-Κατάσταση 161 
+State 161
 
    32 value: "+|-" constant .
 
-    $default  ελάττωση με χρήση του κανόνα 32 (value)
+    $default  reduce using rule 32 (value)
 
 
-Κατάσταση 162 
+State 162
 
    26 value_list: "/" values "/" .
 
-    $default  ελάττωση με χρήση του κανόνα 26 (value_list)
+    $default  reduce using rule 26 (value_list)
 
 
-Κατάσταση 163 
+State 163
 
    27 values: values "," . value
 
-    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 121
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 122
-    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
-    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
-    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
-    "string"  ολίσθηση, και μετάβαση στη κατάσταση 123
+    "+|-"     shift, and go to state 121
+    "iconst"  shift, and go to state 122
+    "rconst"  shift, and go to state 58
+    "cconst"  shift, and go to state 59
+    "lconst"  shift, and go to state 60
+    "string"  shift, and go to state 123
 
-    $default  ελάττωση με χρήση του κανόνα 36 (repeat)
+    $default  reduce using rule 36 (repeat)
 
-    value     πήγαινε στην κατάσταση 183
-    repeat    πήγαινε στην κατάσταση 126
-    constant  πήγαινε στην κατάσταση 127
+    value     go to state 183
+    repeat    go to state 126
+    constant  go to state 127
 
 
-Κατάσταση 164 
+State 164
 
    29 value: repeat "*" . "+|-" constant
    30      | repeat "*" . constant
    31      | repeat "*" . "string"
 
-    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 184
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
-    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
-    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
-    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
-    "string"  ολίσθηση, και μετάβαση στη κατάσταση 185
+    "+|-"     shift, and go to state 184
+    "iconst"  shift, and go to state 57
+    "rconst"  shift, and go to state 58
+    "cconst"  shift, and go to state 59
+    "lconst"  shift, and go to state 60
+    "string"  shift, and go to state 185
 
-    constant  πήγαινε στην κατάσταση 186
+    constant  go to state 186
 
 
-Κατάσταση 165 
+State 165
 
    24 vals: vals "," "id" value_list .
 
-    $default  ελάττωση με χρήση του κανόνα 24 (vals)
+    $default  reduce using rule 24 (vals)
 
 
-Κατάσταση 166 
+State 166
 
    78 labels: label .
 
-    $default  ελάττωση με χρήση του κανόνα 78 (labels)
+    $default  reduce using rule 78 (labels)
 
 
-Κατάσταση 167 
+State 167
 
    76 goto_statement: "goto" "id" "," "(" labels . ")"
    77 labels: labels . "," label
 
-    ")"  ολίσθηση, και μετάβαση στη κατάσταση 187
-    ","  ολίσθηση, και μετάβαση στη κατάσταση 188
+    ")"  shift, and go to state 187
+    ","  shift, and go to state 188
 
 
-Κατάσταση 168 
+State 168
 
    60 variable: "id" .
    89 read_item: "(" read_list "," "id" . "=" iter_space ")"
 
-    "="  ολίσθηση, και μετάβαση στη κατάσταση 189
+    "="  shift, and go to state 189
 
-    $default  ελάττωση με χρήση του κανόνα 60 (variable)
+    $default  reduce using rule 60 (variable)
 
 
-Κατάσταση 169 
+State 169
 
    60 variable: "id" .
    96 write_item: "(" write_list "," "id" . "=" iter_space ")"
 
-    "="  ολίσθηση, και μετάβαση στη κατάσταση 190
+    "="  shift, and go to state 190
 
-    $default  ελάττωση με χρήση του κανόνα 60 (variable)
+    $default  reduce using rule 60 (variable)
 
 
-Κατάσταση 170 
+State 170
 
   100 branch_statement: "if" "(" expression "then" body . tail
 
-    "else"   ολίσθηση, και μετάβαση στη κατάσταση 191
-    "endif"  ολίσθηση, και μετάβαση στη κατάσταση 192
+    "else"   shift, and go to state 191
+    "endif"  shift, and go to state 192
 
-    tail  πήγαινε στην κατάσταση 193
+    tail  go to state 193
 
 
-Κατάσταση 171 
+State 171
 
    79 if_statement: "if" "(" expression ")" label . "," label "," label
 
-    ","  ολίσθηση, και μετάβαση στη κατάσταση 194
+    ","  shift, and go to state 194
 
 
-Κατάσταση 172 
+State 172
 
    80 if_statement: "if" "(" expression ")" simple_statement .
 
-    $default  ελάττωση με χρήση του κανόνα 80 (if_statement)
+    $default  reduce using rule 80 (if_statement)
 
 
-Κατάσταση 173 
+State 173
 
    90 iter_space: expression "," . expression step
 
-    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
-    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
-    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
-    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
-    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
-    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
-    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+    ".NOT"    shift, and go to state 54
+    "+|-"     shift, and go to state 55
+    "("       shift, and go to state 81
+    "id"      shift, and go to state 22
+    "iconst"  shift, and go to state 57
+    "rconst"  shift, and go to state 58
+    "cconst"  shift, and go to state 59
+    "lconst"  shift, and go to state 60
 
-    constant    πήγαινε στην κατάσταση 62
-    variable    πήγαινε στην κατάσταση 63
-    expression  πήγαινε στην κατάσταση 195
+    constant    go to state 62
+    variable    go to state 63
+    expression  go to state 195
 
 
-Κατάσταση 174 
+State 174
 
   103 loop_statement: "do" "id" "=" iter_space body . "enddo"
 
-    "enddo"  ολίσθηση, και μετάβαση στη κατάσταση 196
+    "enddo"  shift, and go to state 196
 
 
-Κατάσταση 175 
+State 175
 
    14 undef_variable: "id" "(" dims ")" .
 
-    $default  ελάττωση με χρήση του κανόνα 14 (undef_variable)
+    $default  reduce using rule 14 (undef_variable)
 
 
-Κατάσταση 176 
+State 176
 
    16 dims: dims "," . dim
 
-    "id"      ολίσθηση, και μετάβαση στη κατάσταση 146
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 147
+    "id"      shift, and go to state 146
+    "iconst"  shift, and go to state 147
 
-    dim  πήγαινε στην κατάσταση 197
+    dim  go to state 197
 
 
-Κατάσταση 177 
+State 177
 
    61 expressions: expressions "," expression .
    63 expression: expression . ".OR." expression
@@ -2398,197 +2435,197 @@ formal_parameters (89)
    68           | expression . "/" expression
    69           | expression . "**" expression
 
-    ".OR."                                     ολίσθηση, και μετάβαση στη κατάσταση 97
-    ".AND."                                    ολίσθηση, και μετάβαση στη κατάσταση 98
-    ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE."  ολίσθηση, και μετάβαση στη κατάσταση 99
-    "+|-"                                      ολίσθηση, και μετάβαση στη κατάσταση 100
-    "*"                                        ολίσθηση, και μετάβαση στη κατάσταση 101
-    "/"                                        ολίσθηση, και μετάβαση στη κατάσταση 102
-    "**"                                       ολίσθηση, και μετάβαση στη κατάσταση 103
+    ".OR."                                     shift, and go to state 97
+    ".AND."                                    shift, and go to state 98
+    ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE."  shift, and go to state 99
+    "+|-"                                      shift, and go to state 100
+    "*"                                        shift, and go to state 101
+    "/"                                        shift, and go to state 102
+    "**"                                       shift, and go to state 103
 
-    $default  ελάττωση με χρήση του κανόνα 61 (expressions)
+    $default  reduce using rule 61 (expressions)
 
 
-Κατάσταση 178 
+State 178
 
   110 formal_parameters: type . vars "," formal_parameters
   111                  | type . vars
 
-    "id"  ολίσθηση, και μετάβαση στη κατάσταση 69
+    "id"  shift, and go to state 69
 
-    vars            πήγαινε στην κατάσταση 198
-    undef_variable  πήγαινε στην κατάσταση 71
+    vars            go to state 198
+    undef_variable  go to state 71
 
 
-Κατάσταση 179 
+State 179
 
   108 header: "subroutine" "id" "(" formal_parameters . ")"
 
-    ")"  ολίσθηση, και μετάβαση στη κατάσταση 199
+    ")"  shift, and go to state 199
 
 
-Κατάσταση 180 
+State 180
 
   107 header: type "function" "id" "(" . formal_parameters ")"
 
-    "integer"    ολίσθηση, και μετάβαση στη κατάσταση 7
-    "real"       ολίσθηση, και μετάβαση στη κατάσταση 8
-    "logical"    ολίσθηση, και μετάβαση στη κατάσταση 9
-    "character"  ολίσθηση, και μετάβαση στη κατάσταση 10
+    "integer"    shift, and go to state 7
+    "real"       shift, and go to state 8
+    "logical"    shift, and go to state 9
+    "character"  shift, and go to state 10
 
-    type               πήγαινε στην κατάσταση 178
-    formal_parameters  πήγαινε στην κατάσταση 200
+    type               go to state 178
+    formal_parameters  go to state 200
 
 
-Κατάσταση 181 
+State 181
 
    79 if_statement: "if" "(" . expression ")" label "," label "," label
    80             | "if" "(" . expression ")" simple_statement
 
-    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
-    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
-    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
-    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
-    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
-    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
-    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+    ".NOT"    shift, and go to state 54
+    "+|-"     shift, and go to state 55
+    "("       shift, and go to state 81
+    "id"      shift, and go to state 22
+    "iconst"  shift, and go to state 57
+    "rconst"  shift, and go to state 58
+    "cconst"  shift, and go to state 59
+    "lconst"  shift, and go to state 60
 
-    constant    πήγαινε στην κατάσταση 62
-    variable    πήγαινε στην κατάσταση 63
-    expression  πήγαινε στην κατάσταση 201
+    constant    go to state 62
+    variable    go to state 63
+    expression  go to state 201
 
 
-Κατάσταση 182 
+State 182
 
    81 if_statement: error "(" expression ")" label "," . label "," label
 
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 23
+    "iconst"  shift, and go to state 23
 
-    label  πήγαινε στην κατάσταση 202
+    label  go to state 202
 
 
-Κατάσταση 183 
+State 183
 
    27 values: values "," value .
 
-    $default  ελάττωση με χρήση του κανόνα 27 (values)
+    $default  reduce using rule 27 (values)
 
 
-Κατάσταση 184 
+State 184
 
    29 value: repeat "*" "+|-" . constant
 
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
-    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
-    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
-    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+    "iconst"  shift, and go to state 57
+    "rconst"  shift, and go to state 58
+    "cconst"  shift, and go to state 59
+    "lconst"  shift, and go to state 60
 
-    constant  πήγαινε στην κατάσταση 203
+    constant  go to state 203
 
 
-Κατάσταση 185 
+State 185
 
    31 value: repeat "*" "string" .
 
-    $default  ελάττωση με χρήση του κανόνα 31 (value)
+    $default  reduce using rule 31 (value)
 
 
-Κατάσταση 186 
+State 186
 
    30 value: repeat "*" constant .
 
-    $default  ελάττωση με χρήση του κανόνα 30 (value)
+    $default  reduce using rule 30 (value)
 
 
-Κατάσταση 187 
+State 187
 
    76 goto_statement: "goto" "id" "," "(" labels ")" .
 
-    $default  ελάττωση με χρήση του κανόνα 76 (goto_statement)
+    $default  reduce using rule 76 (goto_statement)
 
 
-Κατάσταση 188 
+State 188
 
    77 labels: labels "," . label
 
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 23
+    "iconst"  shift, and go to state 23
 
-    label  πήγαινε στην κατάσταση 204
+    label  go to state 204
 
 
-Κατάσταση 189 
+State 189
 
    89 read_item: "(" read_list "," "id" "=" . iter_space ")"
 
-    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
-    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
-    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
-    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
-    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
-    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
-    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+    ".NOT"    shift, and go to state 54
+    "+|-"     shift, and go to state 55
+    "("       shift, and go to state 81
+    "id"      shift, and go to state 22
+    "iconst"  shift, and go to state 57
+    "rconst"  shift, and go to state 58
+    "cconst"  shift, and go to state 59
+    "lconst"  shift, and go to state 60
 
-    constant    πήγαινε στην κατάσταση 62
-    variable    πήγαινε στην κατάσταση 63
-    expression  πήγαινε στην κατάσταση 144
-    iter_space  πήγαινε στην κατάσταση 205
+    constant    go to state 62
+    variable    go to state 63
+    expression  go to state 144
+    iter_space  go to state 205
 
 
-Κατάσταση 190 
+State 190
 
    96 write_item: "(" write_list "," "id" "=" . iter_space ")"
 
-    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
-    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
-    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
-    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
-    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
-    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
-    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+    ".NOT"    shift, and go to state 54
+    "+|-"     shift, and go to state 55
+    "("       shift, and go to state 81
+    "id"      shift, and go to state 22
+    "iconst"  shift, and go to state 57
+    "rconst"  shift, and go to state 58
+    "cconst"  shift, and go to state 59
+    "lconst"  shift, and go to state 60
 
-    constant    πήγαινε στην κατάσταση 62
-    variable    πήγαινε στην κατάσταση 63
-    expression  πήγαινε στην κατάσταση 144
-    iter_space  πήγαινε στην κατάσταση 206
+    constant    go to state 62
+    variable    go to state 63
+    expression  go to state 144
+    iter_space  go to state 206
 
 
-Κατάσταση 191 
+State 191
 
   101 tail: "else" . body "endif"
 
-    $default  ελάττωση με χρήση του κανόνα 6 (declarations)
+    $default  reduce using rule 6 (declarations)
 
-    body          πήγαινε στην κατάσταση 207
-    declarations  πήγαινε στην κατάσταση 3
+    body          go to state 207
+    declarations  go to state 3
 
 
-Κατάσταση 192 
+State 192
 
   102 tail: "endif" .
 
-    $default  ελάττωση με χρήση του κανόνα 102 (tail)
+    $default  reduce using rule 102 (tail)
 
 
-Κατάσταση 193 
+State 193
 
   100 branch_statement: "if" "(" expression "then" body tail .
 
-    $default  ελάττωση με χρήση του κανόνα 100 (branch_statement)
+    $default  reduce using rule 100 (branch_statement)
 
 
-Κατάσταση 194 
+State 194
 
    79 if_statement: "if" "(" expression ")" label "," . label "," label
 
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 23
+    "iconst"  shift, and go to state 23
 
-    label  πήγαινε στην κατάσταση 208
+    label  go to state 208
 
 
-Κατάσταση 195 
+State 195
 
    63 expression: expression . ".OR." expression
    64           | expression . ".AND." expression
@@ -2599,61 +2636,61 @@ formal_parameters (89)
    69           | expression . "**" expression
    90 iter_space: expression "," expression . step
 
-    ".OR."                                     ολίσθηση, και μετάβαση στη κατάσταση 97
-    ".AND."                                    ολίσθηση, και μετάβαση στη κατάσταση 98
-    ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE."  ολίσθηση, και μετάβαση στη κατάσταση 99
-    "+|-"                                      ολίσθηση, και μετάβαση στη κατάσταση 100
-    "*"                                        ολίσθηση, και μετάβαση στη κατάσταση 101
-    "/"                                        ολίσθηση, και μετάβαση στη κατάσταση 102
-    "**"                                       ολίσθηση, και μετάβαση στη κατάσταση 103
-    ","                                        ολίσθηση, και μετάβαση στη κατάσταση 209
+    ".OR."                                     shift, and go to state 97
+    ".AND."                                    shift, and go to state 98
+    ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE."  shift, and go to state 99
+    "+|-"                                      shift, and go to state 100
+    "*"                                        shift, and go to state 101
+    "/"                                        shift, and go to state 102
+    "**"                                       shift, and go to state 103
+    ","                                        shift, and go to state 209
 
-    $default  ελάττωση με χρήση του κανόνα 92 (step)
+    $default  reduce using rule 92 (step)
 
-    step  πήγαινε στην κατάσταση 210
+    step  go to state 210
 
 
-Κατάσταση 196 
+State 196
 
   103 loop_statement: "do" "id" "=" iter_space body "enddo" .
 
-    $default  ελάττωση με χρήση του κανόνα 103 (loop_statement)
+    $default  reduce using rule 103 (loop_statement)
 
 
-Κατάσταση 197 
+State 197
 
    16 dims: dims "," dim .
 
-    $default  ελάττωση με χρήση του κανόνα 16 (dims)
+    $default  reduce using rule 16 (dims)
 
 
-Κατάσταση 198 
+State 198
 
    11 vars: vars . "," undef_variable
    12     | vars . "," error
   110 formal_parameters: type vars . "," formal_parameters
   111                  | type vars .
 
-    ","  ολίσθηση, και μετάβαση στη κατάσταση 211
+    ","  shift, and go to state 211
 
-    $default  ελάττωση με χρήση του κανόνα 111 (formal_parameters)
+    $default  reduce using rule 111 (formal_parameters)
 
 
-Κατάσταση 199 
+State 199
 
   108 header: "subroutine" "id" "(" formal_parameters ")" .
 
-    $default  ελάττωση με χρήση του κανόνα 108 (header)
+    $default  reduce using rule 108 (header)
 
 
-Κατάσταση 200 
+State 200
 
   107 header: type "function" "id" "(" formal_parameters . ")"
 
-    ")"  ολίσθηση, και μετάβαση στη κατάσταση 212
+    ")"  shift, and go to state 212
 
 
-Κατάσταση 201 
+State 201
 
    63 expression: expression . ".OR." expression
    64           | expression . ".AND." expression
@@ -2665,155 +2702,155 @@ formal_parameters (89)
    79 if_statement: "if" "(" expression . ")" label "," label "," label
    80             | "if" "(" expression . ")" simple_statement
 
-    ".OR."                                     ολίσθηση, και μετάβαση στη κατάσταση 97
-    ".AND."                                    ολίσθηση, και μετάβαση στη κατάσταση 98
-    ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE."  ολίσθηση, και μετάβαση στη κατάσταση 99
-    "+|-"                                      ολίσθηση, και μετάβαση στη κατάσταση 100
-    "*"                                        ολίσθηση, και μετάβαση στη κατάσταση 101
-    "/"                                        ολίσθηση, και μετάβαση στη κατάσταση 102
-    "**"                                       ολίσθηση, και μετάβαση στη κατάσταση 103
-    ")"                                        ολίσθηση, και μετάβαση στη κατάσταση 143
+    ".OR."                                     shift, and go to state 97
+    ".AND."                                    shift, and go to state 98
+    ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE."  shift, and go to state 99
+    "+|-"                                      shift, and go to state 100
+    "*"                                        shift, and go to state 101
+    "/"                                        shift, and go to state 102
+    "**"                                       shift, and go to state 103
+    ")"                                        shift, and go to state 143
 
 
-Κατάσταση 202 
+State 202
 
    81 if_statement: error "(" expression ")" label "," label . "," label
 
-    ","  ολίσθηση, και μετάβαση στη κατάσταση 213
+    ","  shift, and go to state 213
 
 
-Κατάσταση 203 
+State 203
 
    29 value: repeat "*" "+|-" constant .
 
-    $default  ελάττωση με χρήση του κανόνα 29 (value)
+    $default  reduce using rule 29 (value)
 
 
-Κατάσταση 204 
+State 204
 
    77 labels: labels "," label .
 
-    $default  ελάττωση με χρήση του κανόνα 77 (labels)
+    $default  reduce using rule 77 (labels)
 
 
-Κατάσταση 205 
+State 205
 
    89 read_item: "(" read_list "," "id" "=" iter_space . ")"
 
-    ")"  ολίσθηση, και μετάβαση στη κατάσταση 214
+    ")"  shift, and go to state 214
 
 
-Κατάσταση 206 
+State 206
 
    96 write_item: "(" write_list "," "id" "=" iter_space . ")"
 
-    ")"  ολίσθηση, και μετάβαση στη κατάσταση 215
+    ")"  shift, and go to state 215
 
 
-Κατάσταση 207 
+State 207
 
   101 tail: "else" body . "endif"
 
-    "endif"  ολίσθηση, και μετάβαση στη κατάσταση 216
+    "endif"  shift, and go to state 216
 
 
-Κατάσταση 208 
+State 208
 
    79 if_statement: "if" "(" expression ")" label "," label . "," label
 
-    ","  ολίσθηση, και μετάβαση στη κατάσταση 217
+    ","  shift, and go to state 217
 
 
-Κατάσταση 209 
+State 209
 
    91 step: "," . expression
 
-    ".NOT"    ολίσθηση, και μετάβαση στη κατάσταση 54
-    "+|-"     ολίσθηση, και μετάβαση στη κατάσταση 55
-    "("       ολίσθηση, και μετάβαση στη κατάσταση 81
-    "id"      ολίσθηση, και μετάβαση στη κατάσταση 22
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 57
-    "rconst"  ολίσθηση, και μετάβαση στη κατάσταση 58
-    "cconst"  ολίσθηση, και μετάβαση στη κατάσταση 59
-    "lconst"  ολίσθηση, και μετάβαση στη κατάσταση 60
+    ".NOT"    shift, and go to state 54
+    "+|-"     shift, and go to state 55
+    "("       shift, and go to state 81
+    "id"      shift, and go to state 22
+    "iconst"  shift, and go to state 57
+    "rconst"  shift, and go to state 58
+    "cconst"  shift, and go to state 59
+    "lconst"  shift, and go to state 60
 
-    constant    πήγαινε στην κατάσταση 62
-    variable    πήγαινε στην κατάσταση 63
-    expression  πήγαινε στην κατάσταση 218
+    constant    go to state 62
+    variable    go to state 63
+    expression  go to state 218
 
 
-Κατάσταση 210 
+State 210
 
    90 iter_space: expression "," expression step .
 
-    $default  ελάττωση με χρήση του κανόνα 90 (iter_space)
+    $default  reduce using rule 90 (iter_space)
 
 
-Κατάσταση 211 
+State 211
 
    11 vars: vars "," . undef_variable
    12     | vars "," . error
   110 formal_parameters: type vars "," . formal_parameters
 
-    error        ολίσθηση, και μετάβαση στη κατάσταση 150
-    "integer"    ολίσθηση, και μετάβαση στη κατάσταση 7
-    "real"       ολίσθηση, και μετάβαση στη κατάσταση 8
-    "logical"    ολίσθηση, και μετάβαση στη κατάσταση 9
-    "character"  ολίσθηση, και μετάβαση στη κατάσταση 10
-    "id"         ολίσθηση, και μετάβαση στη κατάσταση 69
+    error        shift, and go to state 150
+    "integer"    shift, and go to state 7
+    "real"       shift, and go to state 8
+    "logical"    shift, and go to state 9
+    "character"  shift, and go to state 10
+    "id"         shift, and go to state 69
 
-    type               πήγαινε στην κατάσταση 178
-    undef_variable     πήγαινε στην κατάσταση 151
-    formal_parameters  πήγαινε στην κατάσταση 219
+    type               go to state 178
+    undef_variable     go to state 151
+    formal_parameters  go to state 219
 
 
-Κατάσταση 212 
+State 212
 
   107 header: type "function" "id" "(" formal_parameters ")" .
 
-    $default  ελάττωση με χρήση του κανόνα 107 (header)
+    $default  reduce using rule 107 (header)
 
 
-Κατάσταση 213 
+State 213
 
    81 if_statement: error "(" expression ")" label "," label "," . label
 
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 23
+    "iconst"  shift, and go to state 23
 
-    label  πήγαινε στην κατάσταση 220
+    label  go to state 220
 
 
-Κατάσταση 214 
+State 214
 
    89 read_item: "(" read_list "," "id" "=" iter_space ")" .
 
-    $default  ελάττωση με χρήση του κανόνα 89 (read_item)
+    $default  reduce using rule 89 (read_item)
 
 
-Κατάσταση 215 
+State 215
 
    96 write_item: "(" write_list "," "id" "=" iter_space ")" .
 
-    $default  ελάττωση με χρήση του κανόνα 96 (write_item)
+    $default  reduce using rule 96 (write_item)
 
 
-Κατάσταση 216 
+State 216
 
   101 tail: "else" body "endif" .
 
-    $default  ελάττωση με χρήση του κανόνα 101 (tail)
+    $default  reduce using rule 101 (tail)
 
 
-Κατάσταση 217 
+State 217
 
    79 if_statement: "if" "(" expression ")" label "," label "," . label
 
-    "iconst"  ολίσθηση, και μετάβαση στη κατάσταση 23
+    "iconst"  shift, and go to state 23
 
-    label  πήγαινε στην κατάσταση 221
+    label  go to state 221
 
 
-Κατάσταση 218 
+State 218
 
    63 expression: expression . ".OR." expression
    64           | expression . ".AND." expression
@@ -2824,33 +2861,33 @@ formal_parameters (89)
    69           | expression . "**" expression
    91 step: "," expression .
 
-    ".OR."                                     ολίσθηση, και μετάβαση στη κατάσταση 97
-    ".AND."                                    ολίσθηση, και μετάβαση στη κατάσταση 98
-    ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE."  ολίσθηση, και μετάβαση στη κατάσταση 99
-    "+|-"                                      ολίσθηση, και μετάβαση στη κατάσταση 100
-    "*"                                        ολίσθηση, και μετάβαση στη κατάσταση 101
-    "/"                                        ολίσθηση, και μετάβαση στη κατάσταση 102
-    "**"                                       ολίσθηση, και μετάβαση στη κατάσταση 103
+    ".OR."                                     shift, and go to state 97
+    ".AND."                                    shift, and go to state 98
+    ".GT. | .GE. | .LT. | .LE. | .EQ. | .NE."  shift, and go to state 99
+    "+|-"                                      shift, and go to state 100
+    "*"                                        shift, and go to state 101
+    "/"                                        shift, and go to state 102
+    "**"                                       shift, and go to state 103
 
-    $default  ελάττωση με χρήση του κανόνα 91 (step)
+    $default  reduce using rule 91 (step)
 
 
-Κατάσταση 219 
+State 219
 
   110 formal_parameters: type vars "," formal_parameters .
 
-    $default  ελάττωση με χρήση του κανόνα 110 (formal_parameters)
+    $default  reduce using rule 110 (formal_parameters)
 
 
-Κατάσταση 220 
+State 220
 
    81 if_statement: error "(" expression ")" label "," label "," label .
 
-    $default  ελάττωση με χρήση του κανόνα 81 (if_statement)
+    $default  reduce using rule 81 (if_statement)
 
 
-Κατάσταση 221 
+State 221
 
    79 if_statement: "if" "(" expression ")" label "," label "," label .
 
-    $default  ελάττωση με χρήση του κανόνα 79 (if_statement)
+    $default  reduce using rule 79 (if_statement)
