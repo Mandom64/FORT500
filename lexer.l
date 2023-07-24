@@ -6,12 +6,13 @@
 
 /* =====================STATEMENTS BLOCK=====================*/
 %{
-    #include "parser.tab.h"
-    #include <stdbool.h>
-    #include <stdlib.h>
     #include <stdio.h>
+    #include <stdlib.h>
+    #include <stdbool.h>
     #include <math.h>
-    #define FLEX_DEBUG 0 // print lexical analysis
+    #include "parser.tab.h"
+
+    #define FLEX_DEBUG 1 // print lexical analysis
 
     int   str_to_int(char *str);
     float bin_to_float(char *str);
@@ -21,7 +22,7 @@
     void  print_token_hex(int token_id);
     void  yyerror(const char* error);
 
-    char str_buf[1024] = {0};
+    char str_buffer[1024] = {0};
     int error_counter = 0;
 %}
 /*
@@ -113,30 +114,30 @@ LCONST                       ".TRUE."|".FALSE."
                              }
 
 
-\"                           { strcpy(str_buf,""); BEGIN(STRING); }
-<STRING>\"                   { BEGIN(INITIAL); printf("\n[STRING] %s [LINE %d]", str_buf, yylineno); yylval.string_val = strdup(str_buf); return T_STRING; }
+\"                           { strcpy(str_buffer,""); BEGIN(STRING); }
+<STRING>\"                   { BEGIN(INITIAL); printf("\n[STRING] %s [LINE %d]", str_buffer, yylineno); yylval.string_val = strdup(str_buffer); return T_STRING; }
 <STRING>(\\\n|\\\r\n)        {  }
 <STRING>(\\.|[^"\\])         {
                                 if(strlen(yytext) == 2)
                                 {
                                     if(strcmp(yytext, "\\n") == 0)
-                                        strcat(str_buf, "\n");
+                                        strcat(str_buffer, "\n");
                                     else if(strcmp(yytext, "\\f") == 0)
-                                        strcat(str_buf, "\f");
+                                        strcat(str_buffer, "\f");
                                     else if(strcmp(yytext, "\\t") == 0)
-                                        strcat(str_buf, "\t");
+                                        strcat(str_buffer, "\t");
                                     else if(strcmp(yytext, "\\r") == 0)
-                                        strcat(str_buf, "\r");
+                                        strcat(str_buffer, "\r");
                                     else if(strcmp(yytext, "\\b") == 0)
-                                        strcat(str_buf, "\b");
+                                        strcat(str_buffer, "\b");
                                     else if(strcmp(yytext, "\\v") == 0)
-                                        strcat(str_buf, "\v");
+                                        strcat(str_buffer, "\v");
                                     else
-                                        strcat(str_buf, &yytext[1]);
+                                        strcat(str_buffer, &yytext[1]);
                                 }
                                 else
                                 {
-                                    strcat(str_buf, yytext);
+                                    strcat(str_buffer, yytext);
                                 } 
                              }
 <STRING>(\n|\r\n)            { yyerror("New line without \\"); }
@@ -174,25 +175,35 @@ LCONST                       ".TRUE."|".FALSE."
 /* =====================USER FUNCTIONS BLOCK=====================*/
 void print_token(int token_id)
 {    
-    if(FLEX_DEBUG == 1) return;
+    if(!FLEX_DEBUG) 
+        return;
     if(token_id == T_ICONST)
-        printf("\n[LINE %d] INTEGER TOKEN-> %s BASE 10-> %d (%d)", yylineno, yytext, str_to_int(yytext), token_id);
+        printf("\n[LINE %d] INTEGER TOKEN-> %s BASE 10-> %d (%d)", 
+            yylineno, yytext, str_to_int(yytext), token_id);
+    else if(token_id == T_EOF)
+        printf("\n[LINE %d] TOKEN-> %s (%d)\n", 
+            yylineno, yytext, token_id);
     else
-        printf("\n[LINE %d] TOKEN-> %s (%d)", yylineno, yytext, token_id);
+        printf("\n[LINE %d] TOKEN-> %s (%d)", 
+            yylineno, yytext, token_id);
 }
 
 void print_token_binary(int token_id)
 {
-    if(FLEX_DEBUG == 1) return;
+    if(!FLEX_DEBUG) 
+        return;
     if((token_id == T_RCONST) && (strcmp(&yytext[1],"B")))
-        printf("\n[LINE %d] FLOAT TOKEN-> %s BASE 10-> %f (%d)", yylineno, yytext, bin_to_float(yytext), token_id);
+        printf("\n[LINE %d] FLOAT TOKEN-> %s BASE 10-> %f (%d)", 
+            yylineno, yytext, bin_to_float(yytext), token_id);
 }
 
 void print_token_hex(int token_id)
 {
-    if(FLEX_DEBUG == 1) return;
+    if(!FLEX_DEBUG) 
+        return;
     if((token_id == T_RCONST) && (strcmp(&yytext[1],"H")))
-        printf("\n[LINE %d] FLOAT TOKEN-> %s BASE 10-> %f (%d)", yylineno, yytext, hex_to_float(yytext), token_id);
+        printf("\n[LINE %d] FLOAT TOKEN-> %s BASE 10-> %f (%d)", 
+            yylineno, yytext, hex_to_float(yytext), token_id);
 }
 
 int str_to_int(char *str)
@@ -223,7 +234,7 @@ float hex_to_float(char *str)
     char *dot = strchr(str, '.');
     int length_real = strlen(dot) - 1;
     number = strtol(&str[2], &dot, 16);
-    for( int i = 1; i < length_real; i++ ){
+    for( int i = 1; i < length_real; i++ ) {
         if(dot[i] <= 9)
             number =+ (dot[i] - '0') * (1/pow(16,i));
         else
@@ -236,8 +247,10 @@ float hex_to_float(char *str)
 void yyerror(const char* error)
 {
     error_counter++;
-    printf("\n[ERROR %s LINE %d] %s\n", yytext, yylineno, error);
-    if(error_counter == 999){
+    printf("\n[ERROR %s LINE %d] %s", 
+        yytext, yylineno, error);
+
+    if(error_counter == 999) {
         printf("\n[MAXIMUM ERRORS FOUND]");
         exit(EXIT_FAILURE);
     }

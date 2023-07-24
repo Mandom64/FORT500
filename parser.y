@@ -1,8 +1,10 @@
 /*
+    ____________________________
     Γεωργιάδης Χρήστος 2116088
+    ____________________________
     TO DO:
-    *   2)να φτιαχτεί το hashtable με τα scopes                                   *
-    *   4)να φτιάξω πίνακα συμβόλων                                               *
+    *   2)να φτιαχτεί το hashtable με τα scopes   *
+    *   4)να φτιάξω πίνακα συμβόλων               *
 */
 %{
     #include <stdio.h>
@@ -16,6 +18,8 @@
     extern FILE *yyin;
     extern int yylex();
     extern void yyerror(const char* error);
+    extern char str_buffer[1024];
+    extern int lineno;
     HASHTBL *hashtbl;
     int scope = 0;
 %}
@@ -24,7 +28,7 @@
 %define parse.error verbose
  
 %union{
-    _Bool   bool_val;
+    bool   bool_val;
     int     int_val;
     float   real_val;
     char    char_val;
@@ -108,8 +112,7 @@
 /*
     scopes: https://www.inscc.utah.edu/~krueger/6150/Scope_Fortran_90.pdf
 */
-program:            body T_END subprograms                                                          { scope++; }  
-;
+program:            body T_END subprograms                                  
 body:               declarations statements
 ;
 declarations:       declarations type vars
@@ -123,13 +126,13 @@ vars:               vars T_COMMA undef_variable
                     |vars T_COMMA error 
                     | undef_variable
 ;
-undef_variable:     T_ID T_LPAREN dims T_RPAREN                                                     { hashtbl_insert(hashtbl, $1, NULL, scope); }
-                    | T_ID                                                                          { hashtbl_insert(hashtbl, $1, NULL, scope); }
+undef_variable:     T_ID T_LPAREN dims T_RPAREN                              { hashtbl_insert(hashtbl, $1, NULL, scope); }
+                    | T_ID                                                   { hashtbl_insert(hashtbl, $1, NULL, scope); }
 ;
 dims:               dims T_COMMA dim
                     | dim
 ;
-dim:                T_ICONST | T_ID                                                                 { hashtbl_insert(hashtbl, $1, NULL, scope); }
+dim:                T_ICONST | T_ID                                          { hashtbl_insert(hashtbl, $1, NULL, scope); }
 ;
 fields:             fields field
                     | field
@@ -137,8 +140,8 @@ fields:             fields field
 field:              type vars
                     | T_RECORD fields T_ENDREC vars
 ;
-vals:               vals T_COMMA T_ID value_list                                                    { hashtbl_insert(hashtbl, $3, NULL, scope); }
-                    | T_ID value_list                                                               { hashtbl_insert(hashtbl, $1, NULL, scope); }
+vals:               vals T_COMMA T_ID value_list                              { hashtbl_insert(hashtbl, $3, NULL, scope); }
+                    | T_ID value_list                                         { hashtbl_insert(hashtbl, $1, NULL, scope); }
 ;
 value_list:         T_DIVOP values T_DIVOP
 ;
@@ -169,7 +172,7 @@ statement:          simple_statement
 ;
 simple_statement:   assignment
                     | goto_statement
-                    | if_statement
+                    | if_statement 
                     | subroutine_call
                     | io_statement
                     | T_CONTINUE
@@ -179,9 +182,9 @@ simple_statement:   assignment
 assignment:         variable T_ASSIGN expression
                     | variable T_ASSIGN T_STRING
 ;
-variable:           variable T_COLON T_ID                                                           { hashtbl_insert(hashtbl, $3, NULL, scope); }
+variable:           variable T_COLON T_ID                                        { hashtbl_insert(hashtbl, $3, NULL, scope); }
                     | variable T_LPAREN expressions T_RPAREN  
-                    | T_ID                                                                          { hashtbl_insert(hashtbl, $1, NULL, scope); }
+                    | T_ID                                                       { hashtbl_insert(hashtbl, $1, NULL, scope); }
 ;
 expressions:        expressions T_COMMA expression
                     | expression
@@ -200,15 +203,17 @@ expression:         expression T_OROP expression
                     | T_LPAREN expression T_RPAREN
 ;
 goto_statement:     T_GOTO label
-                    | T_GOTO T_ID T_COMMA T_LPAREN labels T_RPAREN                                  { hashtbl_insert(hashtbl, $2, NULL, scope); }
+                    | T_GOTO T_ID T_COMMA T_LPAREN labels T_RPAREN                { hashtbl_insert(hashtbl, $2, NULL, scope); }
 ;
 labels:             labels T_COMMA label
                     | label
 ;
-if_statement:       T_IF T_LPAREN expression T_RPAREN label T_COMMA label T_COMMA label             
-                    | T_IF T_LPAREN expression T_RPAREN simple_statement                            
-                    |error T_LPAREN expression T_RPAREN label T_COMMA label T_COMMA label           { yyerror("no if found"); yyerrok;}
-                    |error T_LPAREN expression T_RPAREN simple_statement                            { yyerror("no if found"); yyerrok;}
+if_statement:       T_IF T_LPAREN expression T_RPAREN           
+                    label T_COMMA label T_COMMA label                         
+                    | T_IF T_LPAREN expression T_RPAREN         {scope++;}
+                    simple_statement                                                       
+                    |error T_LPAREN expression T_RPAREN label T_COMMA label T_COMMA label   { yyerror("no if found"); yyerrok;}
+                    |error T_LPAREN expression T_RPAREN simple_statement                    { yyerror("no if found"); yyerrok;}
 ;
 subroutine_call:    T_CALL variable
 ;
@@ -219,7 +224,7 @@ read_list:          read_list T_COMMA read_item
                     | read_item
 ;
 read_item:          variable
-                    | T_LPAREN read_list T_COMMA T_ID T_ASSIGN iter_space T_RPAREN                  { hashtbl_insert(hashtbl, $4, NULL, scope); }
+                    | T_LPAREN read_list T_COMMA T_ID T_ASSIGN iter_space T_RPAREN       { hashtbl_insert(hashtbl, $4, NULL, scope); }
 ;
 iter_space:         expression T_COMMA expression step
 ;
@@ -230,30 +235,38 @@ write_list:         write_list T_COMMA write_item
                     | write_item
 ;
 write_item:         expression
-                    | T_LPAREN write_list T_COMMA T_ID T_ASSIGN iter_space T_RPAREN                 { hashtbl_insert(hashtbl, $4, NULL, scope); }
+                    | T_LPAREN write_list T_COMMA T_ID T_ASSIGN iter_space T_RPAREN       { hashtbl_insert(hashtbl, $4, NULL, scope); }
                     | T_STRING
 ;
 compound_statement: branch_statement
                     | loop_statement
 ;
-branch_statement:   T_IF T_LPAREN expression T_THEN body tail
+branch_statement:   T_IF T_LPAREN expression T_RPAREN T_THEN   { scope++; }
+                    body                                       
+                    tail
 ;
 /* 
     δεν είμαι σίγουρος αν η FORTRAN έχει dangling-else problem γιατί τελειώνει τα if, if else με keyword 
 */
-tail:               T_ELSE body T_ENDIF                                         
-                    | T_ENDIF  
+tail:               T_ELSE    {scope++;}
+                    body         
+                    T_ENDIF   { hashtbl_get(hashtbl, scope);scope--; }                                  
+                    | T_ENDIF { hashtbl_get(hashtbl, scope);scope--; }
 ;
-loop_statement:     T_DO T_ID T_ASSIGN iter_space body T_ENDDO                                      { hashtbl_insert(hashtbl, $2, NULL, scope); }
+loop_statement:     T_DO T_ID T_ASSIGN iter_space    {scope++;}  
+                    body                             { hashtbl_get(hashtbl, scope);scope--; }   
+                    T_ENDDO                          { hashtbl_insert(hashtbl, $2, NULL, scope); }
 ;
-subprograms:        subprograms subprogram                                                          { scope++; }
+subprograms:        subprograms subprogram                                         
                     | %empty{ }
 ;
-subprogram:         header body T_END                                                               { hashtbl_get(hashtbl, scope); scope--; }                               
+subprogram:         header    { scope++; }
+                    body      { hashtbl_get(hashtbl, scope); scope--; } 
+                    T_END                                                                
 ;
-header:             type T_FUNCTION T_ID T_LPAREN formal_parameters T_RPAREN                        { hashtbl_insert(hashtbl, $3, NULL, scope); }
-                    | T_SUBROUTINE T_ID T_LPAREN formal_parameters T_RPAREN                         { hashtbl_insert(hashtbl, $2, NULL, scope); }
-                    | T_SUBROUTINE T_ID                                                             { hashtbl_insert(hashtbl, $2, NULL, scope); }
+header:             type T_FUNCTION T_ID T_LPAREN formal_parameters T_RPAREN       { hashtbl_insert(hashtbl, $3, NULL, scope); }
+                    | T_SUBROUTINE T_ID T_LPAREN formal_parameters T_RPAREN        { hashtbl_insert(hashtbl, $2, NULL, scope); }
+                    | T_SUBROUTINE T_ID                                            { hashtbl_insert(hashtbl, $2, NULL, scope); }
 ;
 formal_parameters:  type vars T_COMMA formal_parameters
                     | type vars
@@ -265,6 +278,7 @@ int main(int argc, char* argv[])
 {
     if(!(hashtbl = hashtbl_create(10, NULL)))
         puts("Error failed to initialize hashtable");
+
     if(argc > 1)
     {
         yyin = fopen(argv[1], "r");
@@ -273,7 +287,9 @@ int main(int argc, char* argv[])
             return -1;
         }
     }
+
     yyparse();
+    printf("\n");
     fclose(yyin);
     hashtbl_destroy(hashtbl);
     return EXIT_SUCCESS;

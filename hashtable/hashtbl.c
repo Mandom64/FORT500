@@ -77,7 +77,7 @@ int hashtbl_insert(HASHTBL *hashtbl, const char *key, void *data ,int scope)
 	struct hashnode_s *node;
 	hash_size hash=hashtbl->hashfunc(key)%hashtbl->size;
 	
-	printf("\tHASHTBL_INSERT(): KEY = %s, HASH = %ld,  \tDATA = %s, SCOPE = %d\n", key, hash, (char*)data, scope);
+	printf("\n\tHASHTBL_INSERT(): KEY = %s, HASH = %ld, DATA = %s, SCOPE = %d", key, hash, (char*)data, scope);
 
 	node=hashtbl->nodes[hash];
 	while(node) {
@@ -132,7 +132,7 @@ void *hashtbl_get(HASHTBL *hashtbl, int scope)
 		node=hashtbl->nodes[n];
 		while(node) {
 			if(node->scope == scope) {
-				printf("\t\t\t\t\tHASHTBL_GET():\tSCOPE = %d, KEY = %s,  \tDATA = %s\n", node->scope, node->key, (char*)node->data);
+				printf("\n\tHASHTBL_GET(): SCOPE = %d, KEY = %s,  \tDATA = %s\n", node->scope, node->key, (char*)node->data);
 				oldnode = node;
 				node=node->next;
 				rem = hashtbl_remove(hashtbl, oldnode->key, scope);
